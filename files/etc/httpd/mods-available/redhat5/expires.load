@@ -1,0 +1,1 @@
+LoadModule expires_module modules/mod_expires.so

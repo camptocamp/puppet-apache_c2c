@@ -1,0 +1,12 @@
+# file managed by puppet
+
+
+
+<Proxy *>
+        Order deny,allow
+        Allow from all
+</Proxy>
+
+ProxyPass <%= location %> <%= url %>
+ProxyPassReverse <%= location %> <%= url %>
+

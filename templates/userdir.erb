@@ -1,0 +1,14 @@
+# file managed by puppet
+
+<IfModule mod_userdir.c>
+  UserDir public_html/htdocs
+  UserDir disabled root
+  <Directory /home/*/public_html/htdocs>
+    AllowOverride FileInfo AuthConfig Limit
+    Options MultiViews Indexes SymLinksIfOwnerMatch IncludesNoExec
+  </Directory>
+  <Directory /home/*/public_html/cgi-bin/>
+    Options ExecCGI
+    AddHandler cgi-script .cgi
+  </Directory> 
+</IfModule>

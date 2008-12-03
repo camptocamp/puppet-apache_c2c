@@ -1,0 +1,37 @@
+# file managed by puppet
+
+NameVirtualHost *:80
+<VirtualHost *:80>
+  ServerName localhost
+
+	DocumentRoot /var/www/html
+
+	<Directory />
+		Options FollowSymLinks
+		AllowOverride None
+	</Directory>
+
+	<Directory /var/www/html>
+		Options Indexes FollowSymLinks
+		AllowOverride None
+		Order allow,deny
+		allow from all
+	</Directory>
+
+# 	ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
+# 	<Directory "/usr/lib/cgi-bin">
+# 		AllowOverride None
+# 		Options ExecCGI -MultiViews +SymLinksIfOwnerMatch
+# 		Order allow,deny
+# 		Allow from all
+# 	</Directory>
+
+	ErrorLog /var/log/httpd/error_log
+
+	# Possible values include: debug, info, notice, warn, error, crit,
+	# alert, emerg.
+	LogLevel warn
+
+	CustomLog /var/log/httpd/access_log combined
+	ServerSignature Off
+</VirtualHost>

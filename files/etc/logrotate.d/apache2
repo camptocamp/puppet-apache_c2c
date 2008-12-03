@@ -1,0 +1,18 @@
+/var/www/*/logs/*.log {
+        weekly
+        missingok
+        rotate 52
+        compress
+        delaycompress
+        notifempty
+        create 640 root adm
+        sharedscripts
+        prerotate
+                test -f /usr/share/doc/awstats/examples/awstats_updateall.pl && /usr/share/doc/awstats/examples/awstats_updateall.pl -awstatsprog=/usr/lib/cgi-bin/awstats.pl -confdir=/etc/awstats now > /dev/null
+        endscript
+        postrotate
+                if [ -f /var/run/apache2.pid ]; then
+                        /etc/init.d/apache2 restart > /dev/null
+                fi
+        endscript
+}

@@ -1,0 +1,46 @@
+
+Types
+#####
+
+# apache::auth::simple-vhost
+
+Simple HTTP auth with a single username/password pair applied to the whole virtualhost
+
+Example:
+
+  apache::auth::simple {"Restricted Access":
+    ensure   => present,
+    vhost    => "c2cpc34.camptocamp.com",
+    location => "/",
+    username => "test",
+    password => "xTLQKl8WB9bt6",
+  }
+
+# apache::webdav and children
+Simple WebDAV class. We can add as many instances we want
+
+Example :
+
+  include apache::base
+  include apache::ssl
+  include apache::webdav
+
+  apache::vhost-ssl {$fqdn:
+    ensure => present,
+  }
+# create share into /var/www/$vhost/private/my-first-test, purge files older than 4 days.
+  apache::webdav::instance {"/my-first-test":
+    ensure => present,
+    vhost => $fqdn,
+    purge => 4,
+  }
+# create share into /var/www/$vhost/htdocs
+  apache::webdav::instance {"/":
+    ensure => present,
+    vhost => $fqdn,
+    purge => 0,
+    directory => "/var/www/${vhost}/htdocs/",
+  }
+
+# apache::vhost-ssl : multiple vhost
+We have to add a file into /etc/apache2/conf.d containing un NameVirtualHost *:443

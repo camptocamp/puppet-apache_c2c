@@ -1,0 +1,1 @@
+LoadModule mime_magic_module modules/mod_mime_magic.so

@@ -1,0 +1,28 @@
+Information about these directories:
+
+ - htdocs/
+   is where you put the files you are publishing on your website. The first
+   file presented to the visitors (eg: when they hit "http://<%= name %>/")
+   must be named "index.html". "index.php" also works for PHP websites.
+
+ - cgi-bin/
+   is where you put scripts that will be executed when the get called. This
+   directory gets available under the following URL:
+   http://<%= name %>/cgi-bin/
+
+ - private/
+   you can put there anything that must be accessible by the web server but not
+   published on the internet. For example password files or user sessions.
+
+ - logs/
+   you will find here the full access and error logs for your website.
+
+ - conf/
+   you can put apache configuration files in this directory. They will be
+   integrated within the <VirtualHost> section of your website. For more
+   details see http://httpd.apache.org/docs/
+
+ - ssl/
+   here are found the SSL certificates of your website, if you have https
+   enabled.
+

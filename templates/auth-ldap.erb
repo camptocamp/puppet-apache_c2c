@@ -1,0 +1,12 @@
+# file managed by puppet
+
+
+<Location <%= location %>>
+  AuthLDAPURL <%= ldapUrl %>
+  AuthLDAPGroupAttribute memberUid
+  AuthLDAPGroupAttributeIsDN off
+  AuthzLDAPAuthoritative off
+  AuthBasicProvider ldap file
+  AuthType basic
+  AuthName "Private Area"
+</Location>

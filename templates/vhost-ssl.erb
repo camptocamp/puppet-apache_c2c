@@ -1,0 +1,62 @@
+# file managed by puppet
+
+
+<VirtualHost *:80>
+  ServerName <%= name %>
+
+  <% aliases.each do |serveralias| %>
+  ServerAlias <%= serveralias %>
+  <% end %>
+
+  DocumentRoot <%= wwwroot %>/<%= name %>/htdocs
+
+  LogLevel warn
+
+  ErrorLog <%= wwwroot %>/<%= name %>/logs/error.log
+  CustomLog <%= wwwroot %>/<%= name %>/logs/access.log combined
+
+  Include <%= wwwroot %>/<%= name%>/conf/*.conf
+
+  # CGI scripts
+  ScriptAlias /cgi-bin/ <%= wwwroot %>/<%= name %>/cgi-bin/
+  <Directory <%= wwwroot %>/<%= name %>/cgi-bin>
+    Options +ExecCGI
+    AddHandler cgi-script .cgi
+  </Directory>
+</VirtualHost>
+
+<VirtualHost <%= ip_address %>:443>
+  ServerName <%= name %>
+
+  <% aliases.each do |serveralias| %>
+  ServerAlias <%= serveralias %>
+  <% end %>
+
+  DocumentRoot <%= wwwroot %>/<%= name %>/htdocs
+
+  LogLevel warn
+
+  ErrorLog <%= wwwroot %>/<%= name %>/logs/error.log
+  CustomLog <%= wwwroot %>/<%= name %>/logs/access.log combined
+
+  Include <%= wwwroot %>/<%= name%>/conf/*.conf
+
+  SSLEngine On
+  SSLCertificateFile <%= wwwroot %>/<%= name %>/ssl/<%= cert %>
+  <% if certkey != "absent" %>
+  SSLCertificateKeyFile <%= wwwroot %>/<%= name %>/ssl/<%= certkey %>
+  <% end %>
+  <% if cacert != "absent" %>
+  SSLCACertificateFile <%= wwwroot %>/<%= name %>/ssl/<%= cacert %>
+  <% end %>
+  <% if certchain != "absent" %>
+  SSLCertificateChainFile <%= wwwroot %>/<%= name %>/ssl/<%= certchain %>
+  <% end %>
+
+  # CGI scripts
+  ScriptAlias /cgi-bin/ <%= wwwroot %>/<%= name %>/cgi-bin/
+  <Directory <%= wwwroot %>/<%= name %>/cgi-bin>
+    Options +ExecCGI
+    AddHandler cgi-script .cgi
+  </Directory>
+</VirtualHost>

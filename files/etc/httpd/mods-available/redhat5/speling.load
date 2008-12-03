@@ -1,0 +1,1 @@
+LoadModule speling_module modules/mod_speling.so
