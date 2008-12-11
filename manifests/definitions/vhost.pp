@@ -6,6 +6,7 @@ define apache::vhost ($ensure=present, $config_file=false, $config_content=false
         owner   => root,
         group   => root,
         mode    => 600,
+        seltype => "httpd_config_t",
         require => [Package["$wwwpkgname"], File["$wwwconf/sites-available"]],
         notify  => Service["$wwwpkgname"],
       }
@@ -15,6 +16,7 @@ define apache::vhost ($ensure=present, $config_file=false, $config_content=false
         owner  => root,
         group  => root,
         mode   => 755,
+        seltype => "httpd_sys_content_t",
         require => File["${wwwroot}"],
       }
 
@@ -23,6 +25,7 @@ define apache::vhost ($ensure=present, $config_file=false, $config_content=false
         owner  => $user,
         group  => $group,
         mode   => $mode,
+        seltype => "httpd_config_t",
         # BUG: Require fails when using LDAP groups
         #require => [File["${wwwroot}/${name}"], Group[$group]],
         require => [File["${wwwroot}/${name}"]],
@@ -33,6 +36,7 @@ define apache::vhost ($ensure=present, $config_file=false, $config_content=false
         owner  => $user,
         group  => $group,
         mode   => $mode,
+        seltype => "httpd_sys_content_t",
         # BUG: Require fails when using LDAP groups
         #require => [File["${wwwroot}/${name}"], Group[$group]],
         require => [File["${wwwroot}/${name}"]],
@@ -58,6 +62,7 @@ define apache::vhost ($ensure=present, $config_file=false, $config_content=false
         owner  => $user,
         group  => $group,
         mode   => $mode,
+        seltype => "httpd_sys_script_exec_t",
         # BUG: Require fails when using LDAP groups
         #require => [File["${wwwroot}/${name}"], Group[$group]],
         require => [File["${wwwroot}/${name}"]],
@@ -93,6 +98,7 @@ define apache::vhost ($ensure=present, $config_file=false, $config_content=false
         owner  => root,
         group  => root,
         mode   => 755,
+        seltype => "httpd_log_t",
         require => File["${wwwroot}/${name}"],
       }
 
@@ -103,6 +109,7 @@ define apache::vhost ($ensure=present, $config_file=false, $config_content=false
         owner => root,
         group => adm,
         mode => 644,
+        seltype => "httpd_log_t",
         require => File["${wwwroot}/${name}/logs"],
       }
 
@@ -112,6 +119,7 @@ define apache::vhost ($ensure=present, $config_file=false, $config_content=false
         owner   => $user,
         group   => $group,
         mode    => $mode,
+        seltype => "httpd_sys_content_t",
         require => File["${wwwroot}/${name}"],
       }
 

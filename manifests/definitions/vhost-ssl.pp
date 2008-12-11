@@ -16,6 +16,7 @@ define apache::vhost-ssl ($ensure, $ip_address = "*", $htdocs=false, $conf=false
     owner  => "root",
     group  => "root",
     mode   => 700,
+    seltype => "cert_t",
   }
 
   exec { "generate-ssl-cert-$name":
@@ -32,6 +33,7 @@ define apache::vhost-ssl ($ensure, $ip_address = "*", $htdocs=false, $conf=false
     owner => "root",
     group => "root",
     mode  => 750,
+    seltype => "cert_t",
     require => [File["${wwwroot}/${name}/ssl"], Exec["generate-ssl-cert-$name"]],
   }
 

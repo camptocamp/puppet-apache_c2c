@@ -30,12 +30,14 @@ class apache::base {
         mode    => 644,
         owner   => "root",
         group   => "root",
+        seltype => "httpd_config_t",
         require => Package["$wwwpkgname"],
       }
 
       file { "$wwwconf/conf/httpd.conf":
         ensure => present,
         source => "puppet:///apache/$wwwconf/conf/httpd.conf",
+        seltype => "httpd_config_t",
         notify  => Service["$wwwpkgname"],
         require => Package["$wwwpkgname"],
       }
@@ -51,6 +53,7 @@ class apache::base {
         mode    => 755,
         owner   => "root",
         group   => "root",
+        seltype => "httpd_config_t",
         require => Package["$wwwpkgname"],
       }
 
@@ -114,6 +117,7 @@ class apache::base {
     mode    => 755,
     owner   => "root",
     group   => "root",
+    seltype => "httpd_sys_content_t",
     require => Package["$wwwpkgname"],
   }
 
@@ -122,6 +126,7 @@ class apache::base {
     mode    => 755,
     owner   => "root",
     group   => "root",
+    seltype => "httpd_sys_script_exec_t",
     require => Package["$wwwpkgname"],
   }
 
@@ -151,6 +156,7 @@ class apache::base {
   file { "${wwwconf}/sites-available/default":
     ensure  => present,
     source  => "puppet:///apache/${wwwconf}/sites-available/default",
+    seltype => "httpd_config_t",
     require => Package["$wwwpkgname"],
     notify  => Exec["apache-graceful"],
     mode    => 644,
@@ -158,6 +164,7 @@ class apache::base {
 
   file { "${wwwconf}/sites-enabled/000-default":
     ensure => "${wwwconf}/sites-available/default",
+    seltype => "httpd_config_t",
     require => [Package["$wwwpkgname"], File["${wwwconf}/sites-available/default"]],
     notify  => Exec["apache-graceful"],
   }
