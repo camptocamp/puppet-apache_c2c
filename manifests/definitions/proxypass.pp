@@ -4,9 +4,9 @@ define apache::proxypass(
   $url,
   $vhost
 ) {
-  file{"/var/www/${vhost}/conf/proxypass-${name}.conf":
+  file{"${wwwroot}/${vhost}/conf/proxypass-${name}.conf":
     ensure => $ensure,
     content => template("apache/proxypass.erb"),
-    notify  => Service["apache2"],
+    notify  => Service["${wwwpkgname}"],
   }
 }
