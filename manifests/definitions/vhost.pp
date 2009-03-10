@@ -1,4 +1,25 @@
-define apache::vhost ($ensure=present, $config_file=false, $config_content=false, $htdocs=false, $conf=false, $user="$wwwuser", $group="root", $mode=2570, $aliases = []) {
+define apache::vhost ($ensure=present, $config_file=false, $config_content=false, $htdocs=false, $conf=false, $user="", $group="root", $mode=2570, $aliases = []) {
+
+  $wwwuser = $user ? {
+    "" => $operatingsystem ? {
+      redhat => "apache",
+      debian => "www-data",
+    },
+    default => $user,
+  }
+
+  $wwwconf = $operatingsystem ? {
+    redhat  => "/etc/httpd",
+    debian  => "/etc/apache2",
+    default => { notice "Unsupported operatingsystem ${operatingsystem}",
+  }
+
+  $wwwpkgname = $operatingsystem ? {
+    redhat => "httpd",
+    debian => "apache2",
+    default => { notice "Unsupported operatingsystem ${operatingsystem}",
+  }
+
   case $ensure {
     present: {
       file { "$wwwconf/sites-available/${name}":
@@ -6,7 +27,10 @@ define apache::vhost ($ensure=present, $config_file=false, $config_content=false
         owner   => root,
         group   => root,
         mode    => 600,
-        seltype => "httpd_config_t",
+        seltype => $operatingsystem ? {
+          redhat => "httpd_config_t",
+          default => undef,
+        }
         require => [Package["$wwwpkgname"], File["$wwwconf/sites-available"]],
         notify  => Service["$wwwpkgname"],
       }
@@ -16,7 +40,10 @@ define apache::vhost ($ensure=present, $config_file=false, $config_content=false
         owner  => root,
         group  => root,
         mode   => 755,
-        seltype => "httpd_sys_content_t",
+        seltype => $operatingsystem ? {
+          redhat => "httpd_sys_content_t",
+          default => undef,
+        }
         require => File["${wwwroot}"],
       }
 
@@ -25,9 +52,10 @@ define apache::vhost ($ensure=present, $config_file=false, $config_content=false
         owner  => $user,
         group  => $group,
         mode   => $mode,
-        seltype => "httpd_config_t",
-        # BUG: Require fails when using LDAP groups
-        #require => [File["${wwwroot}/${name}"], Group[$group]],
+        seltype => $operatingsystem ? {
+          redhat => "httpd_config_t",
+          default => undef,
+        }
         require => [File["${wwwroot}/${name}"]],
       }
 
@@ -36,9 +64,10 @@ define apache::vhost ($ensure=present, $config_file=false, $config_content=false
         owner  => $user,
         group  => $group,
         mode   => $mode,
-        seltype => "httpd_sys_content_t",
-        # BUG: Require fails when using LDAP groups
-        #require => [File["${wwwroot}/${name}"], Group[$group]],
+        seltype => $operatingsystem ? {
+          redhat => "httpd_sys_content_t",
+          default => undef,
+        } 
         require => [File["${wwwroot}/${name}"]],
       }
  
@@ -62,9 +91,10 @@ define apache::vhost ($ensure=present, $config_file=false, $config_content=false
         owner  => $user,
         group  => $group,
         mode   => $mode,
-        seltype => "httpd_sys_script_exec_t",
-        # BUG: Require fails when using LDAP groups
-        #require => [File["${wwwroot}/${name}"], Group[$group]],
+        seltype => $operatingsystem ? {
+          redhat => "httpd_sys_script_exec_t",
+          default => undef,
+        }
         require => [File["${wwwroot}/${name}"]],
       }
 
@@ -98,7 +128,10 @@ define apache::vhost ($ensure=present, $config_file=false, $config_content=false
         owner  => root,
         group  => root,
         mode   => 755,
-        seltype => "httpd_log_t",
+        seltype => $operatingsystem ? {
+          redhat => "httpd_log_t",
+          default => undef,
+        } 
         require => File["${wwwroot}/${name}"],
       }
 
@@ -109,7 +142,10 @@ define apache::vhost ($ensure=present, $config_file=false, $config_content=false
         owner => root,
         group => adm,
         mode => 644,
-        seltype => "httpd_log_t",
+        seltype => $operatingsystem ? {
+          redhat => "httpd_log_t",
+          default => undef,
+        }
         require => File["${wwwroot}/${name}/logs"],
       }
 
@@ -119,7 +155,10 @@ define apache::vhost ($ensure=present, $config_file=false, $config_content=false
         owner   => $user,
         group   => $group,
         mode    => $mode,
-        seltype => "httpd_sys_content_t",
+        seltype => $operatingsystem ? {
+          redhat => "httpd_sys_content_t",
+          default => undef,
+        }
         require => File["${wwwroot}/${name}"],
       }
 

@@ -2,30 +2,32 @@ class apache::debian inherits apache::base {
 
   package {"apache2":
     ensure => installed,
+    alias  => "apache"
   }
 
   service {"apache2":
     ensure => running,
     enable => true,
     hasrestart => true,
-    require => Package["apache2"],
+    require => Package["apache"],
+    alias => "apache"
   }
 
   user {"www-data":
     ensure  => present,
-    require => Package["apache2"],
-    alias   => "apache2 user",
+    require => Package["apache"],
+    alias   => "apache user",
   }
 
   group {"www-data":
     ensure  => present,
-    require => Package["apache2"],
-    alias   => "apache2 group",
+    require => Package["apache"],
+    alias   => "apache group",
   }
 
   package {["apache2-mpm-prefork", "libapache2-mod-proxy-html"]:
     ensure  => installed,
-    require => Package["apache2"],
+    require => Package["apache"],
   }
   
   # directory not present in lenny
@@ -45,8 +47,8 @@ class apache::debian inherits apache::base {
 
   file { "/etc/apache2/ports.conf":
     content => "ServerName 127.0.1.1\nListen 80\n",
-    notify  => Service["apache2"],
-    require => Package["apache2"],
+    notify  => Service["apache"],
+    require => Package["apache"],
   }
 
 }

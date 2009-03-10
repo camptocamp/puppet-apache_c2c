@@ -1,11 +1,15 @@
-class apache::ssl::debian inherits apache::debian {
+class apache::ssl::debian inherits apache::ssl {
 
   apache::module {"ssl":
     ensure => present,
   }
 
-  File ["/etc/apache2/ports.conf"] {
-    content => "ServerName 127.0.1.1\nListen 80\nListen 443\n",
+  common::line {"set https port":
+    ensure => present,
+    line => "Listen 443",
+    file => "/etc/apache2/ports.conf",
+    notify  => Service["apache"],
+    require => Package["apache"],
   }
 
 }

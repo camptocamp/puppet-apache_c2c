@@ -7,15 +7,15 @@ class apache::deflate {
     ensure  => present,
     content => "<IfModule mod_deflate.c>\nAddOutputFilterByType DEFLATE application/x-javascript\nBrowserMatch Safari no-gzip</IfModule>\n",
     seltype => "httpd_config_t",
-    notify  => Service["apache2"],
-    require => Package["apache2"],
+    notify  => Service["apache"],
+    require => Package["apache"],
   }
 
   file {"/etc/apache2/conf.d/deflate-css.conf":
     ensure  => present,
     content => "<IfModule mod_deflate.c>\nAddOutputFilterByType DEFLATE text/css\n</IfModule>\n",
     seltype => "httpd_config_t",
-    notify  => Service["apache2"],
-    require => Package["apache2"],
+    notify  => Service["apache"],
+    require => Package["apache"],
   }
 }

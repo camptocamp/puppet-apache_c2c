@@ -6,7 +6,7 @@ class apache::base {
     mode => 755,
     owner => "root",
     group => "root",
-    require => Package["apache2"],
+    require => Package["apache"],
   }
 
   file {"cgi-bin directory":
@@ -15,7 +15,7 @@ class apache::base {
     mode => 755,
     owner => "root",
     group => "root",
-    require => Package["apache2"],
+    require => Package["apache"],
   }
 
   file {"log directory":
@@ -24,7 +24,7 @@ class apache::base {
     mode => 755,
     owner => "root",
     group  => "root",
-    require => Package["apache2"],
+    require => Package["apache"],
   }
 
   file {"logrotate configuration":
@@ -34,7 +34,7 @@ class apache::base {
     group => root,
     mode => 644,
     source => "puppet:///apache/etc/logrotate.d/apache2",
-    require => Package["apache2"],
+    require => Package["apache"],
   }
 
   apache::module {["alias", "auth_basic", "authn_file", "authz_default", "authz_groupfile", "authz_host", "authz_user", "autoindex", "dir", "env", "mime", "negotiation", "rewrite", "setenvif", "status", "cgi"]:
@@ -47,7 +47,7 @@ class apache::base {
     ensure => present,
     source => "puppet:///apache/etc/apache2/sites-available/default",
     seltype => "httpd_config_t",
-    require => Package["apache2"],
+    require => Package["apache"],
     notify => Exec["apache-graceful"],
     mode => 644,
   }
@@ -55,7 +55,7 @@ class apache::base {
   file {"enable default virtualhost":
     path => "/etc/apache2/sites-enabled/000-default":
     ensure => File["default virtualhost"],
-    require => [Package["apache2"], File["default virtualhost"]],
+    require => [Package["apache"], File["default virtualhost"]],
     notify => Exec["apache-graceful"],
   }
 
@@ -63,20 +63,6 @@ class apache::base {
     command => "apache2ctl graceful",
     refreshonly => true,
     onlyif => "apache2ctl configtest",
-  }
-
-  file { "/etc/ssl/":
-    ensure => directory,
-  }
-
-  file { "/etc/ssl/ssleay.cnf":
-    source => "puppet:///apache/ssleay.cnf",
-    require => File["/etc/ssl/"],
-  }
-
-  file { "/usr/local/sbin/generate-ssl-cert.sh":
-    source => "puppet:///apache/generate-ssl-cert.sh",
-    mode   => 755,
   }
 
 }

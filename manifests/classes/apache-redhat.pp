@@ -26,15 +26,15 @@ class apache::redhat inherits apache::base {
   package {"httpd":
     ensure => installed,
     require => [File["/usr/local/sbin/a2ensite"], File["/usr/local/sbin/a2dissite"], File["/usr/local/sbin/a2enmod"], File["/usr/local/sbin/a2dismod"]],
-    alias => "apache2"
+    alias => "apache"
   }
 
   service {"httpd":
     ensure => running,
     enable => true,
     hasrestart => true,
-    require => Package["apache2"],
-    alias => "apache2"
+    require => Package["apache"],
+    alias => "apache"
   }
 
   file { ["/usr/local/sbin/a2ensite", "/usr/local/sbin/a2dissite", "/usr/local/sbin/a2enmod", "/usr/local/sbin/a2dismod"]:
@@ -51,15 +51,15 @@ class apache::redhat inherits apache::base {
     owner => "root",
     group => "root",
     seltype => "httpd_config_t",
-    require => Package["apache2"],
+    require => Package["apache"],
   }
 
   file { "/etc/httpd/conf/httpd.conf":
     ensure => present,
     source => "puppet:///apache/etc/httpd/conf/httpd.conf",
     seltype => "httpd_config_t",
-    notify  => Service["apache2"],
-    require => Package["apache2"],
+    notify  => Service["apache"],
+    require => Package["apache"],
   }
 
   # the following command was used to generate the content of the directory:
@@ -74,7 +74,7 @@ class apache::redhat inherits apache::base {
     owner => "root",
     group => "root",
     seltype => "httpd_config_t",
-    require => Package["apache2"],
+    require => Package["apache"],
   }
 
   # this module is statically compiled on debian and must be enabled here
@@ -88,10 +88,9 @@ class apache::redhat inherits apache::base {
   # present and mod_proxy isn't...
   file {"/etc/httpd/conf.d/proxy_ajp.conf":
     ensure => absent,
-    require => Package["apache2"],
+    require => Package["apache"],
     notify => Exec["apache-graceful"],
   }
 
 }
-
 
