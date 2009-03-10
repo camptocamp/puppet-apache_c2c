@@ -1,3 +1,5 @@
+import "classes/*.pp"
+import "definitions/*.pp"
 
 class apache {
   case $operatingsystem {
@@ -7,7 +9,7 @@ class apache {
   }
 }
 
-class apache::ssl inherit apache {
+class apache::ssl inherits apache {
   case $operatingsystem {
     Debian:  { include apache::ssl::debian}
     RedHat:  { include apache::ssl::redhat}

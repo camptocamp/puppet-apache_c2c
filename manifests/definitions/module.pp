@@ -1,26 +1,26 @@
 define apache::module ($ensure='present') {
-  
-  $wwwconf = $operatingsystem ? {
-    Redhat  => "/etc/httpd",
-    Debian  => "/etc/apache2",
-    default => { notice "Unsupported operatingsystem ${operatingsystem}",
+
+  case $operatingsystem {
+    redhat :  { $wwwconf = "/etc/httpd" }
+    debian :  { $wwwconf = "/etc/apache2" }
+    default : { fail "Unsupported operatingsystem ${operatingsystem}" }
   }
 
   case $ensure {
     'present' : {
       exec { "a2enmod ${name}":
-        unless  => "/bin/sh -c '[ -L ${wwwconf}/${name}.load ] \\
+        unless  => "/bin/sh -c '[ -L ${wwwconf}/mods-enabled/${name}.load ] \\
           && [ ${wwwconf}/mods-enabled/${name}.load -ef ${wwwconf}/mods-available/${name}.load ]'",
-        require => Package["apache2"],
-        notify  => Service["apache2"],
+        require => Package["apache"],
+        notify  => Service["apache"],
       }
     }
     'absent': {
       exec { "a2dismod ${name}": 
         onlyif  => "/bin/sh -c '[ -L ${wwwconf}/mods-enabled/${name}.load ] \\
           && [ ${wwwconf}/mods-enabled/${name}.load -ef ${wwwconf}/mods-available/${name}.load ]'",
-        require => Package["apache2"],
-        notify  => Service["apache2"],
+        require => Package["apache"],
+        notify  => Service["apache"],
        }
     }
     default: { 

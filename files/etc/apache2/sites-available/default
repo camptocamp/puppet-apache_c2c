@@ -2,22 +2,20 @@
 
 NameVirtualHost *:80
 <VirtualHost *:80>
-
   ServerAdmin sysadmin@camptocamp.com
-	
   DocumentRoot /var/www
 
-	<Directory />
-		Options FollowSymLinks
-		AllowOverride None
-	</Directory>
+  <Directory />
+    Options FollowSymLinks
+    AllowOverride None
+  </Directory>
 
-	<Directory /var/www/>
-		Options Indexes FollowSymLinks MultiViews
-		AllowOverride None
-		Order allow,deny
-		allow from all
-	</Directory>
+  <Directory /var/www/>
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride None
+    Order allow,deny
+    allow from all
+  </Directory>
 
   <IfModule mod_status.c>
     <Location /server-status>
@@ -28,12 +26,8 @@ NameVirtualHost *:80
     </Location>
   </IfModule>
 
-	ErrorLog /var/log/apache2/error.log
-
-	# Possible values include: debug, info, notice, warn, error, crit,
-	# alert, emerg.
-	LogLevel warn
-
-	CustomLog /var/log/apache2/access.log combined
-	ServerSignature Off
+  ErrorLog /var/log/apache2/error.log
+  LogLevel warn
+  CustomLog /var/log/apache2/access.log combined
+  ServerSignature Off
 </VirtualHost>

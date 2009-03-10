@@ -1,24 +1,26 @@
 define apache::vhost ($ensure=present, $config_file=false, $config_content=false, $htdocs=false, $conf=false, $user="", $group="root", $mode=2570, $aliases = []) {
 
-  $wwwuser = $user ? {
-    "" => $operatingsystem ? {
-      redhat => "apache",
-      debian => "www-data",
-    },
-    default => $user,
-  }
-
-  $wwwconf = $operatingsystem ? {
-    redhat  => "/etc/httpd",
-    debian  => "/etc/apache2",
-    default => { notice "Unsupported operatingsystem ${operatingsystem}",
-  }
-
-  $wwwpkgname = $operatingsystem ? {
-    redhat => "httpd",
-    debian => "apache2",
-    default => { notice "Unsupported operatingsystem ${operatingsystem}",
-  }
+  case $operatingsystem {
+    redhat : {
+      $wwwuser =  $user ? {
+        "" => "apache",
+        default => $user,
+      }
+      $wwwconf = "/etc/httpd"
+      $wwwpkgname = "httpd"
+      $wwwroot = "/var/www/vhosts"
+    }
+    debian : {
+      $wwwuser =  $user ? {
+        "" => "www-data",
+        default => $user,
+      }
+      $wwwconf = "/etc/apache2"
+      $wwwpkgname = "apache2"
+      $wwwroot = "/var/www/"
+    }
+    default : { fail "Unsupported operatingsystem ${operatingsystem}" }
+  }    
 
   case $ensure {
     present: {
@@ -30,8 +32,8 @@ define apache::vhost ($ensure=present, $config_file=false, $config_content=false
         seltype => $operatingsystem ? {
           redhat => "httpd_config_t",
           default => undef,
-        }
-        require => [Package["$wwwpkgname"], File["$wwwconf/sites-available"]],
+        },
+        require => Package["$wwwpkgname"],
         notify  => Service["$wwwpkgname"],
       }
 
@@ -43,31 +45,31 @@ define apache::vhost ($ensure=present, $config_file=false, $config_content=false
         seltype => $operatingsystem ? {
           redhat => "httpd_sys_content_t",
           default => undef,
-        }
-        require => File["${wwwroot}"],
+        },
+        require => File["root directory"],
       }
 
       file {"${wwwroot}/${name}/conf":
         ensure => directory,
-        owner  => $user,
+        owner  => $wwwuser,
         group  => $group,
         mode   => $mode,
         seltype => $operatingsystem ? {
           redhat => "httpd_config_t",
           default => undef,
-        }
+        },
         require => [File["${wwwroot}/${name}"]],
       }
 
       file {"${wwwroot}/${name}/htdocs":
         ensure => directory,
-        owner  => $user,
+        owner  => $wwwuser,
         group  => $group,
         mode   => $mode,
         seltype => $operatingsystem ? {
           redhat => "httpd_sys_content_t",
           default => undef,
-        } 
+        },
         require => [File["${wwwroot}/${name}"]],
       }
  
@@ -88,13 +90,13 @@ define apache::vhost ($ensure=present, $config_file=false, $config_content=false
       # cgi-bin
       file {"${wwwroot}/${name}/cgi-bin":
         ensure => directory,
-        owner  => $user,
+        owner  => $wwwuser,
         group  => $group,
         mode   => $mode,
         seltype => $operatingsystem ? {
           redhat => "httpd_sys_script_exec_t",
           default => undef,
-        }
+        },
         require => [File["${wwwroot}/${name}"]],
       }
 
@@ -131,7 +133,7 @@ define apache::vhost ($ensure=present, $config_file=false, $config_content=false
         seltype => $operatingsystem ? {
           redhat => "httpd_log_t",
           default => undef,
-        } 
+        },
         require => File["${wwwroot}/${name}"],
       }
 
@@ -145,20 +147,20 @@ define apache::vhost ($ensure=present, $config_file=false, $config_content=false
         seltype => $operatingsystem ? {
           redhat => "httpd_log_t",
           default => undef,
-        }
+        },
         require => File["${wwwroot}/${name}/logs"],
       }
 
       # Private data
       file {"${wwwroot}/${name}/private":
         ensure  => directory,
-        owner   => $user,
+        owner   => $wwwuser,
         group   => $group,
         mode    => $mode,
         seltype => $operatingsystem ? {
           redhat => "httpd_sys_content_t",
           default => undef,
-        }
+        },
         require => File["${wwwroot}/${name}"],
       }
 
@@ -178,7 +180,6 @@ define apache::vhost ($ensure=present, $config_file=false, $config_content=false
         require => [
           Package["$wwwpkgname"],
           File["$wwwconf/sites-available/${name}"],
-          File["$wwwconf/sites-enabled"],
           File["${wwwroot}/${name}/htdocs"],
           File["${wwwroot}/${name}/logs"],
           File["${wwwroot}/${name}/conf"]

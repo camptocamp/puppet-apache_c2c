@@ -1,7 +1,7 @@
 class apache::base {
 
   file {"root directory":
-    path => "/var/www"
+    path => "/var/www",
     ensure => directory,
     mode => 755,
     owner => "root",
@@ -10,7 +10,7 @@ class apache::base {
   }
 
   file {"cgi-bin directory":
-    path => "/usr/lib/cgi-bin"
+    path => "/usr/lib/cgi-bin",
     ensure => directory,
     mode => 755,
     owner => "root",
@@ -19,7 +19,7 @@ class apache::base {
   }
 
   file {"log directory":
-    path => "/var/log/apache2"
+    path => "/var/log/apache2",
     ensure => directory,
     mode => 755,
     owner => "root",
@@ -28,7 +28,7 @@ class apache::base {
   }
 
   file {"logrotate configuration":
-    path => "/etc/logrotate.d/apache2"
+    path => "/etc/logrotate.d/apache2",
     ensure => present,
     owner => root,
     group => root,
@@ -43,18 +43,17 @@ class apache::base {
   }
 
   file {"default virtualhost":
-    path => "/etc/apache2/sites-available/default"
+    path => "/etc/apache2/sites-available/default",
     ensure => present,
     source => "puppet:///apache/etc/apache2/sites-available/default",
-    seltype => "httpd_config_t",
     require => Package["apache"],
     notify => Exec["apache-graceful"],
     mode => 644,
   }
 
   file {"enable default virtualhost":
-    path => "/etc/apache2/sites-enabled/000-default":
-    ensure => File["default virtualhost"],
+    path => "/etc/apache2/sites-enabled/000-default",
+    ensure => "/etc/apache2/sites-available/default",
     require => [Package["apache"], File["default virtualhost"]],
     notify => Exec["apache-graceful"],
   }
