@@ -1,4 +1,4 @@
-class apache::debian {
+class apache::debian inherits apache::base {
 
   package {"apache2":
     ensure => installed,

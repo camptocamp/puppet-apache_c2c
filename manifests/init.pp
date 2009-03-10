@@ -6,22 +6,7 @@
 # include apache::base
 
 case $operatingsystem {
-  RedHat: {
-    $wwwuser = "apache"
-    $wwwroot = "/var/www/vhosts"
-    $wwwcgi = "/var/www/cgi-bin"
-    $wwwconf = "/etc/httpd"
-    $wwwpkgname = "httpd"
-  }
-
-  Debian: {
-    $wwwuser = "www-data"
-    $wwwroot = "/var/www/"
-    $wwwcgi = "/usr/lib/cgi-bin"
-    $wwwconf = "/etc/apache2"
-    $wwwpkgname = "apache2"
-  }
+  Debian:  { include apache::debian}
+  RedHat:  { include apache::redhat}
+  default: { notice "Unsupported operatingsystem ${operatingsystem}" }
 }
-
-import "classes/*.pp"
-import "definitions/*.pp"
