@@ -1,4 +1,4 @@
-class apache::ssl {
+class apache::base::ssl {
 
   file { "/etc/ssl/":
     ensure => directory,

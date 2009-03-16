@@ -1,4 +1,4 @@
-class apache::ssl::redhat inherits apache::ssl {
+class apache::ssl::redhat inherits apache::base::ssl {
 
   package {"mod_ssl":
     ensure => installed,

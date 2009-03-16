@@ -21,7 +21,7 @@ Simple WebDAV class. We can add as many instances we want
 
 Example :
 
-  include apache::base
+  include apache
   include apache::ssl
   include apache::webdav
 
