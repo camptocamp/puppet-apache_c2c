@@ -17,7 +17,7 @@ define apache::vhost ($ensure=present, $config_file=false, $config_content=false
       }
       $wwwconf = "/etc/apache2"
       $wwwpkgname = "apache2"
-      $wwwroot = "/var/www/"
+      $wwwroot = "/var/www"
     }
     default : { fail "Unsupported operatingsystem ${operatingsystem}" }
   }    
