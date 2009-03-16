@@ -4,7 +4,7 @@ class apache::ssl::debian inherits apache::ssl {
     ensure => present,
   }
 
-  line {"set https port":
+  line {"listen on port 443":
     ensure => present,
     line => "Listen 443",
     file => "/etc/apache2/ports.conf",

@@ -45,8 +45,18 @@ class apache::debian inherits apache::base {
     require => File["/var/www"],
   }
 
-  file { "/etc/apache2/ports.conf":
-    content => "ServerName 127.0.1.1\nListen 80\n",
+  line {"set ServerName":
+    ensure => present,
+    line => "ServerName 127.0.1.1",
+    file => "/etc/apache2/ports.conf",
+    notify  => Service["apache"],
+    require => Package["apache"],
+  }
+
+  line {"listen on port 80":
+    ensure => present, 
+    line => "Listen 80",
+    file => "/etc/apache2/ports.conf",
     notify  => Service["apache"],
     require => Package["apache"],
   }
