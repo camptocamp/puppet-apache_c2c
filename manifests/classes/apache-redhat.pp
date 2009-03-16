@@ -11,8 +11,8 @@ class apache::redhat inherits apache::base {
   File["cgi-bin directory"] { path => "/var/www/cgi-bin" }
   
   File["enable default virtualhost"] { 
+    ensure => "/etc/httpd/sites-available/default",
     path => "/etc/httpd/sites-enabled/000-default",
-    source => "/etc/httpd/sites-available/000-default",
   }
 
   File["logrotate configuration"] { 
@@ -39,6 +39,18 @@ class apache::redhat inherits apache::base {
     hasrestart => true,
     require => Package["apache"],
     alias => "apache"
+  }
+
+  user { "apache":
+    ensure  => present,
+    require => Package["apache"],
+    alias   => "apache user",
+  }
+
+  group { "apache":
+    ensure  => present,
+    require => Package["apache"],
+    alias   => "apache group",
   }
 
   file { ["/usr/local/sbin/a2ensite", "/usr/local/sbin/a2dissite", "/usr/local/sbin/a2enmod", "/usr/local/sbin/a2dismod"]:
