@@ -1,4 +1,4 @@
-define apache::vhost-ssl ($ensure, $ip_address = "*", $htdocs=false, $conf=false, $user="$wwwuser", $group="root", $mode=2570, $aliases = [], $cert = "apache.pem", $certkey = "absent", $cacert = "absent", $certchain = "absent") {
+define apache::vhost-ssl ($ensure=present, $ip_address = "*", $htdocs=false, $conf=false, $user="$wwwuser", $group="root", $mode=2570, $aliases = [], $cert = "apache.pem", $certkey = "absent", $cacert = "absent", $certchain = "absent") {
 
   case $operatingsystem {
     redhat : {
