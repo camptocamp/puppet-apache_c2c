@@ -1,12 +1,20 @@
 class apache::administration {
 
-  group { "apache-admin":
-    ensure => present,
+  case $operatingsystem {
+    redhat: {
+      $wwwuser = "apache"
+      $wwwpkgname = "httpd"
+      $distro_specific_apache_sudo = "/usr/sbin/apachectl, /sbin/service ${wwwpkgname}"
+    }
+    debian: {
+      $wwwuser =  "www-data"
+      $wwwpkgname = "apache2"
+      $distro_specific_apache_sudo = "/usr/sbin/apache2ctl"
+    }
   }
 
-  $distro_specific_apache_sudo = $operatingsystem ? {
-    Debian => "/usr/sbin/apache2ctl",
-    RedHat => "/usr/sbin/apachectl, /sbin/service ${wwwpkgname}"
+  group { "apache-admin":
+    ensure => present,
   }
 
   common::concatfilepart { "sudoers.apache":
