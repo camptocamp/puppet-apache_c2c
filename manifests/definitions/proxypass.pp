@@ -1,10 +1,16 @@
 define apache::proxypass ($ensure, $location, $url, $vhost) {
 
   case $operatingsystem {
-    redhat: { $wwwpkgname = "httpd" }
-    debian: { $wwwpkgname = "apache2" }
+    redhat : {
+      $wwwpkgname = "httpd"
+      $wwwroot = "/var/www/vhosts"
+    }
+    debian : {
+      $wwwpkgname = "apache2"
+      $wwwroot = "/var/www"
+    }
     default : { fail "Unsupported operatingsystem ${operatingsystem}" }
-  }    
+  }
 
   file{"${wwwroot}/${vhost}/conf/proxypass-${name}.conf":
     ensure => $ensure,
