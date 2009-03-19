@@ -52,13 +52,4 @@ class apache::debian inherits apache::base {
     notify  => Service["apache"],
     require => Package["apache"],
   }
-
-  line {"listen on port 80":
-    ensure => present, 
-    line => "Listen 80",
-    file => "/etc/apache2/ports.conf",
-    notify  => Service["apache"],
-    require => Package["apache"],
-  }
-
 }
