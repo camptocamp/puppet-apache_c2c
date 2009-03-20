@@ -1,6 +1,5 @@
 # file managed by puppet
 
-NameVirtualHost *:80
 <VirtualHost *:80>
   ServerAdmin sysadmin@camptocamp.com
   DocumentRoot /var/www

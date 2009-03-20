@@ -42,6 +42,15 @@ class apache::base {
     notify => Exec["apache-graceful"],
   }
 
+  file {"default status module configuration":
+    path => "/etc/apache2/mods-available/status.conf",
+    ensure => present,
+    owner => root,
+    group => root,
+    source => "puppet:///apache/etc/apache2/mods-available/status.conf",
+    require => Module["status"],
+  }
+
   file {"default virtualhost":
     path => "/etc/apache2/sites-available/default",
     ensure => present,

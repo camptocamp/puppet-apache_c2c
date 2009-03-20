@@ -36,6 +36,14 @@ class apache::debian inherits apache::base {
     force => true,
   }
 
+  case $lsbdistcodename {
+    lenny: {
+      File["default virtualhost"] {
+        source => "puppet:///apache/etc/apache2/sites-available/default-lenny",
+      }
+    }
+  }
+
   file {"/var/www/index.html":
     ensure  => present,
     owner   => "root",
