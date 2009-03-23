@@ -5,7 +5,7 @@ class apache::deflate {
 
   file {"/etc/apache2/conf.d/deflate-javascript.conf":
     ensure  => present,
-    content => "<IfModule mod_deflate.c>\nAddOutputFilterByType DEFLATE application/x-javascript\nBrowserMatch Safari no-gzip</IfModule>\n",
+    content => "<IfModule mod_deflate.c>\nAddOutputFilterByType DEFLATE application/x-javascript application/javascript\nBrowserMatch Safari no-gzip\n</IfModule>\n",
     notify  => Service["apache"],
     require => Package["apache"],
   }
