@@ -23,4 +23,9 @@
     Options +ExecCGI
     AddHandler cgi-script .cgi
   </Directory>
+
+  <IfModule mod_wsgi.c>
+    WSGIDaemonProcess <%= name %>
+    WSGIProcessGroup <%= name %>
+  </IfModule>
 </VirtualHost>

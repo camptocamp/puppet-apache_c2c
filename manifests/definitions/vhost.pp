@@ -28,7 +28,7 @@ define apache::vhost ($ensure=present, $config_file=false, $config_content=false
         ensure  => present,
         owner   => root,
         group   => root,
-        mode    => 600,
+        mode    => 644,
         seltype => $operatingsystem ? {
           redhat => "httpd_config_t",
           default => undef,
