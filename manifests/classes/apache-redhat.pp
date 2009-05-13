@@ -97,7 +97,6 @@ class apache::redhat inherits apache::base {
   apache::module {["log_config"]:
     ensure => present,
     notify => Exec["apache-graceful"],
-    require => [File["/etc/httpd/mods-available"], File["/etc/httpd/mods-enabled"]],
   }
 
   # no idea why redhat choose to put this file there. apache fails if it's

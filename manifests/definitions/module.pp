@@ -1,8 +1,18 @@
 define apache::module ($ensure='present') {
 
   case $operatingsystem {
-    redhat :  { $wwwconf = "/etc/httpd" }
-    debian :  { $wwwconf = "/etc/apache2" }
+    redhat :  {
+      $wwwconf = "/etc/httpd"
+      $a2enmod_deps = [Package["apache"], File["/etc/httpd/mods-available"], File["/etc/httpd/mods-enabled"]]
+
+      #TODO: wrap around around "if $selinux" or whatever, once we have facter
+      # 1.6.0 (http://projects.reductivelabs.com/issues/1327)
+      apache::redhat::selinux {$name: }
+    }
+    debian :  {
+      $wwwconf = "/etc/apache2"
+      $a2enmod_deps = Package["apache"]
+    }
     default : { fail "Unsupported operatingsystem ${operatingsystem}" }
   }
 
@@ -11,15 +21,15 @@ define apache::module ($ensure='present') {
       exec { "a2enmod ${name}":
         unless  => "/bin/sh -c '[ -L ${wwwconf}/mods-enabled/${name}.load ] \\
           && [ ${wwwconf}/mods-enabled/${name}.load -ef ${wwwconf}/mods-available/${name}.load ]'",
-        require => Package["apache"],
+        require => $a2enmod_deps,
         notify  => Service["apache"],
       }
     }
     'absent': {
       exec { "a2dismod ${name}": 
         onlyif  => "/bin/sh -c '[ -L ${wwwconf}/mods-enabled/${name}.load ] \\
-          && [ ${wwwconf}/mods-enabled/${name}.load -ef ${wwwconf}/mods-available/${name}.load ]'",
-        require => Package["apache"],
+          || [ -e ${wwwconf}/mods-enabled/${name}.load ]'",
+        require => $a2enmod_deps,
         notify  => Service["apache"],
        }
     }
