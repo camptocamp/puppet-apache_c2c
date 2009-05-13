@@ -24,10 +24,6 @@
     AddHandler cgi-script .cgi
   </Directory>
 
-  <IfModule mod_wsgi.c>
-    WSGIDaemonProcess <%= name %>
-    WSGIProcessGroup <%= name %>
-  </IfModule>
 </VirtualHost>
 
 <VirtualHost <%= ip_address %>:443>
@@ -65,8 +61,4 @@
     AddHandler cgi-script .cgi
   </Directory>
 
-  <IfModule mod_wsgi.c>
-    WSGIDaemonProcess <%= name %>
-    WSGIProcessGroup <%= name %>
-  </IfModule>
 </VirtualHost>
