@@ -1,10 +1,11 @@
 #!/bin/bash
+# file managed by puppet
 
 ROOT="/etc/httpd/"
 SCRIPT=$(basename $0)
 
 if [ $# -ne 1 ]; then
-  echo "usage: $0 site"
+  echo "usage: $0 site|module"
   exit 1
 fi
 
@@ -35,8 +36,8 @@ case $SCRIPT in
   ;;
 
   a2dissite|a2dismod)
-    if [ ! -f ${ROOT}/${BASE}-enabled/$1$EXT ]; then
-      echo "$1 doesn't exist, can't disable."
+    if [ ! -L ${ROOT}/${BASE}-enabled/$1$EXT ]; then
+      echo "$1 doesn't exist, won't disable."
       exit 0
     else
       rm -f ${ROOT}/${BASE}-enabled/$1$EXT || (echo "problem disabling $1" && exit 1)
