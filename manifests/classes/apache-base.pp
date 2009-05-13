@@ -49,6 +49,7 @@ class apache::base {
     group => root,
     source => "puppet:///apache/etc/apache2/mods-available/status.conf",
     require => Module["status"],
+    notify => Exec["apache-graceful"],
   }
 
   file {"default virtualhost":
