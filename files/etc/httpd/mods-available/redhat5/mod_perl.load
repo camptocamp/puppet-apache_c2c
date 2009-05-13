@@ -1,2 +1,0 @@
-# with RH5, mod_perl is loaded through /etc/httpd/conf.d/perl.conf
-# LoadModule perl_module modules/mod_perl.so
