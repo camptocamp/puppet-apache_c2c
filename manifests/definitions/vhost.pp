@@ -1,4 +1,16 @@
-define apache::vhost ($ensure=present, $config_file=false, $config_content=false, $htdocs=false, $conf=false, $user="", $group="root", $mode=2570, $aliases = []) {
+define apache::vhost (
+  $ensure=present,
+  $config_file=false,
+  $config_content=false,
+  $htdocs=false,
+  $conf=false,
+  $readme=false,
+  $user="",
+  $admin="",
+  $group="root",
+  $mode=2570,
+  $aliases=[]
+) {
 
   case $operatingsystem {
     redhat : {
@@ -51,7 +63,10 @@ define apache::vhost ($ensure=present, $config_file=false, $config_content=false
 
       file {"${wwwroot}/${name}/conf":
         ensure => directory,
-        owner  => $wwwuser,
+        owner  => $admin ? {
+          "" => $wwwuser,
+          default => $admin,
+        },
         group  => $group,
         mode   => $mode,
         seltype => $operatingsystem ? {
@@ -170,7 +185,10 @@ define apache::vhost ($ensure=present, $config_file=false, $config_content=false
         owner   => root,
         group   => root,
         mode    => 644,
-        content => template("apache/README_vhost.erb"),
+        content => $readme ? {
+          false => template("apache/README_vhost.erb"),
+          default => $readme,
+        },
         require => File["${wwwroot}/${name}"],
       }
 
