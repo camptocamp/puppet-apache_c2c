@@ -19,7 +19,12 @@ class apache::redhat inherits apache::base {
     path => "/etc/logrotate.d/httpd",
     source => "puppet:///apache/etc/logrotate.d/httpd",
   }
-  
+
+  File["default status module configuration"] {
+    path => "/etc/httpd/conf.d/status.conf",
+    source => "puppet:///apache/etc/httpd/conf/status.conf",
+  }
+
   File["default virtualhost"] { 
     path => "/etc/httpd/sites-available/default",
     source => "puppet:///apache/etc/httpd/sites-available/default",
