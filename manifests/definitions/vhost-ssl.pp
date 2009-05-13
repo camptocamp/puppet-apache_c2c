@@ -1,4 +1,21 @@
-define apache::vhost-ssl ($ensure=present, $ip_address = "*", $htdocs=false, $conf=false, $user="$wwwuser", $group="root", $mode=2570, $aliases = [], $cert = "apache.pem", $certkey = "absent", $cacert = "absent", $certchain = "absent") {
+define apache::vhost-ssl (
+  $ensure=present,
+  $config_file=false,
+  $config_content=false,
+  $htdocs=false,
+  $conf=false,
+  $readme=false,
+  $user="$wwwuser",
+  $admin="$admin",
+  $group="root",
+  $mode=2570,
+  $aliases=[],
+  $ip_address="*",
+  $cert="apache.pem",
+  $certkey="absent",
+  $cacert="absent",
+  $certchain="absent"
+) {
 
   case $operatingsystem {
     redhat : {
@@ -20,13 +37,20 @@ define apache::vhost-ssl ($ensure=present, $ip_address = "*", $htdocs=false, $co
 
   apache::vhost {$name:
     ensure         => $ensure,
-    config_content => template("apache/vhost-ssl.erb"),
+    config_file    => $config_file,
+    config_content => $config_content ? {
+      false        => template("apache/vhost-ssl.erb"),
+      default      => $config_content,
+    },
     aliases        => $aliases,
     htdocs         => $htdocs,
     conf           => $conf,
+    readme         => $readme,
     user           => $user,
+    admin          => $admin,
     group          => $group,
     mode           => $mode,
+    aliases        => $aliases,
   }
 
   if $ensure == "present" {
