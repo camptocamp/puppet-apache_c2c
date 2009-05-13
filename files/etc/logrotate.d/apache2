@@ -1,3 +1,4 @@
+# file managed by puppet
 /var/www/*/logs/*.log {
         weekly
         missingok

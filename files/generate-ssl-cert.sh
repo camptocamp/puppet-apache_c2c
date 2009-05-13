@@ -1,4 +1,5 @@
 #!/bin/sh
+# file managed by puppet
 
 hostname=$1
 template=$2
