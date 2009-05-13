@@ -10,11 +10,20 @@ class apache::ssl::redhat inherits apache::base::ssl {
     notify => Service["apache"],
   }
 
-  apache::module { "mod_ssl":
+  apache::module { "ssl":
     ensure => present,
-    alias => "ssl",
     require => File["/etc/httpd/conf.d/ssl.conf"],
     notify => Service["apache"],
+  }
+
+  #TODO: transitional resources, remove soon
+  apache::module { "mod_ssl":
+    ensure => absent,
+    require => Apache::Module["ssl"],
+  }
+  file { "/etc/httpd/mods-available/mod_ssl.load":
+    ensure => absent,
+    require => Apache::Module["mod_ssl"],
   }
 
 }
