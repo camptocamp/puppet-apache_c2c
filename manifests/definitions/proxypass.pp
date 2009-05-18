@@ -1,4 +1,4 @@
-define apache::proxypass ($ensure, $location, $url, $vhost) {
+define apache::proxypass ($ensure="present", $location, $url, $vhost) {
 
   case $operatingsystem {
     redhat : {
@@ -16,5 +16,6 @@ define apache::proxypass ($ensure, $location, $url, $vhost) {
     ensure => $ensure,
     content => template("apache/proxypass.erb"),
     notify  => Service["${wwwpkgname}"],
+    require => Apache::Vhost[$vhost],
   }
 }
