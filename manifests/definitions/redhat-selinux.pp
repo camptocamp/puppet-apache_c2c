@@ -26,7 +26,7 @@ define apache::redhat::selinux() {
       }
     }
 
-    php, perl: {
+    php, php4, php5, perl, wsgi, python: {
       if defined(Selboolean["httpd_builtin_scripting"]) { }
       else {
         selboolean { ["httpd_builtin_scripting", "httpd_can_network_connect_db"]:
