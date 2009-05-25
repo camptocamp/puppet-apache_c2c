@@ -18,7 +18,7 @@ define apache::webdav::instance ($ensure=present, $vhost, $purge='5', $directory
       }
     }
     'absent' :{
-      exec {"Creating dav basedir for ${name}":
+      exec {"Removing dav basedir for ${name}":
         command => "rm -rf $davdir",
         onlyif => "test -d $davdir",
         require => File["/var/www/${vhost}/conf/webdav${clean_name}.conf"],
