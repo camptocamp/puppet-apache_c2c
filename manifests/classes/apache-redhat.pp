@@ -91,7 +91,7 @@ class apache::redhat inherits apache::base {
       5 => "puppet:///apache//etc/httpd/mods-available/redhat5/",
     },
     recurse => true,
-    mode => 755,
+    mode => 644,
     owner => "root",
     group => "root",
     seltype => "httpd_config_t",
