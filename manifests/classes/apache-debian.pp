@@ -60,10 +60,15 @@ class apache::debian inherits apache::base {
     require => File["/var/www/html"],
   }
 
-  line {"set ServerName":
-    ensure => present,
-    line => "ServerName 127.0.1.1",
-    file => "/etc/apache2/ports.conf",
+  file { "/etc/apache2/conf.d/servername.conf":
+    content => "ServerName ${fqdn}\n",
+    notify  => Service["apache"],
+    require => Package["apache"],
+  }
+
+  #TODO: remove once deployed everywhere
+  exec { "sed -i '/^ServerName/d' /etc/apache2/ports.conf":
+    onlyif  => "grep -q ServerName /etc/apache2/ports.conf",
     notify  => Service["apache"],
     require => Package["apache"],
   }
