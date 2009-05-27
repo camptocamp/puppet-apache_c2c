@@ -2,14 +2,14 @@
 
 <VirtualHost *:80>
   ServerAdmin sysadmin@camptocamp.com
-  DocumentRoot /var/www
+  DocumentRoot /var/www/html
 
   <Directory />
     Options FollowSymLinks
     AllowOverride None
   </Directory>
 
-  <Directory /var/www/>
+  <Directory /var/www/html/>
     Options Indexes FollowSymLinks MultiViews
     AllowOverride None
     Order allow,deny

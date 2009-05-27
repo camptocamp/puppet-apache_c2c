@@ -45,12 +45,19 @@ class apache::debian inherits apache::base {
   }
 
   file {"/var/www/index.html":
+    ensure => absent,
+  }
+  file {"/var/www/html":
+    ensure => directory,
+    require => File["/var/www"],
+  }
+  file {"/var/www/html/index.html":
     ensure  => present,
     owner   => "root",
     group   => "root",
     mode    => 644,
     content => "<html><body><h1>It works!</h1></body></html>\n",
-    require => File["/var/www"],
+    require => File["/var/www/html"],
   }
 
   line {"set ServerName":
