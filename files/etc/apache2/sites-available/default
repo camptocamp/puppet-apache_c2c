@@ -2,8 +2,8 @@
 
 NameVirtualHost *:80
 <VirtualHost *:80>
-  ServerAdmin sysadmin@camptocamp.com
   DocumentRoot /var/www/html
+  ServerName localhost
 
   <Directory />
     Options FollowSymLinks
