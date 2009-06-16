@@ -1,5 +1,5 @@
 # file managed by puppet
-/var/www/*/logs/*.log {
+/var/www/*/logs/*.log /var/log/apache2/*log {
         weekly
         missingok
         rotate 52
