@@ -2,6 +2,14 @@ define apache::proxypass ($ensure="present", $location, $url, $vhost) {
 
   $fname = regsubst($name, "\s", "_", "G")
 
+  if defined(Apache::Module["proxy"]) {} else {
+    apache::module {"proxy": }
+  }
+
+  if defined(Apache::Module["proxy_http"]) {} else {
+    apache::module {"proxy_http": }
+  }
+
   case $operatingsystem {
     redhat : {
       $wwwroot = "/var/www/vhosts"
