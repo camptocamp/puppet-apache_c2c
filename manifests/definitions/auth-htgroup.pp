@@ -25,7 +25,6 @@ define apache::auth::htgroup (
     'present': {
       exec {"! test -f $_authGroupFile && OPT='-c'; htgroup \$OPT $_authGroupFile $groupname $members":
         unless => "grep -q $groupname $_authGroupFile",
-        require => File[$groupFileLocation],
       }
     }
 
