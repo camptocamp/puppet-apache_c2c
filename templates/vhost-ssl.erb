@@ -24,6 +24,8 @@
     AddHandler cgi-script .cgi
   </Directory>
 
+  ServerSignature Off
+
 </VirtualHost>
 
 <VirtualHost <%= ip_address %>:443>
@@ -60,5 +62,7 @@
     Options +ExecCGI
     AddHandler cgi-script .cgi
   </Directory>
+
+  ServerSignature Off
 
 </VirtualHost>
