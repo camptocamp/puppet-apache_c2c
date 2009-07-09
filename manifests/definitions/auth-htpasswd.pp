@@ -35,14 +35,12 @@ define apache::auth::htpasswd (
       if $md5Password {
         exec {"! test -f $_authUserFile && OPT='-c'; htpasswd -bp \$OPT $_authUserFile $username '$md5Password'":
           unless => "grep -q $username $_authUserFile",
-          require => File[$userFileLocation],
         }
       }
 
       if $clearPassword {
         exec {"! test -f $_authUserFile && OPT='-c'; htpasswd -bm \$OPT $_authUserFile $username $clearPassword":
           unless => "grep -q $username $_authUserFile",
-          require => File[$userFileLocation],
         }
       }
     }
