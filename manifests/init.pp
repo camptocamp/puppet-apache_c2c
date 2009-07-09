@@ -16,3 +16,10 @@ class apache::ssl inherits apache {
     default: { notice "Unsupported operatingsystem ${operatingsystem}" }
   }
 }
+
+class apache::webdav::ssl inherits apache::ssl {
+  case $operatingsystem {
+    Debian:  { include apache::webdav::ssl::debian}
+    default: { notice "Unsupported operatingsystem ${operatingsystem}" }
+  }
+}
