@@ -1,0 +1,8 @@
+# file managed by puppet
+
+<Location <%= location %>>
+  AuthName "<%= authname %>"
+  AuthType Basic
+  AuthUserFile <%= _authUserFile %>
+  Require <%= _users %>
+</Location>
