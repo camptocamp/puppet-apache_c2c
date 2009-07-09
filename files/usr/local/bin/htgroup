@@ -1,0 +1,55 @@
+#!/bin/sh
+
+usage () {
+        cat >&2 <<END
+Usage:
+        htgroup [-c] groupfile groupname userid [userid] ...
+        htgroup -D groupfile groupname
+
+ -c  Create a new file.
+ -D  Delete the specified group.
+
+END
+
+exit 0
+
+}
+
+create () {
+        test $# -lt 3 && usage
+        filename=$1;groupname=$2;shift 2;members=$@
+        echo "$groupname: $members" > $filename
+}
+
+update () {
+        test $# -lt 3 && usage
+        filename=$1;groupname=$2;shift 2;members=$@
+
+        if [ ! -f $filename ]; then
+                echo "htgroup: file $filename not found; use '-c' to create it"; exit 0
+        fi
+
+        if ( grep -q "^$groupname" $filename ); then    
+                sed -i "s/^$groupname:.*/$groupname: $members/" $filename
+        else
+                echo "$groupname: $members" >> $filename
+        fi
+}
+
+delete () {
+        test $# -lt 2 && usage
+        filename=$1;groupname=$2;shift 2;members=$@
+        if ( grep -q "^$groupname" $filename ); then
+                sed -i "/^$groupname:.*/d" $filename
+        else
+                echo "$groupname not found !"; exit 0
+        fi
+}
+
+case "$1" in
+        -h|--help) usage;;
+        -c) shift; create $@;;
+        -D) shift; delete $@;;
+         *) update $@;;
+esac
+

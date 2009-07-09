@@ -74,4 +74,12 @@ class apache::base {
     onlyif => "apache2ctl configtest",
   }
 
+  file {"/usr/local/bin/htgroup":
+    ensure => present,
+    owner => root,
+    group => root,
+    mode => 755,
+    source => "puppet:///apache/usr/local/bin/htgroup",
+  }
+
 }
