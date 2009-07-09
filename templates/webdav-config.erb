@@ -1,6 +1,5 @@
-# file managed by puppet
-Alias <%=name%> <%=davdir%>
-<Location <%= name %>>
+Alias /<%=name%> <%=davdir%>
+<Location /<%= name %>>
   DAV On
   DavMinTimeout 600
   Options +Indexes
