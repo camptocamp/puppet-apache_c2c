@@ -8,18 +8,16 @@ define apache::auth::htpasswd (
   $clearPassword=false){
  
   if $userFileLocation {
-    if defined(File[$userFileLocation]) {
-      $_authUserFile = "${userFileLocation}/${userFileName}"
-    } else {
-      fail "location $userFileLocation is not defined !"
-    } 
+    $_userFileLocation = $userFileLocation
   } else {
     if $vhost {
-      $_authUserFile = "/var/www/${vhost}/private/${userFileName}"
+      $_userFileLocation = "/var/www/${vhost}/private"
     } else {
       fail "parameter vhost is require !"
     }
   }
+  
+  $_authUserFile = "${_userFileLocation}/${userFileName}"
   
   case $ensure {
 
@@ -35,12 +33,14 @@ define apache::auth::htpasswd (
       if $md5Password {
         exec {"! test -f $_authUserFile && OPT='-c'; htpasswd -bp \$OPT $_authUserFile $username '$md5Password'":
           unless => "grep -q $username $_authUserFile",
+          require => File[$_userFileLocation],
         }
       }
 
       if $clearPassword {
         exec {"! test -f $_authUserFile && OPT='-c'; htpasswd -bm \$OPT $_authUserFile $username $clearPassword":
           unless => "grep -q $username $_authUserFile",
+          require => File[$_userFileLocation],
         }
       }
     }

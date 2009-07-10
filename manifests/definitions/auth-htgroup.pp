@@ -5,26 +5,25 @@ define apache::auth::htgroup (
   $groupFileName="htgroup",
   $groupname,
   $members){
- 
+
   if $groupFileLocation {
-    if defined(File[$groupFileLocation]) {
-      $_authGroupFile = "${groupFileLocation}/${groupFileName}"
-    } else {
-      fail "location $groupFileLocation is not defined !"
-    } 
+    $_groupFileLocation = $groupFileLocation
   } else {
     if $vhost {
-      $_authGroupFile = "/var/www/${vhost}/private/${groupFileName}"
+      $_groupFileLocation = "/var/www/${vhost}/private"
     } else {
       fail "parameter vhost is require !"
-    }
+    }  
   }
+
+  $_authGroupFile = "${_groupFileLocation}/${groupFileName}"
   
   case $ensure {
 
     'present': {
       exec {"! test -f $_authGroupFile && OPT='-c'; htgroup \$OPT $_authGroupFile $groupname $members":
         unless => "grep -q $groupname $_authGroupFile",
+        require => File[$_groupFileLocation],
       }
     }
 
