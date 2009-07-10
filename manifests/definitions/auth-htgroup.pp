@@ -30,10 +30,10 @@ define apache::auth::htgroup (
     'absent': {
       exec {"htgroup -D $_authGroupFile $groupname":
         onlyif => "grep -q $groupname $_authGroupFile",
-        notify => Exec["delete $_authGroupFile if empty"],
+        notify => Exec["delete $_authGroupFile after remove $groupname"],
       }
 
-      exec {"delete $_authGroupFile if empty":
+      exec {"delete $_authGroupFile after remove $groupname":
         command => "rm -f $_authGroupFile",
         onlyif => "wc -l $_authGroupFile |grep -q 0",
         refreshonly => true,

@@ -48,10 +48,10 @@ define apache::auth::htpasswd (
     'absent': {
       exec {"htpasswd -D $_authUserFile $username":
         onlyif => "grep -q $username $_authUserFile",
-        notify => Exec["delete $_authUserFile if empty"],
+        notify => Exec["delete $_authUserFile after remove $username"],
       }
 
-      exec {"delete $_authUserFile if empty":
+      exec {"delete $_authUserFile after remove $username":
         command => "rm -f $_authUserFile",
         onlyif => "wc -l $_authUserFile |grep -q 0",
         refreshonly => true,
