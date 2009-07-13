@@ -69,5 +69,10 @@ class apache::debian inherits apache::base {
     notify  => Service["apache"],
     require => Package["apache"],
   }
+  
+  file {"/etc/apache2/sites-available/default-ssl":
+    ensure => absent,
+    force => true,
+  }
     
 }
