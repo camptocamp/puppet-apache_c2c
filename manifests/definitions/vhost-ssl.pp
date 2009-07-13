@@ -14,7 +14,8 @@ define apache::vhost-ssl (
   $cert="apache.pem",
   $certkey="absent",
   $cacert="absent",
-  $certchain="absent"
+  $certchain="absent",
+  $sslonly=false
 ) {
 
   case $operatingsystem {
@@ -24,6 +25,7 @@ define apache::vhost-ssl (
         default => $user,
       }
       $wwwroot = "/var/www/vhosts"
+      $confroot = "/etc/httpd"
     }
     debian : {
       $wwwuser =  $user ? {
@@ -31,15 +33,19 @@ define apache::vhost-ssl (
         default => $user,
       }
       $wwwroot = "/var/www"
+      $confroot = "/etc/apache2"
     }
     default : { fail "Unsupported operatingsystem ${operatingsystem}" }
   }    
-
+  
   apache::vhost {$name:
     ensure         => $ensure,
     config_file    => $config_file,
     config_content => $config_content ? {
-      false        => template("apache/vhost-ssl.erb"),
+      false => $sslonly ? {
+        true => template("apache/vhost-ssl.erb"),
+        default => template("apache/vhost.erb", "apache/vhost-ssl.erb"),
+      },
       default      => $config_content,
     },
     aliases        => $aliases,
@@ -51,6 +57,17 @@ define apache::vhost-ssl (
     group          => $group,
     mode           => $mode,
     aliases        => $aliases,
+  }
+
+  if $sslonly {
+    exec { "disable default site":
+      command => $operatingsystem ? {
+        Debian => "/usr/sbin/a2dissite default",
+        RedHat => "/usr/local/sbin/a2dissite 000-default",
+      },
+      onlyif => "/usr/bin/test -L ${confroot}/sites-enabled/000-default",
+      notify => Exec["apache-graceful"],
+    }
   }
 
   if $ensure == "present" {
