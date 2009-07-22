@@ -6,12 +6,18 @@ define apache::auth::htpasswd (
   $username,
   $md5Password=false,
   $clearPassword=false){
+
+   case $operatingsystem {
+    redhat : { $wwwroot = "/var/www/vhosts" }
+    debian : { $wwwroot = "/var/www" }
+    default : { fail "Unsupported operatingsystem ${operatingsystem}" }
+  } 
  
   if $userFileLocation {
     $_userFileLocation = $userFileLocation
   } else {
     if $vhost {
-      $_userFileLocation = "/var/www/${vhost}/private"
+      $_userFileLocation = "${wwwroot}/${vhost}/private"
     } else {
       fail "parameter vhost is require !"
     }

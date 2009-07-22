@@ -6,11 +6,17 @@ define apache::auth::htgroup (
   $groupname,
   $members){
 
+  case $operatingsystem {
+    redhat : { $wwwroot = "/var/www/vhosts" }
+    debian : { $wwwroot = "/var/www" }
+    default : { fail "Unsupported operatingsystem ${operatingsystem}" }
+  }
+
   if $groupFileLocation {
     $_groupFileLocation = $groupFileLocation
   } else {
     if $vhost {
-      $_groupFileLocation = "/var/www/${vhost}/private"
+      $_groupFileLocation = "${wwwroot}/${vhost}/private"
     } else {
       fail "parameter vhost is require !"
     }  

@@ -5,6 +5,12 @@ define apache::auth::basic::file::user (
   $location="/",
   $authUserFile=false,
   $users="valid-user"){
+
+  case $operatingsystem {
+    redhat : { $wwwroot = "/var/www/vhosts" }
+    debian : { $wwwroot = "/var/www" }
+    default : { fail "Unsupported operatingsystem ${operatingsystem}" }
+  }
  
   if defined(Apache::Module["authn_file"]) {} else {
     apache::module {"authn_file": }
@@ -13,7 +19,7 @@ define apache::auth::basic::file::user (
   if $authUserFile {
     $_authUserFile = $authUserFile
   } else {
-    $_authUserFile = "/var/www/${vhost}/private/htpasswd"
+    $_authUserFile = "${wwwroot}/${vhost}/private/htpasswd"
   }
 
   if $users != "valid-user" {
@@ -22,7 +28,7 @@ define apache::auth::basic::file::user (
     $_users = $users
   }
 
-  file {"/var/www/${vhost}/conf/auth-basic-file-user-${name}.conf":
+  file {"${wwwroot}/${vhost}/conf/auth-basic-file-user-${name}.conf":
     ensure => $ensure,
     content => template("apache/auth-basic-file-user.erb"),
     notify => Exec["apache-graceful"],
