@@ -15,7 +15,9 @@ http://httpd.apache.org/docs/2.2/howto/auth.html
 The main advantages of this new way to manage authentication are the possibility 
 of sharing resources between virtual hosts and access restrictions
 
-Simple Basic File Authentication :
+######################################
+## Simple Basic File Authentication ##
+######################################
 
 Example:
 
@@ -58,4 +60,19 @@ Example:
     authUserFile => "/srv/dav0/htpasswd",
     users => "user1", # it not defined -> 'valid-user'
   }
+
+###############################
+## Basic LDAP Authentication ##
+###############################
+
+Example:
+
+apache::auth::basic::ldap {"collectd":
+  vhost => $fqdn,
+  location => "/collection3",
+  authLDAPUrl => 'ldap://ldap.foobar.ch/c=ch?uid??',
+  authLDAPGroupAttribute => "memberUid",
+  authLDAPGroupAttributeIsDN => "off",
+  authzRequire => "ldap-group ou=foo,ou=bar,o=entreprises,c=ch",
+}
 
