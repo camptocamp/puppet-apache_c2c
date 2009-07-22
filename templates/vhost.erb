@@ -2,9 +2,9 @@
 <VirtualHost *:80>
   ServerName <%= name %>
 
-  <% aliases.each do |serveralias| %>
+<% aliases.each do |serveralias| -%>
   ServerAlias <%= serveralias %>
-  <% end %>
+<% end -%>
 
   DocumentRoot <%= wwwroot %>/<%= name %>/htdocs
 

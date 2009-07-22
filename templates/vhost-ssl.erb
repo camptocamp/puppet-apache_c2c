@@ -2,9 +2,9 @@
 <VirtualHost <%= ip_address %>:443>
   ServerName <%= name %>
 
-  <% aliases.each do |serveralias| %>
+<% aliases.each do |serveralias| -%>
   ServerAlias <%= serveralias %>
-  <% end %>
+<% end -%>
 
   DocumentRoot <%= wwwroot %>/<%= name %>/htdocs
 
@@ -17,15 +17,15 @@
 
   SSLEngine On
   SSLCertificateFile <%= wwwroot %>/<%= name %>/ssl/<%= cert %>
-  <% if certkey != "absent" %>
+<% if certkey != "absent" -%>
   SSLCertificateKeyFile <%= wwwroot %>/<%= name %>/ssl/<%= certkey %>
-  <% end %>
-  <% if cacert != "absent" %>
+<% end -%>
+<% if cacert != "absent" -%>
   SSLCACertificateFile <%= wwwroot %>/<%= name %>/ssl/<%= cacert %>
-  <% end %>
-  <% if certchain != "absent" %>
+<% end -%>
+<% if certchain != "absent" -%>
   SSLCertificateChainFile <%= wwwroot %>/<%= name %>/ssl/<%= certchain %>
-  <% end %>
+<% end -%>
 
   # CGI scripts
   ScriptAlias /cgi-bin/ <%= wwwroot %>/<%= name %>/cgi-bin/
