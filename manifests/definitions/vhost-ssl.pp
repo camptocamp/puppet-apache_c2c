@@ -25,7 +25,7 @@ define apache::vhost-ssl (
         default => $user,
       }
       $wwwroot = "/var/www/vhosts"
-      $confroot = "/etc/httpd"
+      $wwwconf = "/etc/httpd"
     }
     debian : {
       $wwwuser =  $user ? {
@@ -33,7 +33,7 @@ define apache::vhost-ssl (
         default => $user,
       }
       $wwwroot = "/var/www"
-      $confroot = "/etc/apache2"
+      $wwwconf = "/etc/apache2"
     }
     default : { fail "Unsupported operatingsystem ${operatingsystem}" }
   }    
@@ -57,15 +57,19 @@ define apache::vhost-ssl (
     group          => $group,
     mode           => $mode,
     aliases        => $aliases,
+    enable_default => $sslonly ? {
+      true => false,
+      default => true,
+    }
   }
 
   if $sslonly {
     exec { "disable default site":
       command => $operatingsystem ? {
         Debian => "/usr/sbin/a2dissite default",
-        RedHat => "/usr/local/sbin/a2dissite 000-default",
+        RedHat => "/usr/local/sbin/a2dissite default",
       },
-      onlyif => "/usr/bin/test -L ${confroot}/sites-enabled/000-default",
+      onlyif => "/usr/bin/test -L ${wwwconf}/sites-enabled/000-default",
       notify => Exec["apache-graceful"],
     }
   }

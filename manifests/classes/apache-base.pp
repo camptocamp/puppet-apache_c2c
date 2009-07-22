@@ -61,13 +61,6 @@ class apache::base {
     mode => 644,
   }
 
-  file {"enable default virtualhost":
-    path => "/etc/apache2/sites-enabled/000-default",
-    ensure => "/etc/apache2/sites-available/default",
-    require => [Package["apache"], File["default virtualhost"]],
-    notify => Exec["apache-graceful"],
-  }
-
   exec { "apache-graceful":
     command => "apache2ctl graceful",
     refreshonly => true,

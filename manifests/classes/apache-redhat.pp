@@ -9,11 +9,6 @@ class apache::redhat inherits apache::base {
   File["log directory"] { path => "/var/log/httpd" }
   File["root directory"] { path => "/var/www/vhosts" }
   File["cgi-bin directory"] { path => "/var/www/cgi-bin" }
-  
-  File["enable default virtualhost"] { 
-    ensure => "/etc/httpd/sites-available/default",
-    path => "/etc/httpd/sites-enabled/000-default",
-  }
 
   File["logrotate configuration"] { 
     path => "/etc/logrotate.d/httpd",

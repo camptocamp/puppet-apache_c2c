@@ -9,7 +9,8 @@ define apache::vhost (
   $admin="",
   $group="root",
   $mode=2570,
-  $aliases=[]
+  $aliases=[],
+  $enable_default=true
 ) {
 
   case $operatingsystem {
@@ -33,6 +34,18 @@ define apache::vhost (
     }
     default : { fail "Unsupported operatingsystem ${operatingsystem}" }
   }    
+
+  # check if default virtual host is enabled
+  if $enable_default {
+    exec { "check if default virtual host is enabled for $name":
+      command => $operatingsystem ? {
+        Debian => "/usr/sbin/a2ensite default",
+        RedHat => "/usr/local/sbin/a2ensite default",
+      },
+      unless => "/usr/bin/test -L ${wwwconf}/sites-enabled/000-default",
+      notify => Exec["apache-graceful"],
+    }
+  }
 
   case $ensure {
     present: {
