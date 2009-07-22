@@ -3,6 +3,7 @@
 <Location <%= location %>>
   AuthName "<%= authname %>"
   AuthType Basic
+  AuthBasicProvider file
   AuthUserFile <%= _authUserFile %>
   Require <%= _users %>
 </Location>
