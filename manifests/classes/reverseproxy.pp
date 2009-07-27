@@ -17,7 +17,7 @@ class apache::reverseproxy {
   </Proxy>
 </IfModule>
 ",
-    notify  => Service["apache"],
+    notify  => Exec["apache-graceful"],
     require => Package["apache"],
   }
 

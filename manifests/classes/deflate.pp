@@ -23,7 +23,7 @@ class apache::deflate {
   BrowserMatch Safari no-gzip
 </IfModule>
 ",
-    notify  => Service["apache"],
+    notify  => Exec["apache-graceful"],
     require => Package["apache"],
   }
 

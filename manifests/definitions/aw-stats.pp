@@ -23,7 +23,7 @@ define apache::aw-stats($ensure=present) {
     owner   => root,
     group   => root,
     source  => "puppet:///apache/${conf}",
-    notify  => Service["apache"],
+    notify  => Exec["apache-graceful"],
     require => File["${wwwroot}/${name}/conf"],
   }
 }

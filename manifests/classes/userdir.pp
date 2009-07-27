@@ -37,7 +37,7 @@ class apache::userdir {
   # Disable global userdir activation
   file {"/etc/apache2/mods-enabled/userdir.conf":
     ensure => absent,
-    notify => Service["apache"],
+    notify => Exec["apache-graceful"],
   }
 
 }

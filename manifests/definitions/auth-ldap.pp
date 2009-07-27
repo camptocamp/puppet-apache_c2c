@@ -17,7 +17,7 @@ define apache::auth::ldap ($ensure="present", $authname="Private Area", $vhost, 
   file {"${wwwroot}/${vhost}/conf/${name}.conf":
     ensure  => $ensure,
     content => template("apache/auth-ldap.erb"),
-    notify  => Service["apache"],
+    notify  => Exec["apache-graceful"],
   }
 
 }

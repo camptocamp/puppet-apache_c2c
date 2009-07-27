@@ -5,7 +5,7 @@ define apache::webdav::svn ($ensure, $vhost, $parentPath, $confname) {
   file {"/var/www/${vhost}/conf/${confname}.conf":
     ensure  => $ensure,
     content => template("apache/webdav-svn.erb"),
-    notify  => Service["apache2"],
+    notify  => Exec["apache-graceful"],
   }
 
 }

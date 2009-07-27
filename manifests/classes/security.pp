@@ -11,7 +11,7 @@ class apache::security {
       file { "/etc/httpd/conf.d/mod_security.conf":
         ensure => absent,
         require => Package["mod_security"],
-        notify => Service["apache"],
+        notify => Exec["apache-graceful"],
       }
     }
 

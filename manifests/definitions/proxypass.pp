@@ -23,7 +23,7 @@ define apache::proxypass ($ensure="present", $location, $url, $vhost) {
   file{"${wwwroot}/${vhost}/conf/proxypass-${fname}.conf":
     ensure => $ensure,
     content => template("apache/proxypass.erb"),
-    notify  => Service["apache"],
+    notify  => Exec["apache-graceful"],
     require => Apache::Vhost[$vhost],
   }
 }

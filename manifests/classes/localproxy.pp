@@ -29,6 +29,6 @@ class apache::localproxy {
 # NOTE: this file must be parsed by apache AFTER modsecurity rule definitions !
 SecRuleRemoveByMsg \"Proxy access attempt\"\n",
     require => Package["apache"],
-    notify => Service["apache"],
+    notify => Exec["apache-graceful"],
   }
 }
