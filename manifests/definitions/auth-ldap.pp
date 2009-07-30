@@ -1,5 +1,7 @@
 define apache::auth::ldap ($ensure="present", $authname="Private Area", $vhost, $ldapUrl, $location) {
 
+  $fname = regsubst($name, "\s", "_", "G")
+
   case $operatingsystem {
     redhat : { $wwwroot = "/var/www/vhosts" }
     debian : { $wwwroot = "/var/www" }
@@ -14,7 +16,7 @@ define apache::auth::ldap ($ensure="present", $authname="Private Area", $vhost, 
     apache::module {"authnz_ldap": }
   }
 
-  file {"${wwwroot}/${vhost}/conf/${name}.conf":
+  file {"${wwwroot}/${vhost}/conf/${fname}.conf":
     ensure  => $ensure,
     content => template("apache/auth-ldap.erb"),
     notify  => Exec["apache-graceful"],

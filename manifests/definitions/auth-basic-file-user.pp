@@ -6,6 +6,8 @@ define apache::auth::basic::file::user (
   $authUserFile=false,
   $users="valid-user"){
 
+  $fname = regsubst($name, "\s", "_", "G")
+
   case $operatingsystem {
     redhat : { $wwwroot = "/var/www/vhosts" }
     debian : { $wwwroot = "/var/www" }
@@ -28,7 +30,7 @@ define apache::auth::basic::file::user (
     $_users = $users
   }
 
-  file {"${wwwroot}/${vhost}/conf/auth-basic-file-user-${name}.conf":
+  file {"${wwwroot}/${vhost}/conf/auth-basic-file-user-${fname}.conf":
     ensure => $ensure,
     content => template("apache/auth-basic-file-user.erb"),
     notify => Exec["apache-graceful"],

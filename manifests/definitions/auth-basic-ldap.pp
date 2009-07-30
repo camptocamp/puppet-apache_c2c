@@ -16,6 +16,8 @@ define apache::auth::basic::ldap (
   $authzLDAPAuthoritative=false,
   $authzRequire="valid-user"){
 
+  $fname = regsubst($name, "\s", "_", "G")
+
   case $operatingsystem {
     redhat : { $wwwroot = "/var/www/vhosts" }
     debian : { $wwwroot = "/var/www" }
@@ -30,7 +32,7 @@ define apache::auth::basic::ldap (
     apache::module {"authnz_ldap": }
   }
 
-  file {"${wwwroot}/${vhost}/conf/auth-basic-ldap-${name}.conf":
+  file {"${wwwroot}/${vhost}/conf/auth-basic-ldap-${fname}.conf":
     ensure => $ensure,
     content => template("apache/auth-basic-ldap.erb"),
     notify => Exec["apache-graceful"],

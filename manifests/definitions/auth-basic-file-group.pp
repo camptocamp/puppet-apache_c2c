@@ -7,6 +7,8 @@ define apache::auth::basic::file::group (
   $authGroupFile=false,
   $groups){
 
+  $fname = regsubst($name, "\s", "_", "G")
+
   case $operatingsystem {
     redhat : { $wwwroot = "/var/www/vhosts" }
     debian : { $wwwroot = "/var/www" }
@@ -29,7 +31,7 @@ define apache::auth::basic::file::group (
     $_authGroupFile = "${wwwroot}/${vhost}/private/htgroup"
   }
 
-  file {"${wwwroot}/${vhost}/conf/auth-basic-file-group-${name}.conf":
+  file {"${wwwroot}/${vhost}/conf/auth-basic-file-group-${fname}.conf":
     ensure => $ensure,
     content => template("apache/auth-basic-file-group.erb"),
     notify => Exec["apache-graceful"],
