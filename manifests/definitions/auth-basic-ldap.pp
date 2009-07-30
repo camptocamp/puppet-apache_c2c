@@ -22,6 +22,10 @@ define apache::auth::basic::ldap (
     default : { fail "Unsupported operatingsystem ${operatingsystem}" }
   }
 
+  if defined(Apache::Module["ldap"]) {} else {
+    apache::module {"ldap": }
+  }
+
   if defined(Apache::Module["mod_authnz_ldap"]) {} else {
     apache::module {"authnz_ldap": }
   }
