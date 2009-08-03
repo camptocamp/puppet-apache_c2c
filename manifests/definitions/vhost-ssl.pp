@@ -89,6 +89,7 @@ define apache::vhost-ssl (
       exec { "generate-ssl-cert-$name":
         command => "/usr/local/sbin/generate-ssl-cert.sh $name /etc/ssl/ssleay.cnf ${wwwroot}/${name}/ssl/apache.pem",
         creates => "${wwwroot}/${name}/ssl/apache.pem",
+        notify  => Exec["apache-graceful"],
         require => [
           File["${wwwroot}/${name}/ssl"],
           File["/usr/local/sbin/generate-ssl-cert.sh"],
@@ -99,7 +100,7 @@ define apache::vhost-ssl (
       file { "${wwwroot}/${name}/ssl/apache.pem":
         owner => "root",
         group => "root",
-        mode  => 750,
+        mode  => 640,
         seltype => "cert_t",
         require => [File["${wwwroot}/${name}/ssl"], Exec["generate-ssl-cert-$name"]],
       }
