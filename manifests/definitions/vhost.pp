@@ -59,7 +59,7 @@ define apache::vhost (
           default => undef,
         },
         require => Package["$wwwpkgname"],
-        notify  => Service["$wwwpkgname"],
+        notify  => Exec["apache-graceful"],
       }
 
       file {"${wwwroot}/${name}":
