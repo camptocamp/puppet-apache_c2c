@@ -4,13 +4,6 @@ class apache::deflate {
     ensure => present,
   }
 
-  #TODO: remove soon
-  file { ["/etc/apache2/conf.d/deflate-javascript.conf",
-          "/etc/apache2/conf.d/deflate-css.conf"]:
-    ensure  => absent,
-    require => File["deflate.conf"],
-  }
-
   file { "deflate.conf":
     ensure => present,
     path => $operatingsystem ? {

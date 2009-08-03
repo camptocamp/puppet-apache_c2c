@@ -5,9 +5,9 @@ define apache::module ($ensure='present') {
       $wwwconf = "/etc/httpd"
       $a2enmod_deps = [Package["apache"], File["/etc/httpd/mods-available"], File["/etc/httpd/mods-enabled"]]
 
-      #TODO: wrap around around "if $selinux" or whatever, once we have facter
-      # 1.6.0 (http://projects.reductivelabs.com/issues/1327)
-      apache::redhat::selinux {$name: }
+      if $selinux == "true" {
+        apache::redhat::selinux {$name: }
+      }
     }
     debian :  {
       $wwwconf = "/etc/apache2"
