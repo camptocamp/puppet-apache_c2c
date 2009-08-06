@@ -44,6 +44,7 @@ define apache::vhost (
       },
       unless => "/usr/bin/test -L ${wwwconf}/sites-enabled/000-default",
       notify => Exec["apache-graceful"],
+      require => Package["apache"],
     }
   }
 
