@@ -9,7 +9,9 @@
     create 644 root adm
     sharedscripts
     prerotate
-        test -x /etc/cron.hourly/awstats && /etc/cron.hourly/awstats
+        if [ -x /etc/cron.hourly/awstats ]; then
+            /etc/cron.hourly/awstats || true
+        fi
     endscript
     postrotate
         if [ -f /var/run/httpd.pid ]; then
