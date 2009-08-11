@@ -28,14 +28,14 @@ Example:
     userFileLocation => "/srv/a/path",
     userFileName => "htpasswd",
     username => "user1",
-    clearPassword => "user1", # use MD5 encryption in definition
+    clearPassword => "user1", # use encryption in definition
   }
 
   apache::auth::htpasswd {"user2 in /var/www/camptocamp.com/private/htpasswd":
     ensure => present,
     vhost => "camptocamp.com"
     username => "user2",
-    md5Password => 'kdrY191UyPY3E', # (htpasswd -nb user2 user2)
+    cryptPassword => 'kdrY191UyPY3E', # (htpasswd -ndb user2 user2)
   }
  
 2. create one or more groups :

@@ -4,7 +4,7 @@ define apache::auth::htpasswd (
   $userFileLocation=false,
   $userFileName="htpasswd",
   $username,
-  $md5Password=false,
+  $cryptPassword=false,
   $clearPassword=false){
 
    case $operatingsystem {
@@ -28,24 +28,24 @@ define apache::auth::htpasswd (
   case $ensure {
 
     'present': {
-      if $md5Password and $clearPassword {
-        fail "choose only one of md5Password OR clearPassword !"
+      if $cryptPassword and $clearPassword {
+        fail "choose only one of cryptPassword OR clearPassword !"
       }
 
-      if !$md5Password and !$clearPassword  {
-        fail "choose one of md5Password OR clearPassword !"
+      if !$cryptPassword and !$clearPassword  {
+        fail "choose one of cryptPassword OR clearPassword !"
       }
 
-      if $md5Password {
-        exec {"! test -f $_authUserFile && OPT='-c'; htpasswd -bp \$OPT $_authUserFile $username '$md5Password'":
-          unless => "grep -q $username $_authUserFile",
+      if $cryptPassword {
+        exec {"! test -f $_authUserFile && OPT='-c'; htpasswd -bp \$OPT $_authUserFile $username '$cryptPassword'":
+          unless => "grep -q ${username}:${cryptPassword} $_authUserFile",
           require => File[$_userFileLocation],
         }
       }
 
       if $clearPassword {
-        exec {"! test -f $_authUserFile && OPT='-c'; htpasswd -bm \$OPT $_authUserFile $username $clearPassword":
-          unless => "grep -q $username $_authUserFile",
+        exec {"! test -f $_authUserFile && OPT='-c'; htpasswd -b \$OPT $_authUserFile $username $clearPassword":
+          unless => "grep $username $_authUserFile && grep ${username}:\$(mkpasswd -S \$(grep $username $_authUserFile |cut -d : -f 2 |cut -c-2) $clearPassword) $_authUserFile",
           require => File[$_userFileLocation],
         }
       }
