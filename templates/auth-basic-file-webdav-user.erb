@@ -1,0 +1,13 @@
+# file managed by puppet
+<Location /<%= name %>>
+  AuthName "Private Area"
+  AuthType Basic
+  AuthBasicProvider file
+  AuthUserFile <%= _authUserFile %>
+  require <%= _users %>
+<% if ro_users -%>
+  <Limit <%= limits %>>
+    require user <%= ro_users %>
+  </Limit>
+<% end -%>
+</Location>
