@@ -20,12 +20,7 @@ class apache::administration {
   common::concatfilepart { "sudoers.apache":
     ensure => present,
     file => "/etc/sudoers",
-    content => "
-# This part comes from modules/apache/manifests/classes/administration.pp
-%apache-admin ALL=(root) /etc/init.d/${wwwpkgname}
-%apache-admin ALL=(root) /bin/su ${wwwuser}, /bin/su - ${wwwuser}
-%apache-admin ALL=(root) ${distro_specific_apache_sudo}
-",
+    content => template("apache/sudoers.apache.erb"),
     require => Group["apache-admin"],
   }
 
