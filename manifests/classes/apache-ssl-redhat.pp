@@ -8,12 +8,14 @@ class apache::ssl::redhat inherits apache::base::ssl {
     ensure => absent,
     require => Package["mod_ssl"],
     notify => Service["apache"],
+    before => Exec["apache-graceful"],
   }
 
   apache::module { "ssl":
     ensure => present,
     require => File["/etc/httpd/conf.d/ssl.conf"],
     notify => Service["apache"],
+    before => Exec["apache-graceful"],
   }
 
 }
