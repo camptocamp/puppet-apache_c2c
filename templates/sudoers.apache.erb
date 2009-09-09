@@ -10,6 +10,6 @@ Cmnd_Alias APACHE_ADMIN = <%= sudo_apache_admin_cmnd %>
 <% else -%>
 Cmnd_Alias APACHE_ADMIN = /etc/init.d/<%= wwwpkgname %>, /bin/su <%= wwwuser %>, /bin/su - <%= wwwuser %>, <%= distro_specific_apache_sudo %>
 <% end -%>
-APACHE_ADMIN ALL=(root) APACHE_ADMIN
+APACHE_ADMIN ALL=(<%= wwwuser %>) ALL : ALL=(root) APACHE_ADMIN
 ##
 
