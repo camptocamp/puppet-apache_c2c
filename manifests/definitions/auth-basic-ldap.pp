@@ -28,7 +28,7 @@ define apache::auth::basic::ldap (
     apache::module {"ldap": }
   }
 
-  if defined(Apache::Module["mod_authnz_ldap"]) {} else {
+  if defined(Apache::Module["authnz_ldap"]) {} else {
     apache::module {"authnz_ldap": }
   }
 
