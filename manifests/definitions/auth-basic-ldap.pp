@@ -35,6 +35,10 @@ define apache::auth::basic::ldap (
   file {"${wwwroot}/${vhost}/conf/auth-basic-ldap-${fname}.conf":
     ensure => $ensure,
     content => template("apache/auth-basic-ldap.erb"),
+    seltype => $operatingsystem ? {
+      "RedHat" => "httpd_config_t",
+      default  => undef,
+    },
     notify => Exec["apache-graceful"],
   }
 

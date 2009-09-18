@@ -17,6 +17,10 @@ define apache::directive ($ensure="present", $directive, $vhost) {
   file{"${wwwroot}/${vhost}/conf/directive-${fname}.conf":
     ensure => $ensure,
     content => "# file managed by puppet\n${directive}\n",
+    seltype => $operatingsystem ? {
+      "RedHat" => "httpd_config_t",
+      default  => undef,
+    },
     notify  => Service["${wwwpkgname}"],
     require => Apache::Vhost[$vhost],
   }

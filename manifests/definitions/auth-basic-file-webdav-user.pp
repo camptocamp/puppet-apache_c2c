@@ -36,6 +36,10 @@ define apache::auth::basic::file::webdav::user (
   file {"${wwwroot}/${vhost}/conf/auth-basic-file-webdav-${fname}.conf":
     ensure => $ensure,
     content => template("apache/auth-basic-file-webdav-user.erb"),
+    seltype => $operatingsystem ? {
+      "RedHat" => "httpd_config_t",
+      default  => undef,
+    },
     notify => Exec["apache-graceful"],
   }
 

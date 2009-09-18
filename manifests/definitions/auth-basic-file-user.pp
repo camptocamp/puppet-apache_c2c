@@ -33,6 +33,10 @@ define apache::auth::basic::file::user (
   file {"${wwwroot}/${vhost}/conf/auth-basic-file-user-${fname}.conf":
     ensure => $ensure,
     content => template("apache/auth-basic-file-user.erb"),
+    seltype => $operatingsystem ? {
+      "RedHat" => "httpd_config_t",
+      default  => undef,
+    },
     notify => Exec["apache-graceful"],
   }
 

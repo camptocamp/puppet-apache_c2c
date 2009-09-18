@@ -19,6 +19,10 @@ define apache::auth::ldap ($ensure="present", $authname="Private Area", $vhost, 
   file {"${wwwroot}/${vhost}/conf/${fname}.conf":
     ensure  => $ensure,
     content => template("apache/auth-ldap.erb"),
+    seltype => $operatingsystem ? {
+      "RedHat" => "httpd_config_t",
+      default  => undef,
+    },
     notify  => Exec["apache-graceful"],
   }
 

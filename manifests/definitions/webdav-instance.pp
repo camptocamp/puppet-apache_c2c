@@ -23,7 +23,12 @@ define apache::webdav::instance ($ensure=present, $vhost, $directory=false) {
   file {"${wwwroot}/${vhost}/conf/webdav-${name}.conf" :
     ensure => $ensure,
     content => template("apache/webdav-config.erb"),
+    seltype => $operatingsystem ? {
+      "RedHat" => "httpd_config_t",
+      default  => undef,
+    },
     require => File[$davdir],
+    notify => Exec["apache-graceful"],
   }
 
 }

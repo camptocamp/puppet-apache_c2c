@@ -23,6 +23,10 @@ define apache::aw-stats($ensure=present) {
     owner   => root,
     group   => root,
     source  => "puppet:///apache/${conf}",
+    seltype => $operatingsystem ? {
+      "RedHat" => "httpd_config_t",
+      default  => undef,
+    },
     notify  => Exec["apache-graceful"],
     require => File["${wwwroot}/${name}/conf"],
   }
