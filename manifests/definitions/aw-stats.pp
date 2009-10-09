@@ -28,6 +28,6 @@ define apache::aw-stats($ensure=present) {
       default  => undef,
     },
     notify  => Exec["apache-graceful"],
-    require => File["${wwwroot}/${name}/conf"],
+    require => Apache::Vhost[$name],
   }
 }
