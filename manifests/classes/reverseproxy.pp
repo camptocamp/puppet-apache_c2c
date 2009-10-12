@@ -6,6 +6,7 @@ class apache::reverseproxy {
     ensure => "present",
     path => $operatingsystem ? {
       RedHat => "/etc/httpd/conf.d/reverseproxy.conf",
+      CentOS => "/etc/httpd/conf.d/reverseproxy.conf",
       Debian => "/etc/apache2/conf.d/reverseproxy.conf",
     },
     content => "# file managed by puppet

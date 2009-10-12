@@ -8,7 +8,7 @@ define apache::auth::htpasswd (
   $clearPassword=false){
 
    case $operatingsystem {
-    redhat : { $wwwroot = "/var/www/vhosts" }
+    redhat,CentOS : { $wwwroot = "/var/www/vhosts" }
     debian : { $wwwroot = "/var/www" }
     default : { fail "Unsupported operatingsystem ${operatingsystem}" }
   } 

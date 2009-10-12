@@ -2,8 +2,8 @@ class apache::redhat inherits apache::base {
   
   # BEGIN inheritance from apache::base
   Exec["apache-graceful"] {
-    command => "apachectl graceful",
-    onlyif => "apachectl configtest",
+    command => "/usr/sbin/apachectl graceful",
+    onlyif => "/usr/sbin/apachectl configtest",
   }
 
   File["log directory"] { path => "/var/log/httpd" }
