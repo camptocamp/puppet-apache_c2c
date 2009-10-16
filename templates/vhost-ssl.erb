@@ -16,13 +16,13 @@
   Include <%= wwwroot %>/<%= name%>/conf/*.conf
 
   SSLEngine On
-  SSLCertificateFile <%= wwwroot %>/<%= name %>/ssl/<%= cert %>
-  SSLCertificateKeyFile <%= wwwroot %>/<%= name %>/ssl/<%= certkey %>
-<% if cacert != "absent" -%>
-  SSLCACertificateFile <%= wwwroot %>/<%= name %>/ssl/<%= cacert %>
+  SSLCertificateFile <%= certfile %>
+  SSLCertificateKeyFile <%= certkeyfile %>
+<% if has_variable?("cacertfile") -%>
+  SSLCACertificateFile <%= cacertfile %>
 <% end -%>
-<% if certchain != "absent" -%>
-  SSLCertificateChainFile <%= wwwroot %>/<%= name %>/ssl/<%= certchain %>
+<% if has_variable?("certchainfile") -%>
+  SSLCertificateChainFile <%= certchainfile %>
 <% end -%>
 
   # CGI scripts
