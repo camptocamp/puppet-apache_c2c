@@ -17,9 +17,7 @@
 
   SSLEngine On
   SSLCertificateFile <%= wwwroot %>/<%= name %>/ssl/<%= cert %>
-<% if certkey != "absent" -%>
   SSLCertificateKeyFile <%= wwwroot %>/<%= name %>/ssl/<%= certkey %>
-<% end -%>
 <% if cacert != "absent" -%>
   SSLCACertificateFile <%= wwwroot %>/<%= name %>/ssl/<%= cacert %>
 <% end -%>

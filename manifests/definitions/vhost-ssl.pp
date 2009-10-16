@@ -11,8 +11,8 @@ define apache::vhost-ssl (
   $mode=2570,
   $aliases=[],
   $ip_address="*",
-  $cert="apache.pem",
-  $certkey="absent",
+  $cert="$name.crt",
+  $certkey="$name.key",
   $cacert="absent",
   $certchain="absent",
   $sslonly=false
@@ -87,8 +87,12 @@ define apache::vhost-ssl (
     if $certkey == "absent" and $cacert == "absent" {
 
       exec { "generate-ssl-cert-$name":
-        command => "/usr/local/sbin/generate-ssl-cert.sh $name /etc/ssl/ssleay.cnf ${wwwroot}/${name}/ssl/apache.pem",
-        creates => "${wwwroot}/${name}/ssl/apache.pem",
+        command => "/usr/local/sbin/generate-ssl-cert.sh $name /etc/ssl/ssleay.cnf ${wwwroot}/${name}/ssl/",
+        creates => [
+          "${wwwroot}/${name}/ssl/$name.key",
+          "${wwwroot}/${name}/ssl/$name.crt",
+          "${wwwroot}/${name}/ssl/$name.csr"
+        ],
         notify  => Exec["apache-graceful"],
         require => [
           File["${wwwroot}/${name}/ssl"],
@@ -97,10 +101,18 @@ define apache::vhost-ssl (
         ],
       }
 
-      file { "${wwwroot}/${name}/ssl/apache.pem":
+      file { "${wwwroot}/${name}/ssl/$name.crt":
         owner => "root",
         group => "root",
         mode  => 640,
+        seltype => "cert_t",
+        require => [File["${wwwroot}/${name}/ssl"], Exec["generate-ssl-cert-$name"]],
+      }
+
+      file { "${wwwroot}/${name}/ssl/$name.key":
+        owner => "root",
+        group => "root",
+        mode  => 600,
         seltype => "cert_t",
         require => [File["${wwwroot}/${name}/ssl"], Exec["generate-ssl-cert-$name"]],
       }
