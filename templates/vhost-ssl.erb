@@ -18,9 +18,7 @@
   SSLEngine On
   SSLCertificateFile <%= certfile %>
   SSLCertificateKeyFile <%= certkeyfile %>
-<% if has_variable?("cacertfile") -%>
   SSLCACertificateFile <%= cacertfile %>
-<% end -%>
 <% if has_variable?("certchainfile") -%>
   SSLCertificateChainFile <%= certchainfile %>
 <% end -%>

@@ -16,4 +16,9 @@ class apache::ssl::debian inherits apache::base::ssl {
     }
   }
 
+  if !defined(Package["ca-certificates"]) {
+    package { "ca-certificates":
+      ensure => present,
+    }
+  }
 }
