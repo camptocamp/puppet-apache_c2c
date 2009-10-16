@@ -15,6 +15,7 @@ define apache::vhost-ssl (
   $certkey="$name.key",
   $cacert="absent",
   $certchain="absent",
+  $days="3650",
   $sslonly=false
 ) {
 
@@ -87,7 +88,7 @@ define apache::vhost-ssl (
     if $certkey == "absent" and $cacert == "absent" {
 
       exec { "generate-ssl-cert-$name":
-        command => "/usr/local/sbin/generate-ssl-cert.sh $name /etc/ssl/ssleay.cnf ${wwwroot}/${name}/ssl/",
+        command => "/usr/local/sbin/generate-ssl-cert.sh $name /etc/ssl/ssleay.cnf ${wwwroot}/${name}/ssl/ $days",
         creates => [
           "${wwwroot}/${name}/ssl/$name.key",
           "${wwwroot}/${name}/ssl/$name.crt",
