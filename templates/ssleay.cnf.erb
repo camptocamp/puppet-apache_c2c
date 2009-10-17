@@ -14,9 +14,17 @@ prompt                  = no
 
 [ req_distinguished_name ]
 countryName                     = <%= sslcert_country %>
+<% if has_variable?("sslcert_state") -%>
 stateOrProvinceName             = <%= sslcert_state %>
+<% end -%>
+<% if has_variable?("sslcert_locality") -%>
 localityName                    = <%= sslcert_locality %>
+<% end -%>
 organizationName                = <%= sslcert_organisation %>
+<% if has_variable?("sslcert_unit") -%>
 organizationalUnitName          = <%= sslcert_unit %>
+<% end -%>
 commonName                      = @HostName@
+<% if has_variable?("sslcert_email") -%>
 emailAddress                    = <%= sslcert_email %>
+<% end -%>

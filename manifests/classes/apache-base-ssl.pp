@@ -1,11 +1,7 @@
 class apache::base::ssl {
 
-  if $sslcert_country {} else { $sslcert_country = "??" }
-  if $sslcert_state {} else { $sslcert_state = "undefined state" }
-  if $sslcert_locality {} else { $sslcert_locality = "undefined locality" }
-  if $sslcert_organisation {} else { $sslcert_organisation = "undefined organisation" }
-  if $sslcert_unit {} else { $sslcert_unit = "undefined unit" }
-  if $sslcert_email {} else { $sslcert_email = "undefined email" }
+  if !$sslcert_country { $sslcert_country = "??" }
+  if !$sslcert_organisation { $sslcert_organisation = "undefined organisation" }
 
   file { "/etc/ssl/":
     ensure => directory,
