@@ -16,6 +16,7 @@ define apache::vhost-ssl (
   $cacert=false,
   $certchain=false,
   $days="3650",
+  $publish_csr=false,
   $sslonly=false
 ) {
 
@@ -179,6 +180,24 @@ define apache::vhost-ssl (
         notify  => Exec["apache-graceful"],
         require => File["${wwwroot}/${name}/ssl"],
       }
+    }
+
+    # put a copy of the CSR in htdocs, or another location if $publish_csr
+    # specifies so.
+    file { "public CSR file":
+      ensure  => $publish_csr ? {
+        false   => "absent",
+        default => "present",
+      },
+      path    => $publish_csr ? {
+        true    => "${wwwroot}/${name}/htdocs/$name.csr",
+        false   => "${wwwroot}/${name}/htdocs/$name.csr",
+        default => $publish_csr,
+      },
+      source  => "file://${wwwroot}/${name}/ssl/$name.csr",
+      mode    => 644,
+      seltype => "httpd_sys_content_t",
+      require => Exec["generate-ssl-cert-$name"],
     }
 
   }
