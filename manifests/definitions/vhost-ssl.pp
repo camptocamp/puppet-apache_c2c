@@ -192,7 +192,7 @@ define apache::vhost-ssl (
     # The CSR will be re-generated each time this resource is triggered.
     exec { "generate-ssl-cert-$name":
       command => "/usr/local/sbin/generate-ssl-cert.sh $name /etc/ssl/ssleay.cnf ${wwwroot}/${name}/ssl/ $days",
-      creates => [$certfile, $certkeyfile, $csrfile],
+      creates => $csrfile,
       notify  => Exec["apache-graceful"],
       require => [
         File["${wwwroot}/${name}/ssl"],
