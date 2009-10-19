@@ -128,7 +128,7 @@ define apache::vhost-ssl (
         default => $cert,
       },
       seltype => "cert_t",
-      notify  => Exec["apache-graceful"],
+      notify  => [Exec["apache-graceful"], Exec["generate-ssl-cert-$name"]],
       require => [File["${wwwroot}/${name}/ssl"], Exec["generate-ssl-cert-$name"]],
     }
 
@@ -144,7 +144,7 @@ define apache::vhost-ssl (
         default => $certkey,
       },
       seltype => "cert_t",
-      notify  => Exec["apache-graceful"],
+      notify  => [Exec["apache-graceful"], Exec["generate-ssl-cert-$name"]],
       require => [File["${wwwroot}/${name}/ssl"], Exec["generate-ssl-cert-$name"]],
     }
 
