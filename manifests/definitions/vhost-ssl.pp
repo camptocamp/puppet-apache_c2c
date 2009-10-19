@@ -233,19 +233,18 @@ define apache::vhost-ssl (
       require => [File["${wwwroot}/${name}/ssl"], Exec["generate-ssl-cert-$name"]],
     }
 
-    # The certificate from your certification authority. Defaults to the
-    # certificate bundle shipped with your distribution.
-    file { $cacertfile:
-      owner => "root",
-      group => "root",
-      mode  => 640,
-      source  => $cacert ? {
-        false   => undef,
-        default => $cacert,
-      },
-      seltype => "cert_t",
-      notify  => Exec["apache-graceful"],
-      require => File["${wwwroot}/${name}/ssl"],
+    if $cacert != false {
+      # The certificate from your certification authority. Defaults to the
+      # certificate bundle shipped with your distribution.
+      file { $cacertfile:
+        owner   => "root",
+        group   => "root",
+        mode    => 640,
+        source  => $cacert,
+        seltype => "cert_t",
+        notify  => Exec["apache-graceful"],
+        require => File["${wwwroot}/${name}/ssl"],
+      }
     }
 
 
