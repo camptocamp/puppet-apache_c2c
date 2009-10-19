@@ -85,7 +85,7 @@ define apache::vhost-ssl (
   }
 
   if $sslonly {
-    exec { "disable default site":
+    exec { "disable default site from $name":
       command => $operatingsystem ? {
         Debian => "/usr/sbin/a2dissite default",
         RedHat => "/usr/local/sbin/a2dissite default",
@@ -181,7 +181,7 @@ define apache::vhost-ssl (
 
     # put a copy of the CSR in htdocs, or another location if $publish_csr
     # specifies so.
-    file { "public CSR file":
+    file { "public CSR file for $name":
       ensure  => $publish_csr ? {
         false   => "absent",
         default => "present",
