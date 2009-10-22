@@ -35,5 +35,7 @@
   AuthzLDAPAuthoritative <%= authzLDAPAuthoritative %>
 <% end -%>
   AuthLDAPUrl <%= authLDAPUrl %>
-  Require <%= authzRequire %>
+<% authzRequire.each do |require| -%>
+  Require <%= require %>
+<% end -%>
 </Location>
