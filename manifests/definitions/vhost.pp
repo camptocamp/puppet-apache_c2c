@@ -226,6 +226,17 @@ define apache::vhost (
         ensure  => absent,
         require => Exec["disable vhost ${name}"]
       }
+      
+      file { "$wwwconf/sites-available/${name}":
+        ensure  => absent,
+        require => Exec["disable vhost ${name}"]
+      }
+
+      exec {"remove ${wwwroot}/${name}":
+        command => "rm -rf ${wwwroot}/${name}",
+        onlyif  => "test -d ${wwwroot}/${name}",
+        require => Exec["disable vhost ${name}"],
+      }
 
       exec { "disable vhost ${name}":
         command => "a2dissite ${name}",
@@ -235,6 +246,21 @@ define apache::vhost (
           && [ $wwwconf/sites-enabled/$name -ef $wwwconf/sites-available/$name ]'",
       }
    }
+
+   disabled: {
+      exec { "disable vhost ${name}":
+        command => "a2dissite ${name}",
+        notify  => Exec["apache-graceful"],
+        require => Package["$wwwpkgname"],
+        onlyif => "/bin/sh -c '[ -L $wwwconf/sites-enabled/$name ] \\
+          && [ $wwwconf/sites-enabled/$name -ef $wwwconf/sites-available/$name ]'",
+      }
+
+      file { "$wwwconf/sites-enabled/${name}":
+        ensure  => absent,
+        require => Exec["disable vhost ${name}"]
+      }
+    }
     default: { err ( "Unknown ensure value: '${ensure}'" ) }
   }
 }
