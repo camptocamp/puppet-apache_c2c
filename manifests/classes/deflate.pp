@@ -8,6 +8,7 @@ class apache::deflate {
     ensure => present,
     path => $operatingsystem ? {
       RedHat => "/etc/httpd/conf.d/deflate.conf",
+      CentOS => "/etc/httpd/conf.d/deflate.conf",
       Debian => "/etc/apache2/conf.d/deflate.conf",
     },
     content => "# file managed by puppet

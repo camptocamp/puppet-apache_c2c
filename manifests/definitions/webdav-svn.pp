@@ -7,6 +7,7 @@ define apache::webdav::svn ($ensure, $vhost, $parentPath, $confname) {
     content => template("apache/webdav-svn.erb"),
     seltype => $operatingsystem ? {
       "RedHat" => "httpd_config_t",
+      "CentOS" => "httpd_config_t",
       default  => undef,
     },
     notify  => Exec["apache-graceful"],

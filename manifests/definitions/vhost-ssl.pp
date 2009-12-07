@@ -101,7 +101,7 @@ define apache::vhost-ssl (
 
   # define distro-specific paths and users.
   case $operatingsystem {
-    redhat : {
+    redhat,CentOS : {
       $wwwuser =  $user ? {
         "" => "apache",
         default => $user,
@@ -171,6 +171,7 @@ define apache::vhost-ssl (
       command => $operatingsystem ? {
         Debian => "/usr/sbin/a2dissite default",
         RedHat => "/usr/local/sbin/a2dissite default",
+        CentOS => "/usr/local/sbin/a2dissite default",
       },
       onlyif => "/usr/bin/test -L ${wwwconf}/sites-enabled/000-default",
       notify => Exec["apache-graceful"],

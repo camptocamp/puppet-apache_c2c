@@ -3,7 +3,7 @@ define apache::auth::ldap ($ensure="present", $authname="Private Area", $vhost, 
   $fname = regsubst($name, "\s", "_", "G")
 
   case $operatingsystem {
-    redhat : { $wwwroot = "/var/www/vhosts" }
+    redhat,CentOS : { $wwwroot = "/var/www/vhosts" }
     debian : { $wwwroot = "/var/www" }
     default : { fail "Unsupported operatingsystem ${operatingsystem}" }
   }
@@ -21,6 +21,7 @@ define apache::auth::ldap ($ensure="present", $authname="Private Area", $vhost, 
     content => template("apache/auth-ldap.erb"),
     seltype => $operatingsystem ? {
       "RedHat" => "httpd_config_t",
+      "CentOS" => "httpd_config_t",
       default  => undef,
     },
     notify  => Exec["apache-graceful"],

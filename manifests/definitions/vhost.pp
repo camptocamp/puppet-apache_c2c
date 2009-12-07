@@ -14,7 +14,7 @@ define apache::vhost (
 ) {
 
   case $operatingsystem {
-    redhat : {
+    redhat,CentOS : {
       $wwwuser =  $user ? {
         "" => "apache",
         default => $user,
@@ -41,6 +41,7 @@ define apache::vhost (
       command => $operatingsystem ? {
         Debian => "/usr/sbin/a2ensite default",
         RedHat => "/usr/local/sbin/a2ensite default",
+        CentOS => "/usr/local/sbin/a2ensite default",
       },
       unless => "/usr/bin/test -L ${wwwconf}/sites-enabled/000-default",
       notify => Exec["apache-graceful"],
@@ -57,6 +58,7 @@ define apache::vhost (
         mode    => 644,
         seltype => $operatingsystem ? {
           redhat => "httpd_config_t",
+          CentOS => "httpd_config_t",
           default => undef,
         },
         require => Package["$wwwpkgname"],
@@ -70,6 +72,7 @@ define apache::vhost (
         mode   => 755,
         seltype => $operatingsystem ? {
           redhat => "httpd_sys_content_t",
+          CentOS => "httpd_sys_content_t",
           default => undef,
         },
         require => File["root directory"],
@@ -85,6 +88,7 @@ define apache::vhost (
         mode   => $mode,
         seltype => $operatingsystem ? {
           redhat => "httpd_config_t",
+          CentOS => "httpd_config_t",
           default => undef,
         },
         require => [File["${wwwroot}/${name}"]],
@@ -97,6 +101,7 @@ define apache::vhost (
         mode   => $mode,
         seltype => $operatingsystem ? {
           redhat => "httpd_sys_content_t",
+          CentOS => "httpd_sys_content_t",
           default => undef,
         },
         require => [File["${wwwroot}/${name}"]],
@@ -124,6 +129,7 @@ define apache::vhost (
         mode   => $mode,
         seltype => $operatingsystem ? {
           redhat => "httpd_sys_script_exec_t",
+          CentOS => "httpd_sys_script_exec_t",
           default => undef,
         },
         require => [File["${wwwroot}/${name}"]],
@@ -161,6 +167,7 @@ define apache::vhost (
         mode   => 755,
         seltype => $operatingsystem ? {
           redhat => "httpd_log_t",
+          CentOS => "httpd_log_t",
           default => undef,
         },
         require => File["${wwwroot}/${name}"],
@@ -175,6 +182,7 @@ define apache::vhost (
         mode => 644,
         seltype => $operatingsystem ? {
           redhat => "httpd_log_t",
+          CentOS => "httpd_log_t",
           default => undef,
         },
         require => File["${wwwroot}/${name}/logs"],
@@ -188,6 +196,7 @@ define apache::vhost (
         mode    => $mode,
         seltype => $operatingsystem ? {
           redhat => "httpd_sys_content_t",
+          CentOS => "httpd_sys_content_t",
           default => undef,
         },
         require => File["${wwwroot}/${name}"],
@@ -207,10 +216,16 @@ define apache::vhost (
       }
 
       exec {"enable vhost ${name}":
-        command => "a2ensite ${name}",
+        command => $operatingsystem ? {
+          RedHat => "/usr/local/sbin/a2ensite ${name}",
+          CentOS => "/usr/local/sbin/a2ensite ${name}",
+          default => "/usr/sbin/a2ensite ${name}"
+        },
         notify  => Exec["apache-graceful"],
-        require => [
-          Package["$wwwpkgname"],
+        require => [$operatingsystem ? {
+          redhat => File["/usr/local/sbin/a2ensite"],
+          CentOS => File["/usr/local/sbin/a2ensite"],
+          default => Package["$wwwpkgname"]},
           File["$wwwconf/sites-available/${name}"],
           File["${wwwroot}/${name}/htdocs"],
           File["${wwwroot}/${name}/logs"],
@@ -239,9 +254,16 @@ define apache::vhost (
       }
 
       exec { "disable vhost ${name}":
-        command => "a2dissite ${name}",
+        command => $operatingsystem ? {
+          RedHat => "/usr/local/sbin/a2dissite ${name}",
+          CentOS => "/usr/local/sbin/a2dissite ${name}",
+          default => "/usr/sbin/a2dissite ${name}"
+        },
         notify  => Exec["apache-graceful"],
-        require => Package["$wwwpkgname"],
+        require => [$operatingsystem ? {
+          redhat => File["/usr/local/sbin/a2ensite"],
+          CentOS => File["/usr/local/sbin/a2ensite"],
+          default => Package["$wwwpkgname"]}],
         onlyif => "/bin/sh -c '[ -L $wwwconf/sites-enabled/$name ] \\
           && [ $wwwconf/sites-enabled/$name -ef $wwwconf/sites-available/$name ]'",
       }

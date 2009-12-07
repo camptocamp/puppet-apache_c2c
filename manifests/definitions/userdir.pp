@@ -5,6 +5,7 @@ define apache::userdirinstance ($ensure=present, $vhost) {
     source => 'puppet:///apache/userdir.conf',
     seltype => $operatingsystem ? {
       "RedHat" => "httpd_config_t",
+      "CentOS" => "httpd_config_t",
       default  => undef,
     },
     require => File["/var/www/${vhost}/conf"],

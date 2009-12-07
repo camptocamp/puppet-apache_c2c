@@ -1,7 +1,7 @@
 define apache::aw-stats($ensure=present) {
 
   case $operatingsystem {
-    redhat : {
+    redhat,CentOS : {
       $wwwroot = "/var/www/vhosts"
       $conf = "awstats.rh.conf"
     }
@@ -25,6 +25,7 @@ define apache::aw-stats($ensure=present) {
     source  => "puppet:///apache/${conf}",
     seltype => $operatingsystem ? {
       "RedHat" => "httpd_config_t",
+      "CentOS" => "httpd_config_t",
       default  => undef,
     },
     notify  => Exec["apache-graceful"],

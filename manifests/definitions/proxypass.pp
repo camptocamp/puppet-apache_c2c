@@ -11,7 +11,7 @@ define apache::proxypass ($ensure="present", $location, $url, $vhost) {
   }
 
   case $operatingsystem {
-    redhat : {
+    redhat,CentOS : {
       $wwwroot = "/var/www/vhosts"
     }
     debian : {
@@ -25,6 +25,7 @@ define apache::proxypass ($ensure="present", $location, $url, $vhost) {
     content => template("apache/proxypass.erb"),
     seltype => $operatingsystem ? {
       "RedHat" => "httpd_config_t",
+      "CentOS" => "httpd_config_t",
       default  => undef,
     },
     notify  => Exec["apache-graceful"],

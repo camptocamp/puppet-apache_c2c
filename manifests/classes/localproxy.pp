@@ -7,11 +7,13 @@ class apache::localproxy {
 
   $nph_http_proxy = "${fqdn}:80"
 
+
   $filepath = $operatingsystem ? {
     RedHat => "/var/www/cgi-bin/nph-proxy.cgi",
+    CentOS => "/var/www/cgi-bin/nph-proxy.cgi",
     Debian => "/usr/lib/cgi-bin/nph-proxy.cgi",
   }
-
+  
   file { "cgi-bin/nph-proxy.cgi":
     path => $filepath,
     mode => "0755",
@@ -23,6 +25,7 @@ class apache::localproxy {
   file { "conf.d/localproxy.conf":
     path => $operatingsystem ? {
       RedHat => "/etc/httpd/conf.d/zzz-localproxy.conf",
+      CentOS => "/etc/httpd/conf.d/zzz-localproxy.conf",
       Debian => "/etc/apache2/conf.d/zzz-localproxy.conf",
     },
     content => "# file managed by puppet

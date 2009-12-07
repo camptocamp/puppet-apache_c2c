@@ -1,7 +1,7 @@
 class apache::administration {
 
   case $operatingsystem {
-    redhat: {
+    redhat,CentOS: {
       $wwwuser = "apache"
       $wwwpkgname = "httpd"
       $distro_specific_apache_sudo = "/usr/sbin/apachectl, /sbin/service ${wwwpkgname}"
