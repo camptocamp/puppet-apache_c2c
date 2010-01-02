@@ -159,7 +159,6 @@ define apache::vhost-ssl (
     admin          => $admin,
     group          => $group,
     mode           => $mode,
-    aliases        => $aliases,
     enable_default => $sslonly ? {
       true => false,
       default => true,
