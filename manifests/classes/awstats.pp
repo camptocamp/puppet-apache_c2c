@@ -4,13 +4,15 @@ class apache::awstats {
     ensure => installed
   }
 
-  file { ["/etc/awstats/awstats.conf",
-         "/etc/awstats/awstats.conf.local",
-         "/etc/awstats/awstats.model.conf",
-         "/etc/awstats/awstats.localhost.localdomain.conf",
-         "/etc/awstats/awstats.${fqdn}.conf"]:
-    ensure  => absent,
-    require => Package[awstats]
+  # ensure non-managed files are purged from directory
+  file {"/etc/awstats":
+    ensure  => directory,
+    source  => "puppet:///apache/etc/awstats",
+    mode    => 0755,
+    purge   => true,
+    recurse => true,
+    force   => true,
+    require => Package["awstats"],
   }
 
   case $operatingsystem {
