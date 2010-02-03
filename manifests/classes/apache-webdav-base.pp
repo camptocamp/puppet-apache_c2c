@@ -4,8 +4,14 @@ class apache::webdav::base {
     ensure => present,
   }
 
-  apache::module {["dav", "dav_fs", "headers"]:
+  apache::module {["dav", "dav_fs"]:
     ensure => present,
+  }
+
+  if !defined(Apache::Module["headers"]) {
+    apache::module {"headers":
+      ensure => present,
+    }
   }
 
   apache::module {"encoding":
