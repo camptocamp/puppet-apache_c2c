@@ -1,7 +1,10 @@
 # file managed by puppet
 
-NameVirtualHost *:80
-<VirtualHost *:80>
+<% apache_ports.each do |port| -%>
+NameVirtualHost *:<%= port %>
+<% end %>
+
+<VirtualHost *:<%= apache_ports[0] %>>
   DocumentRoot /var/www/html
   ServerName localhost
 

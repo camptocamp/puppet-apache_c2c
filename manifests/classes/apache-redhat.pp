@@ -22,7 +22,7 @@ class apache::redhat inherits apache::base {
 
   File["default virtualhost"] { 
     path => "/etc/httpd/sites-available/default",
-    source => "puppet:///apache/etc/httpd/sites-available/default",
+    content => template("apache/default-vhost.redhat"),
     seltype => "httpd_config_t",
   }  
   # END inheritance from apache::base
@@ -72,7 +72,7 @@ class apache::redhat inherits apache::base {
 
   file { "/etc/httpd/conf/httpd.conf":
     ensure => present,
-    source => "puppet:///apache/etc/httpd/conf/httpd.conf",
+    content => template("apache/httpd.conf.erb"),
     seltype => "httpd_config_t",
     notify  => Service["apache"],
     require => Package["apache"],
@@ -80,6 +80,7 @@ class apache::redhat inherits apache::base {
 
   # the following command was used to generate the content of the directory:
   # egrep '(^|#)LoadModule' /etc/httpd/conf/httpd.conf | sed -r 's|#?(.+ (.+)_module .+)|echo "\1" > mods-available/redhat5/\2.load|' | sh
+  # ssl.load was then changed to a template (see apache-redhat-ssl.pp)
   file {"/etc/httpd/mods-available":
     ensure => directory,
     source => $lsbmajdistrelease ? {
