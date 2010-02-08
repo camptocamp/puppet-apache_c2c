@@ -34,7 +34,7 @@
 <% if authzLDAPAuthoritative -%>
   AuthzLDAPAuthoritative <%= authzLDAPAuthoritative %>
 <% end -%>
-  AuthLDAPUrl <%= authLDAPUrl %>
+  AuthLDAPUrl "<%= authLDAPUrl %>"
 <% authzRequire.each do |require| -%>
   Require <%= require %>
 <% end -%>
