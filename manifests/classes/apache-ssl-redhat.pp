@@ -21,7 +21,7 @@ class apache::ssl::redhat inherits apache::base::ssl {
   if $lsbmajdistrelease == 5 {
     file {"/etc/httpd/mods-available/ssl.load":
       ensure => present,
-      source => template("apache/ssl.load.erb"),
+      content => template("apache/ssl.load.erb"),
       mode => 644,
       owner => "root",
       group => "root",
