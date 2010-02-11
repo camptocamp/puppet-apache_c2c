@@ -2,8 +2,7 @@
 
 <% apache_ports.each do |port| -%>
 NameVirtualHost *:<%= port %>
-<% end %>
-
+<% end -%>
 <VirtualHost *:<%= apache_ports[0] %>>
   DocumentRoot /var/www/html
   ServerName localhost
