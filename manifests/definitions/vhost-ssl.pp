@@ -104,6 +104,7 @@ define apache::vhost-ssl (
   $ports="all"
 ) {
 
+  if $apache_ssl_ports {} else { $apache_ports = [80] }
   if $apache_ssl_ports {} else { $apache_ssl_ports = [443] }
 
   # define distro-specific paths and users.
