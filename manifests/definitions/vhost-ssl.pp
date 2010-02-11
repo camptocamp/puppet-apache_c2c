@@ -46,6 +46,10 @@ Parameters:
 - *$sslonly*: if set to "true", only the https virtualhost will be configured.
   Defaults to "true", which means the virtualhost will be reachable unencrypted
   on port 80, as well as encrypted on port 443.
+- *ports*: array specifying the ports on which the vhost will be reachable.
+  Defaults to "all", which means all ports specified in $apache_ssl_ports (443
+  if not defined) and, if $sslonly is "false" (the default), $apache_ports (80
+  if not defined).
 
 Requires:
 - Class["apache-ssl"]
@@ -96,8 +100,12 @@ define apache::vhost-ssl (
   $certchain=false,
   $days="3650",
   $publish_csr=false,
-  $sslonly=false
+  $sslonly=false,
+  $ports="all"
 ) {
+
+  if $apache_ssl_ports {} else { $apache_ports = [80] }
+  if $apache_ssl_ports {} else { $apache_ssl_ports = [443] }
 
   # define distro-specific paths and users.
   case $operatingsystem {
@@ -162,7 +170,8 @@ define apache::vhost-ssl (
     enable_default => $sslonly ? {
       true => false,
       default => true,
-    }
+    },
+    ports          => $ports,
   }
 
   if $sslonly {

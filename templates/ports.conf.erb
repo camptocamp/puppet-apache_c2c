@@ -1,0 +1,6 @@
+# file managed by puppet
+
+<% apache_ports.each do |port| -%> 
+Listen <%= port %> 
+<% end -%>
+

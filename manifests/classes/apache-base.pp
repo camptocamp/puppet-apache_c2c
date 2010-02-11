@@ -1,5 +1,7 @@
 class apache::base {
 
+  if $apache_ports {} else { $apache_ports = [80] }
+
   file {"root directory":
     path => "/var/www",
     ensure => directory,
@@ -55,7 +57,7 @@ class apache::base {
   file {"default virtualhost":
     path => "/etc/apache2/sites-available/default",
     ensure => present,
-    source => "puppet:///apache/etc/apache2/sites-available/default",
+    content => template("apache/default-vhost"),
     require => Package["apache"],
     notify => Exec["apache-graceful"],
     mode => 644,

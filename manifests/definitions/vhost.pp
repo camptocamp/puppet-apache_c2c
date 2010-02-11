@@ -10,8 +10,11 @@ define apache::vhost (
   $group="root",
   $mode=2570,
   $aliases=[],
-  $enable_default=true
+  $enable_default=true,
+  $ports="all"
 ) {
+
+  if $apache_ports {} else { $apache_ports = [80] }
 
   case $operatingsystem {
     redhat,CentOS : {

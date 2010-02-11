@@ -133,7 +133,9 @@ MaxRequestsPerChild  0
 # prevent Apache from glomming onto all bound IP addresses (0.0.0.0)
 #
 #Listen 12.34.56.78:80
-Listen 80
+<% apache_ports.each do |port| -%>
+Listen <%= port %>
+<% end %>
 
 #
 # Dynamic Shared Object (DSO) Support
