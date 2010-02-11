@@ -68,16 +68,6 @@ class apache::debian inherits apache::base {
     notify  => Service["apache"],
   }
 
-  #file {"/etc/apache2/ports.conf":
-  #  ensure => present,
-  #  owner => root,
-  #  group => root,
-  #  mode => 644,
-  #  source => "puppet:///apache/etc/apache2/ports.conf",
-  #  notify  => Service["apache"],
-  #  require => Package["apache"],
-  #}
-  
   file {"/etc/apache2/sites-available/default-ssl":
     ensure => absent,
     force => true,
