@@ -1,5 +1,31 @@
 class apache::debian inherits apache::base {
 
+  # BEGIN inheritance from apache::base
+  Exec["apache-graceful"] {
+    command => "apache2ctl graceful",
+    onlyif => "apache2ctl configtest",
+  }
+
+  File["log directory"] { path => "/var/log/apache2" }
+  File["root directory"] { path => "/var/www" }
+  File["cgi-bin directory"] { path => "/usr/lib/cgi-bin" }
+
+  File["logrotate configuration"] {
+    path => "/etc/logrotate.d/apache2",
+    source => "puppet:///apache/etc/logrotate.d/apache2",
+  }
+
+  File["default status module configuration"] {
+    path => "/etc/apache2/mods-available/status.conf",
+    source => "puppet:///apache/etc/apache2/mods-available/status.conf",
+  }
+
+  File["default virtualhost"] {
+    path => "/etc/apache2/sites-available/default",
+    content => template("apache/default-vhost.debian"),
+  }
+  # END inheritance from apache::base
+
   package {"apache2":
     ensure => installed,
     alias  => "apache"
@@ -29,7 +55,7 @@ class apache::debian inherits apache::base {
     ensure  => installed,
     require => Package["apache"],
   }
-  
+
   # directory not present in lenny
   file {"/var/www/apache2-default":
     ensure  => absent,
@@ -72,5 +98,5 @@ class apache::debian inherits apache::base {
     ensure => absent,
     force => true,
   }
-    
+
 }

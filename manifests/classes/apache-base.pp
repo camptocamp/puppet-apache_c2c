@@ -12,7 +12,7 @@ class apache::base {
   if $apache_ports {} else { $apache_ports = [80] }
 
   file {"root directory":
-    path => "/var/www",
+    path => undef,
     ensure => directory,
     mode => 755,
     owner => "root",
@@ -21,7 +21,7 @@ class apache::base {
   }
 
   file {"cgi-bin directory":
-    path => "/usr/lib/cgi-bin",
+    path => undef,
     ensure => directory,
     mode => 755,
     owner => "root",
@@ -30,7 +30,7 @@ class apache::base {
   }
 
   file {"log directory":
-    path => "/var/log/apache2",
+    path => undef,
     ensure => directory,
     mode => 755,
     owner => "root",
@@ -39,12 +39,12 @@ class apache::base {
   }
 
   file {"logrotate configuration":
-    path => "/etc/logrotate.d/apache2",
+    path => undef,
     ensure => present,
     owner => root,
     group => root,
     mode => 644,
-    source => "puppet:///apache/etc/logrotate.d/apache2",
+    source => undef,
     require => Package["apache"],
   }
 
@@ -54,28 +54,28 @@ class apache::base {
   }
 
   file {"default status module configuration":
-    path => "/etc/apache2/mods-available/status.conf",
+    path => undef,
     ensure => present,
     owner => root,
     group => root,
-    source => "puppet:///apache/etc/apache2/mods-available/status.conf",
+    source => undef,
     require => Module["status"],
     notify => Exec["apache-graceful"],
   }
 
   file {"default virtualhost":
-    path => "/etc/apache2/sites-available/default",
+    path => undef,
     ensure => present,
-    content => template("apache/default-vhost"),
+    content => undef,
     require => Package["apache"],
     notify => Exec["apache-graceful"],
     mode => 644,
   }
 
   exec { "apache-graceful":
-    command => "apache2ctl graceful",
+    command => undef,
     refreshonly => true,
-    onlyif => "apache2ctl configtest",
+    onlyif => undef,
   }
 
   file {"/usr/local/bin/htgroup":
