@@ -1,4 +1,4 @@
-define apache::proxypass ($ensure="present", $location, $url, $vhost) {
+define apache::proxypass ($ensure="present", $location="", $url="", $vhost) {
 
   $fname = regsubst($name, "\s", "_", "G")
 
