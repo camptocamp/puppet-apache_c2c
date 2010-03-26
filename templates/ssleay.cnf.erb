@@ -24,7 +24,7 @@ organizationName                = <%= sslcert_organisation %>
 <% if has_variable?("sslcert_unit") -%>
 organizationalUnitName          = <%= sslcert_unit %>
 <% end -%>
-commonName                      = @HostName@
+commonName                      = <%= sslcert_commonname %>
 <% if has_variable?("sslcert_email") -%>
 emailAddress                    = <%= sslcert_email %>
 <% end -%>
