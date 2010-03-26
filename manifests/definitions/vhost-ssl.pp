@@ -107,6 +107,10 @@ define apache::vhost-ssl (
   if $apache_ssl_ports {} else { $apache_ports = [80] }
   if $apache_ssl_ports {} else { $apache_ssl_ports = [443] }
 
+  # these 2 values are required to generate a valid SSL certificate.
+  if (!$sslcert_country) { $sslcert_country = "??" }
+  if (!$sslcert_organisation) { $sslcert_organisation = "undefined organisation" }
+
   # define distro-specific paths and users.
   case $operatingsystem {
     redhat,CentOS : {
@@ -196,17 +200,25 @@ define apache::vhost-ssl (
       require => [File["${wwwroot}/${name}"]],
     }
 
+    # template file used to generate SSL key, cert and csr.
+    file { "${wwwroot}/${name}/ssl/ssleay.cnf":
+      ensure  => present,
+      owner   => "root",
+      mode    => 0640,
+      content => template("apache/ssleay.cnf.erb"),
+      require => File["${wwwroot}/${name}/ssl"],
+    }
+
     # The certificate and the private key will be generated only if $name.crt
     # or $name.key are absent from the "ssl/" subdir.
     # The CSR will be re-generated each time this resource is triggered.
     exec { "generate-ssl-cert-$name":
-      command => "/usr/local/sbin/generate-ssl-cert.sh $name /etc/ssl/ssleay.cnf ${wwwroot}/${name}/ssl/ $days",
+      command => "/usr/local/sbin/generate-ssl-cert.sh $name ${wwwroot}/${name}/ssl/ssleay.cnf ${wwwroot}/${name}/ssl/ $days",
       creates => $csrfile,
       notify  => Exec["apache-graceful"],
       require => [
-        File["${wwwroot}/${name}/ssl"],
+        File["${wwwroot}/${name}/ssl/ssleay.cnf"],
         File["/usr/local/sbin/generate-ssl-cert.sh"],
-        File["/etc/ssl/ssleay.cnf"]
       ],
     }
 
