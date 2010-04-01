@@ -41,6 +41,7 @@ class apache::base {
   user { "apache user":
     ensure  => present,
     require => Package["apache"],
+    shell   => "/bin/sh",
   }
 
   group { "apache group":
