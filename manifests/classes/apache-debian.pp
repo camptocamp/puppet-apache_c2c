@@ -10,6 +10,12 @@ class apache::debian inherits apache::base {
   File["root directory"] { path => "/var/www" }
   File["cgi-bin directory"] { path => "/usr/lib/cgi-bin" }
 
+  User["apache user"]   { name => "www-data" }
+  Group["apache group"] { name => "www-data" }
+
+  Package["apache"] { name => "apache2" }
+  Service["apache"] { name => "apache2" }
+
   File["logrotate configuration"] {
     path => "/etc/logrotate.d/apache2",
     source => "puppet:///apache/etc/logrotate.d/apache2",
@@ -25,31 +31,6 @@ class apache::debian inherits apache::base {
     content => template("apache/default-vhost.debian"),
   }
   # END inheritance from apache::base
-
-  package {"apache2":
-    ensure => installed,
-    alias  => "apache"
-  }
-
-  service {"apache2":
-    ensure => running,
-    enable => true,
-    hasrestart => true,
-    require => Package["apache"],
-    alias => "apache"
-  }
-
-  user {"www-data":
-    ensure  => present,
-    require => Package["apache"],
-    alias   => "apache user",
-  }
-
-  group {"www-data":
-    ensure  => present,
-    require => Package["apache"],
-    alias   => "apache group",
-  }
 
   package {["apache2-mpm-prefork", "libapache2-mod-proxy-html"]:
     ensure  => installed,

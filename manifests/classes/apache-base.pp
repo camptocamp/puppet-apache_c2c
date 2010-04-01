@@ -38,6 +38,27 @@ class apache::base {
     require => Package["apache"],
   }
 
+  user { "apache user":
+    ensure  => present,
+    require => Package["apache"],
+  }
+
+  group { "apache group":
+    ensure  => present,
+    require => Package["apache"],
+  }
+
+  package { "apache":
+    ensure => installed,
+  }
+
+  service { "apache":
+    ensure     => running,
+    enable     => true,
+    hasrestart => true,
+    require    => Package["apache"],
+  }
+
   file {"logrotate configuration":
     path => undef,
     ensure => present,

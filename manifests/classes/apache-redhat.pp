@@ -10,6 +10,16 @@ class apache::redhat inherits apache::base {
   File["root directory"] { path => "/var/www/vhosts" }
   File["cgi-bin directory"] { path => "/var/www/cgi-bin" }
 
+  User["apache user"]   { name => "apache" }
+  Group["apache group"] { name => "apache" }
+
+  Package["apache"] {
+    name    => "httpd",
+    require => [File["/usr/local/sbin/a2ensite"], File["/usr/local/sbin/a2dissite"], File["/usr/local/sbin/a2enmod"], File["/usr/local/sbin/a2dismod"]],
+  }
+
+  Service["apache"] { name => "httpd" }
+
   File["logrotate configuration"] { 
     path => "/etc/logrotate.d/httpd",
     source => "puppet:///apache/etc/logrotate.d/httpd",
@@ -26,32 +36,6 @@ class apache::redhat inherits apache::base {
     seltype => "httpd_config_t",
   }  
   # END inheritance from apache::base
-
-  package {"httpd":
-    ensure => installed,
-    require => [File["/usr/local/sbin/a2ensite"], File["/usr/local/sbin/a2dissite"], File["/usr/local/sbin/a2enmod"], File["/usr/local/sbin/a2dismod"]],
-    alias => "apache"
-  }
-
-  service {"httpd":
-    ensure => running,
-    enable => true,
-    hasrestart => true,
-    require => Package["apache"],
-    alias => "apache"
-  }
-
-  user { "apache":
-    ensure  => present,
-    require => Package["apache"],
-    alias   => "apache user",
-  }
-
-  group { "apache":
-    ensure  => present,
-    require => Package["apache"],
-    alias   => "apache group",
-  }
 
   file { ["/usr/local/sbin/a2ensite", "/usr/local/sbin/a2dissite", "/usr/local/sbin/a2enmod", "/usr/local/sbin/a2dismod"]:
     ensure => present,
