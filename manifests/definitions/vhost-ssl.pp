@@ -38,7 +38,7 @@ Parameters:
   SSLCACertificateFile directive.
 - *$certchain*: optional source URL of the CA certificate chain, if needed.
   This the certificate passed to the SSLCertificateChainFile directive.
-- *$certcommonname*: set a custom CN field in your SSL certificate. Note that
+- *$certcn*: set a custom CN field in your SSL certificate. Note that
   the CN field must match the FQDN of your virtualhost to avoid "certificate
   name mismatch" errors in the users browsers. Defaults to false, which means
   that $name will be used as the CN.
@@ -102,7 +102,7 @@ define apache::vhost-ssl (
   $certkey=false,
   $cacert=false,
   $certchain=false,
-  $certcommonname=false,
+  $certcn=false,
   $days="3650",
   $publish_csr=false,
   $sslonly=false,
@@ -117,7 +117,7 @@ define apache::vhost-ssl (
   if (!$sslcert_country) { $sslcert_country = "??" }
   if (!$sslcert_organisation) { $sslcert_organisation = "undefined organisation" }
 
-  if ($certcommonname != false ) { $sslcert_commonname = $certcommonname }
+  if ($certcn != false ) { $sslcert_commonname = $certcn }
   else { $sslcert_commonname = $name }
 
   # define distro-specific paths and users.
