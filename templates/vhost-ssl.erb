@@ -1,9 +1,5 @@
 # file managed by puppet
-<% if ports == "all" -%>
-<VirtualHost<% apache_ssl_ports.each do |port| %> <%= ip_address %>:<%= port %><% end %>>
-<% else -%>
-<VirtualHost<% ports.each do |port| %> <%= ip_address %>:<%= port %><% end %>>
-<% end -%>
+<VirtualHost<% ports.each do |port| -%> <%= port %><% end -%>>
   ServerName <%= name %>
 
 <% aliases.each do |serveralias| -%>

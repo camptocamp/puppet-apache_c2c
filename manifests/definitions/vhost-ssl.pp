@@ -52,9 +52,7 @@ Parameters:
   Defaults to "true", which means the virtualhost will be reachable unencrypted
   on port 80, as well as encrypted on port 443.
 - *ports*: array specifying the ports on which the vhost will be reachable.
-  Defaults to "all", which means all ports specified in $apache_ssl_ports (443
-  if not defined) and, if $sslonly is "false" (the default), $apache_ports (80
-  if not defined).
+  Defaults to "*:443".
 
 Requires:
 - Class["apache-ssl"]
@@ -108,12 +106,9 @@ define apache::vhost-ssl (
   $publish_csr=false,
   $sslonly=false,
   $enable_default=true,
-  $ports="all",
+  $ports=['*:443'],
   $ssl_hostname=false
 ) {
-
-  if $apache_ssl_ports {} else { $apache_ports = [80] }
-  if $apache_ssl_ports {} else { $apache_ssl_ports = [443] }
 
   # these 2 values are required to generate a valid SSL certificate.
   if (!$sslcert_country) { $sslcert_country = "??" }
