@@ -25,6 +25,7 @@ Parameters:
 - *$group*: see apache::vhost
 - *$mode*: see apache::vhost
 - *$aliases*: see apache::vhost
+- *$enable_default*: see apache::vhost
 - *$ip_address*: the ip address defined in the <VirtualHost> directive.
   Defaults to "*".
 - *$cert*: optional source URL of the certificate (see examples below), if the
@@ -106,6 +107,7 @@ define apache::vhost-ssl (
   $days="3650",
   $publish_csr=false,
   $sslonly=false,
+  $enable_default=true,
   $ports="all",
   $ssl_hostname=false
 ) {
@@ -180,23 +182,8 @@ define apache::vhost-ssl (
     admin          => $admin,
     group          => $group,
     mode           => $mode,
-    enable_default => $sslonly ? {
-      true => false,
-      default => true,
-    },
+    enable_default => $enable_default,
     ports          => $ports,
-  }
-
-  if $sslonly {
-    exec { "disable default site from $name":
-      command => $operatingsystem ? {
-        Debian => "/usr/sbin/a2dissite default",
-        RedHat => "/usr/local/sbin/a2dissite default",
-        CentOS => "/usr/local/sbin/a2dissite default",
-      },
-      onlyif => "/usr/bin/test -L ${wwwconf}/sites-enabled/000-default",
-      notify => Exec["apache-graceful"],
-    }
   }
 
   if $ensure == "present" {
