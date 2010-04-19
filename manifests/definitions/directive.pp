@@ -1,4 +1,4 @@
-define apache::directive ($ensure="present", $directive, $vhost) {
+define apache::directive ($ensure="present", $directive="", $vhost) {
 
   $fname = regsubst($name, "\s", "_", "G")
 
