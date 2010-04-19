@@ -67,14 +67,6 @@ class apache::debian inherits apache::base {
     require => Package["apache"],
   }
 
-  common::concatfilepart {"apache.ports":
-    ensure  => present,
-    file    => "/etc/apache2/ports.conf",
-    content => template("apache/ports.conf.erb"),
-    require => Package["apache"],
-    notify  => Service["apache"],
-  }
-
   file {"/etc/apache2/sites-available/default-ssl":
     ensure => absent,
     force => true,
