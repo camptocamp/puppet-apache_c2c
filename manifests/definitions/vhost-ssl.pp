@@ -10,10 +10,12 @@ additional parameters are used to configure the SSL specific stuff.
 An "ssl" subdirectory will be created in the virtualhost's directory. By
 default, 3 files will be created in this subdirectory using the
 generate-ssl-cert.sh script: $name.key (the private key), $name.crt (the
-self-signed certificate) and $name.csr (the certificate signing request).
+self-signed certificate) and $name.csr (the certificate signing request). An
+additional file, ssleay.cnf, is used as a template by generate-ssl-cert.sh.
 
 Parameters:
-- *$name*: the name of the virtualhost.
+- *$name*: the name of the virtualhost. Will be used as the CN in the generated
+  ssl certificate.
 - *$ensure*: see apache::vhost
 - *$config_file*: see apache::vhost
 - *$config_content*: see apache::vhost
@@ -24,7 +26,8 @@ Parameters:
 - *$admin*: see apache::vhost
 - *$group*: see apache::vhost
 - *$mode*: see apache::vhost
-- *$aliases*: see apache::vhost
+- *$aliases*: see apache::vhost. The generated SSL certificate will have this
+  list as DNS subjectAltName entries.
 - *$enable_default*: see apache::vhost
 - *$ip_address*: the ip address defined in the <VirtualHost> directive.
   Defaults to "*".

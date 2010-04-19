@@ -33,8 +33,8 @@ mod_ssl.
 
 It also drops a little shell script in /usr/local/sbin/generate-ssl-cert.sh,
 which is used by apache::vhost-ssl to generate an SSL key and certificate. This
-script calls openssl with /etc/ssl/ssleay.cnf as a template. The content of
-this file is influenced by a few class variables described below.
+script calls openssl with /var/www/<vhost>/ssl/ssleay.cnf as a template. The
+content of this file is influenced by a few class variables described below.
 
 Class variables:
 - *sslcert_country*: the content of the "countryName" field in generated
