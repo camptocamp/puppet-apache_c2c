@@ -36,6 +36,7 @@ class apache::awstats {
 
       file { "/usr/share/awstats/wwwroot/cgi-bin/":
         seltype => "httpd_sys_script_exec_t",
+        mode    => 0755,
         recurse => true,
         require => Package["awstats"],
       }
