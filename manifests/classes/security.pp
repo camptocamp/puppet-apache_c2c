@@ -9,9 +9,15 @@ class apache::security {
       }
 
       file { "/etc/httpd/conf.d/mod_security.conf":
-        ensure => absent,
+        ensure  => present,
+        content => "# file managed by puppet
+
+<IfModule mod_security2.c>
+  Include modsecurity.d/modsecurity_localrules.conf
+</IfModule>
+",
         require => Package["mod_security"],
-        notify => Exec["apache-graceful"],
+        notify  => Exec["apache-graceful"],
       }
     }
 
