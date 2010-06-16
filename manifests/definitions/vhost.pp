@@ -37,15 +37,20 @@ define apache::vhost (
   }    
 
   # check if default virtual host is enabled
-  if $enable_default {
-    exec { "check if default virtual host is enabled for $name":
-      command => $operatingsystem ? {
-        Debian => "/usr/sbin/a2ensite default",
-        RedHat => "/usr/local/sbin/a2ensite default",
-        CentOS => "/usr/local/sbin/a2ensite default",
-      },
-      unless => "/usr/bin/test -L ${wwwconf}/sites-enabled/000-default",
-      notify => Exec["apache-graceful"],
+  if $enable_default == "true" {
+    exec { "enable default virtual host from ${name}":
+      command => "a2ensite default",
+      unless  => "test -L ${wwwconf}/sites-enabled/000-default",
+      notify  => Exec["apache-graceful"],
+      require => Package["apache"],
+    }
+
+  } else {
+
+    exec { "disable default virtual host from ${name}":
+      command => "a2dissite default",
+      onlyif  => "test -L ${wwwconf}/sites-enabled/000-default",
+      notify  => Exec["apache-graceful"],
       require => Package["apache"],
     }
   }
