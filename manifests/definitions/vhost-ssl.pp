@@ -112,8 +112,7 @@ define apache::vhost-ssl (
   $sslonly=false,
   $enable_default=true,
   $ports=['*:80'],
-  $sslports=['*:443'],
-  $ssl_hostname=false
+  $sslports=['*:443']
 ) {
 
   # these 2 values are required to generate a valid SSL certificate.
