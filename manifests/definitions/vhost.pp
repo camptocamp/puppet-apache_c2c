@@ -1,6 +1,6 @@
 define apache::vhost (
   $ensure=present,
-  $config_file=false,
+  $config_file="",
   $config_content=false,
   $htdocs=false,
   $conf=false,
@@ -142,12 +142,13 @@ define apache::vhost (
       }
 
       case $config_file {
-        true: {
+
+        default: {
           File["$wwwconf/sites-available/${name}"] {
-            source => "puppet:///$wwwconf/sites-available/${name}",
+            source => $config_file,
           }
         }
-        false: {
+        "": {
 
           if $config_content {
             File["$wwwconf/sites-available/${name}"] {
@@ -159,9 +160,6 @@ define apache::vhost (
               content => template("apache/vhost.erb"), 
             }
           }
-       }
-        default: {
-          fail "Invalid 'source' value '$source' for apache::vhost"
         }
       }
 
