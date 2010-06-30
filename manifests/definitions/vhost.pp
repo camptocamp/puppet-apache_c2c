@@ -37,7 +37,8 @@ define apache::vhost (
   }    
 
   # check if default virtual host is enabled
-  if $enable_default == "true" {
+  if $enable_default == true {
+
     exec { "enable default virtual host from ${name}":
       command => "a2ensite default",
       unless  => "test -L ${wwwconf}/sites-enabled/000-default",
