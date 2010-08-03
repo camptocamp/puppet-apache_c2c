@@ -21,16 +21,13 @@ Example usage:
 */
 define apache::namevhost ($ensure='present') {
 
+  include apache::params
+
   common::concatfilepart { "apache-namevhost.conf-${name}":
     ensure  => $ensure,
     manage  => true,
     content => "NameVirtualHost ${name}\n",
-    file    => $operatingsystem ? {
-      Debian => "/etc/apache2/ports.conf",
-      Ubuntu => "/etc/apache2/ports.conf",
-      RedHat => "/etc/httpd/ports.conf",
-      CentOS => "/etc/httpd/ports.conf",
-    },
+    file    => "${apache::params::conf}/ports.conf",
     require => Package["apache"],
     notify  => Service["apache"],
   }

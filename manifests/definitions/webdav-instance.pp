@@ -1,15 +1,11 @@
 define apache::webdav::instance ($ensure=present, $vhost, $directory=false) {
 
-  case $operatingsystem {
-    redhat,CentOS : { $wwwroot = "/var/www/vhosts" }
-    debian : { $wwwroot = "/var/www" }
-    default : { fail "Unsupported operatingsystem ${operatingsystem}" }
-  }
+  include apache::params
  
   if $directory {
     $davdir = "${directory}/webdav-${name}"
   } else {
-    $davdir = "${wwwroot}/${vhost}/private/webdav-${name}" 
+    $davdir = "${apache::params::root}/${vhost}/private/webdav-${name}"
   }
 
   file {$davdir:
@@ -20,7 +16,7 @@ define apache::webdav::instance ($ensure=present, $vhost, $directory=false) {
   }
 
   # configuration
-  file {"${wwwroot}/${vhost}/conf/webdav-${name}.conf" :
+  file { "${apache::params::root}/${vhost}/conf/webdav-${name}.conf":
     ensure => $ensure,
     content => template("apache/webdav-config.erb"),
     seltype => $operatingsystem ? {

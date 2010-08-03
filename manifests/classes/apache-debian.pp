@@ -1,20 +1,12 @@
 class apache::debian inherits apache::base {
 
+  include apache::params
+
   # BEGIN inheritance from apache::base
   Exec["apache-graceful"] {
     command => "apache2ctl graceful",
     onlyif => "apache2ctl configtest",
   }
-
-  File["log directory"] { path => "/var/log/apache2" }
-  File["root directory"] { path => "/var/www" }
-  File["cgi-bin directory"] { path => "/usr/lib/cgi-bin" }
-
-  User["apache user"]   { name => "www-data" }
-  Group["apache group"] { name => "www-data" }
-
-  Package["apache"] { name => "apache2" }
-  Service["apache"] { name => "apache2" }
 
   File["logrotate configuration"] {
     path => "/etc/logrotate.d/apache2",
@@ -22,12 +14,12 @@ class apache::debian inherits apache::base {
   }
 
   File["default status module configuration"] {
-    path => "/etc/apache2/mods-available/status.conf",
+    path => "${apache::params::conf}/mods-available/status.conf",
     source => "puppet:///apache/etc/apache2/mods-available/status.conf",
   }
 
   File["default virtualhost"] {
-    path => "/etc/apache2/sites-available/default",
+    path => "${apache::params::conf}/sites-available/default",
     content => template("apache/default-vhost.debian"),
   }
   # END inheritance from apache::base
@@ -38,36 +30,34 @@ class apache::debian inherits apache::base {
   }
 
   # directory not present in lenny
-  file {"/var/www/apache2-default":
-    ensure  => absent,
-    force => true,
+  file { "${apache::params::root}/apache2-default":
+    ensure => absent,
+    force  => true,
   }
 
-  file {"/var/www/index.html":
+  file { "${apache::params::root}/index.html":
     ensure => absent,
   }
 
-  file {"/var/www/html":
-    ensure => directory,
-    require => File["/var/www"],
+  file { "${apache::params::root}/html":
+    ensure  => directory,
   }
 
-  file {"/var/www/html/index.html":
+  file { "${apache::params::root}/html/index.html":
     ensure  => present,
     owner   => root,
     group   => root,
     mode    => 644,
     content => "<html><body><h1>It works!</h1></body></html>\n",
-    require => File["/var/www/html"],
   }
 
-  file {"/etc/apache2/conf.d/servername.conf":
+  file { "${apache::params::conf}/conf.d/servername.conf":
     content => "ServerName ${fqdn}\n",
     notify  => Service["apache"],
     require => Package["apache"],
   }
 
-  file {"/etc/apache2/sites-available/default-ssl":
+  file { "${apache::params::conf}/sites-available/default-ssl":
     ensure => absent,
     force => true,
   }

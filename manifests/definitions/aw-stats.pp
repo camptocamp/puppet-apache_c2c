@@ -1,28 +1,24 @@
 define apache::aw-stats($ensure=present) {
 
-  case $operatingsystem {
-    redhat,CentOS : {
-      $wwwroot = "/var/www/vhosts"
-      $conf = "awstats.rh.conf"
-    }
-    debian : {
-      $wwwroot = "/var/www"
-      $conf = "awstats.deb.conf"
-    }
-    default : { fail "Unsupported operatingsystem ${operatingsystem}" }
-  }
+  include apache::params
 
-  file{"/etc/awstats/awstats.${name}.conf":
+  file { "/etc/awstats/awstats.${name}.conf":
     ensure  => $ensure,
     content => template("apache/awstats.erb"),
     require => [Package["apache"], Class["apache::awstats"]],
   }
 
-  file{"${wwwroot}/${name}/conf/awstats.conf":
+  # used in ERB template
+  $wwwroot = $apache::params::root
+
+  file { "${apache::params::root}/${name}/conf/awstats.conf":
     ensure  => $ensure,
     owner   => root,
     group   => root,
-    source  => "puppet:///apache/${conf}",
+    source  => $operatingsystem ? {
+      /RedHat|CentOS/ => "puppet:///apache/awstats.rh.conf",
+      /Debian|Ubuntu/ => "puppet:///apache/awstats.deb.conf",
+    },
     seltype => $operatingsystem ? {
       "RedHat" => "httpd_config_t",
       "CentOS" => "httpd_config_t",

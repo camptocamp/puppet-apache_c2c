@@ -31,17 +31,7 @@ define apache::redirectmatch ($ensure="present", $regex, $url, $filename="", $vh
 
   $fname = regsubst($name, "\s", "_", "G")
 
-  case $operatingsystem {
-    redhat,CentOS : {
-      $wwwpkgname = "httpd"
-      $wwwroot = "/var/www/vhosts"
-    }
-    debian : {
-      $wwwpkgname = "apache2"
-      $wwwroot = "/var/www"
-    }
-    default : { fail "Unsupported operatingsystem ${operatingsystem}" }
-  }
+  include apache::params
 
   file { "${name} redirect on ${vhost}":
     ensure  => $ensure,
@@ -52,8 +42,8 @@ define apache::redirectmatch ($ensure="present", $regex, $url, $filename="", $vh
       default  => undef,
     },
     name    => $filename ? {
-      ""      => "${wwwroot}/${vhost}/conf/redirect-${fname}.conf",
-      default => "${wwwroot}/${vhost}/conf/${filename}",
+      ""      => "${apache::params::root}/${vhost}/conf/redirect-${fname}.conf",
+      default => "${apache::params::root}/${vhost}/conf/${filename}",
     },
     notify  => Exec["apache-graceful"],
     require => Apache::Vhost[$vhost],

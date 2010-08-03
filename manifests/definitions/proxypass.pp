@@ -35,6 +35,8 @@ define apache::proxypass ($ensure="present", $location="", $url="", $filename=""
 
   $fname = regsubst($name, "\s", "_", "G")
 
+  include apache::params
+
   if defined(Apache::Module["proxy"]) {} else {
     apache::module {"proxy": }
   }
@@ -43,17 +45,7 @@ define apache::proxypass ($ensure="present", $location="", $url="", $filename=""
     apache::module {"proxy_http": }
   }
 
-  case $operatingsystem {
-    redhat,CentOS : {
-      $wwwroot = "/var/www/vhosts"
-    }
-    debian : {
-      $wwwroot = "/var/www"
-    }
-    default : { fail "Unsupported operatingsystem ${operatingsystem}" }
-  }
-
-  file{ "${name} proxypass on ${vhost}":
+  file { "${name} proxypass on ${vhost}":
     ensure => $ensure,
     content => template("apache/proxypass.erb"),
     seltype => $operatingsystem ? {
@@ -62,8 +54,8 @@ define apache::proxypass ($ensure="present", $location="", $url="", $filename=""
       default  => undef,
     },
     name    => $filename ? {
-      ""      => "${wwwroot}/${vhost}/conf/proxypass-${fname}.conf",
-      default => "${wwwroot}/${vhost}/conf/${filename}",
+      ""      => "${apache::params::root}/${vhost}/conf/proxypass-${fname}.conf",
+      default => "${apache::params::root}/${vhost}/conf/${filename}",
     },
     notify  => Exec["apache-graceful"],
     require => Apache::Vhost[$vhost],

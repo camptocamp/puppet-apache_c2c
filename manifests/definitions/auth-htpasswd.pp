@@ -7,17 +7,13 @@ define apache::auth::htpasswd (
   $cryptPassword=false,
   $clearPassword=false){
 
-   case $operatingsystem {
-    redhat,CentOS : { $wwwroot = "/var/www/vhosts" }
-    debian : { $wwwroot = "/var/www" }
-    default : { fail "Unsupported operatingsystem ${operatingsystem}" }
-  } 
+  include apache::params
  
   if $userFileLocation {
     $_userFileLocation = $userFileLocation
   } else {
     if $vhost {
-      $_userFileLocation = "${wwwroot}/${vhost}/private"
+      $_userFileLocation = "${apache::params::root}/${vhost}/private"
     } else {
       fail "parameter vhost is require !"
     }

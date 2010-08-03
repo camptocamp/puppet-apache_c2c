@@ -11,12 +11,8 @@ define apache::auth::basic::file::webdav::user (
 
   $fname = regsubst($name, "\s", "_", "G")
 
-  case $operatingsystem {
-    redhat,CentOS : { $wwwroot = "/var/www/vhosts" }
-    debian : { $wwwroot = "/var/www" }
-    default : { fail "Unsupported operatingsystem ${operatingsystem}" }
-  }
-  
+  include apache::params
+
   if defined(Apache::Module["authn_file"]) {} else {
     apache::module {"authn_file": }
   }
@@ -24,7 +20,7 @@ define apache::auth::basic::file::webdav::user (
   if $authUserFile {
     $_authUserFile = $authUserFile
   } else {
-    $_authUserFile = "${wwwroot}/${vhost}/private/htpasswd"
+    $_authUserFile = "${apache::params::root}/${vhost}/private/htpasswd"
   }
   
   if $users != "valid-user" {
@@ -33,7 +29,7 @@ define apache::auth::basic::file::webdav::user (
     $_users = $users
   }
   
-  file {"${wwwroot}/${vhost}/conf/auth-basic-file-webdav-${fname}.conf":
+  file { "${apache::params::root}/${vhost}/conf/auth-basic-file-webdav-${fname}.conf":
     ensure => $ensure,
     content => template("apache/auth-basic-file-webdav-user.erb"),
     seltype => $operatingsystem ? {

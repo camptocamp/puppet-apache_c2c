@@ -58,6 +58,8 @@ define apache::balancer (
   # normalise name
   $fname = regsubst($name, "\s", "_", "G")
 
+  include apache::params
+
   $balancer = "balancer://${fname}"
 
   if !defined(Apache::Module["proxy"]) {
@@ -83,16 +85,6 @@ define apache::balancer (
     }
   }
 
-  case $operatingsystem {
-    RedHat,CentOS: {
-      $wwwroot = "/var/www/vhosts"
-    }
-    Debian,Ubuntu: {
-      $wwwroot = "/var/www"
-    }
-    default : { fail "Unsupported operatingsystem ${operatingsystem}" }
-  }
-
   file{ "${name} balancer on ${vhost}":
     ensure  => $ensure,
     content => template("apache/balancer.erb"),
@@ -102,8 +94,8 @@ define apache::balancer (
       default  => undef,
     },
     name    => $filename ? {
-      ""      => "${wwwroot}/${vhost}/conf/balancer-${fname}.conf",
-      default => "${wwwroot}/${vhost}/conf/${filename}",
+      ""      => "${apache::params::root}/${vhost}/conf/balancer-${fname}.conf",
+      default => "${apache::params::root}/${vhost}/conf/${filename}",
     },
     notify  => Exec["apache-graceful"],
     require => Apache::Vhost[$vhost],

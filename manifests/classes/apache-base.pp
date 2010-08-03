@@ -9,8 +9,10 @@ It shouldn't be necessary to directly include this class.
 */
 class apache::base {
 
+  include apache::params
+
   file {"root directory":
-    path => undef,
+    path => $apache::params::root,
     ensure => directory,
     mode => 755,
     owner => "root",
@@ -19,7 +21,7 @@ class apache::base {
   }
 
   file {"cgi-bin directory":
-    path => undef,
+    path => $apache::params::cgi,
     ensure => directory,
     mode => 755,
     owner => "root",
@@ -28,7 +30,7 @@ class apache::base {
   }
 
   file {"log directory":
-    path => undef,
+    path => $apache::params::log,
     ensure => directory,
     mode => 755,
     owner => "root",
@@ -37,21 +39,25 @@ class apache::base {
   }
 
   user { "apache user":
+    name    => $apache::params::user,
     ensure  => present,
     require => Package["apache"],
     shell   => "/bin/sh",
   }
 
   group { "apache group":
+    name    => $apache::params::user,
     ensure  => present,
     require => Package["apache"],
   }
 
   package { "apache":
+    name   => $apache::params::pkg,
     ensure => installed,
   }
 
   service { "apache":
+    name       => $apache::params::pkg,
     ensure     => running,
     enable     => true,
     hasrestart => true,

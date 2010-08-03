@@ -1,4 +1,6 @@
 class apache::redhat inherits apache::base {
+
+  include apache::params
   
   # BEGIN inheritance from apache::base
   Exec["apache-graceful"] {
@@ -6,19 +8,9 @@ class apache::redhat inherits apache::base {
     onlyif => "/usr/sbin/apachectl configtest",
   }
 
-  File["log directory"] { path => "/var/log/httpd" }
-  File["root directory"] { path => "/var/www/vhosts" }
-  File["cgi-bin directory"] { path => "/var/www/cgi-bin" }
-
-  User["apache user"]   { name => "apache" }
-  Group["apache group"] { name => "apache" }
-
   Package["apache"] {
-    name    => "httpd",
     require => [File["/usr/local/sbin/a2ensite"], File["/usr/local/sbin/a2dissite"], File["/usr/local/sbin/a2enmod"], File["/usr/local/sbin/a2dismod"]],
   }
-
-  Service["apache"] { name => "httpd" }
 
   File["logrotate configuration"] { 
     path => "/etc/logrotate.d/httpd",
@@ -26,12 +18,12 @@ class apache::redhat inherits apache::base {
   }
 
   File["default status module configuration"] {
-    path => "/etc/httpd/conf.d/status.conf",
+    path => "${apache::params::conf}/conf.d/status.conf",
     source => "puppet:///apache/etc/httpd/conf/status.conf",
   }
 
   File["default virtualhost"] { 
-    path => "/etc/httpd/sites-available/default",
+    path => "${apache::params::conf}/sites-available/default",
     content => template("apache/default-vhost.redhat"),
     seltype => "httpd_config_t",
   }  
@@ -45,7 +37,11 @@ class apache::redhat inherits apache::base {
     source => "puppet:///apache/usr/local/sbin/a2X.redhat",
   }
 
-  file { ["/etc/httpd/sites-available", "/etc/httpd/sites-enabled", "/etc/httpd/mods-enabled"]:
+  file { [
+      "${apache::params::conf}/sites-available",
+      "${apache::params::conf}/sites-enabled",
+      "${apache::params::conf}/mods-enabled"
+    ]:
     ensure => directory,
     mode => 644,
     owner => "root",
@@ -54,7 +50,7 @@ class apache::redhat inherits apache::base {
     require => Package["apache"],
   }
 
-  file { "/etc/httpd/conf/httpd.conf":
+  file { "${apache::params::conf}/conf/httpd.conf":
     ensure => present,
     content => template("apache/httpd.conf.erb"),
     seltype => "httpd_config_t",
@@ -65,7 +61,7 @@ class apache::redhat inherits apache::base {
   # the following command was used to generate the content of the directory:
   # egrep '(^|#)LoadModule' /etc/httpd/conf/httpd.conf | sed -r 's|#?(.+ (.+)_module .+)|echo "\1" > mods-available/redhat5/\2.load|' | sh
   # ssl.load was then changed to a template (see apache-redhat-ssl.pp)
-  file {"/etc/httpd/mods-available":
+  file { "${apache::params::conf}/mods-available":
     ensure => directory,
     source => $lsbmajdistrelease ? {
       5 => "puppet:///apache//etc/httpd/mods-available/redhat5/",
@@ -86,7 +82,7 @@ class apache::redhat inherits apache::base {
 
   # no idea why redhat choose to put this file there. apache fails if it's
   # present and mod_proxy isn't...
-  file {"/etc/httpd/conf.d/proxy_ajp.conf":
+  file { "${apache::params::conf}/conf.d/proxy_ajp.conf":
     ensure => absent,
     require => Package["apache"],
     notify => Exec["apache-graceful"],

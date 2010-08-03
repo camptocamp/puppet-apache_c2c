@@ -40,17 +40,7 @@ define apache::directive ($ensure="present", $directive="", $filename="", $vhost
 
   $fname = regsubst($name, "\s", "_", "G")
 
-  case $operatingsystem {
-    redhat,CentOS : {
-      $wwwpkgname = "httpd"
-      $wwwroot = "/var/www/vhosts"
-    }
-    debian : {
-      $wwwpkgname = "apache2"
-      $wwwroot = "/var/www"
-    }
-    default : { fail "Unsupported operatingsystem ${operatingsystem}" }
-  }
+  include apache::params
 
   file{ "${name} directive on ${vhost}":
     ensure => $ensure,
@@ -61,10 +51,10 @@ define apache::directive ($ensure="present", $directive="", $filename="", $vhost
       default  => undef,
     },
     name    => $filename ? {
-      ""      => "${wwwroot}/${vhost}/conf/directive-${fname}.conf",
-      default => "${wwwroot}/${vhost}/conf/${filename}",
+      ""      => "${apache::params::root}/${vhost}/conf/directive-${fname}.conf",
+      default => "${apache::params::root}/${vhost}/conf/${filename}",
     },
-    notify  => Service["${wwwpkgname}"],
+    notify  => Service["apache"],
     require => Apache::Vhost[$vhost],
   }
 }

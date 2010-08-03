@@ -18,16 +18,13 @@ Example usage:
 */
 define apache::listen ($ensure='present') {
 
+  include apache::params
+
   common::concatfilepart { "apache-ports.conf-${name}":
     ensure  => $ensure,
     manage  => true,
     content => "Listen ${name}\n",
-    file    => $operatingsystem ? {
-      Debian => "/etc/apache2/ports.conf",
-      Ubuntu => "/etc/apache2/ports.conf",
-      RedHat => "/etc/httpd/ports.conf",
-      CentOS => "/etc/httpd/ports.conf",
-    },
+    file    => "${apache::params::conf}/ports.conf",
     require => Package["apache"],
     notify  => Service["apache"],
   }

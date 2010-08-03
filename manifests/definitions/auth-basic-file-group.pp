@@ -9,11 +9,7 @@ define apache::auth::basic::file::group (
 
   $fname = regsubst($name, "\s", "_", "G")
 
-  case $operatingsystem {
-    redhat,CentOS : { $wwwroot = "/var/www/vhosts" }
-    debian : { $wwwroot = "/var/www" }
-    default : { fail "Unsupported operatingsystem ${operatingsystem}" }
-  }
+  include apache::params
  
   if defined(Apache::Module["authn_file"]) {} else {
     apache::module {"authn_file": }
@@ -22,16 +18,16 @@ define apache::auth::basic::file::group (
   if $authUserFile {
     $_authUserFile = $authUserFile
   } else {
-    $_authUserFile = "${wwwroot}/${vhost}/private/htpasswd"
+    $_authUserFile = "${apache::params::root}/${vhost}/private/htpasswd"
   }
 
   if $authGroupFile {
     $_authGroupFile = $authGroupFile
   } else {
-    $_authGroupFile = "${wwwroot}/${vhost}/private/htgroup"
+    $_authGroupFile = "${apache::params::root}/${vhost}/private/htgroup"
   }
 
-  file {"${wwwroot}/${vhost}/conf/auth-basic-file-group-${fname}.conf":
+  file { "${apache::params::root}/${vhost}/conf/auth-basic-file-group-${fname}.conf":
     ensure => $ensure,
     content => template("apache/auth-basic-file-group.erb"),
     seltype => $operatingsystem ? {
