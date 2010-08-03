@@ -13,6 +13,9 @@ Parameters:
   directive.
 - *url*: destination to which the ProxyPass directive points to.
 - *vhost*: the virtualhost to which this directive will apply. Mandatory.
+- *filename*: basename of the file in which the directive(s) will be put.
+  Useful in the case directive order matters: apache reads the files in conf/
+  in alphabetical order.
 
 Requires:
 - Class["apache"]
@@ -28,7 +31,7 @@ Example usage:
   }
 
 */
-define apache::proxypass ($ensure="present", $location="", $url="", $vhost) {
+define apache::proxypass ($ensure="present", $location="", $url="", $filename="", $vhost) {
 
   $fname = regsubst($name, "\s", "_", "G")
 
@@ -50,13 +53,17 @@ define apache::proxypass ($ensure="present", $location="", $url="", $vhost) {
     default : { fail "Unsupported operatingsystem ${operatingsystem}" }
   }
 
-  file{"${wwwroot}/${vhost}/conf/proxypass-${fname}.conf":
+  file{ "${name} proxypass on ${vhost}":
     ensure => $ensure,
     content => template("apache/proxypass.erb"),
     seltype => $operatingsystem ? {
       "RedHat" => "httpd_config_t",
       "CentOS" => "httpd_config_t",
       default  => undef,
+    },
+    name    => $filename ? {
+      ""      => "${wwwroot}/${vhost}/conf/proxypass-${fname}.conf",
+      default => "${wwwroot}/${vhost}/conf/${filename}",
     },
     notify  => Exec["apache-graceful"],
     require => Apache::Vhost[$vhost],

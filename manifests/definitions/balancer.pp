@@ -20,6 +20,9 @@ Parameters:
   Defaults to "retry=5"
 - *vhost*: the virtualhost to which this directive will apply. Mandatory
   parameter.
+- *filename*: basename of the file in which the directive(s) will be put.
+  Useful in the case directive order matters: apache reads the files in conf/
+  in alphabetical order.
 
 Requires:
 - Class["apache"]
@@ -48,6 +51,7 @@ define apache::balancer (
   $members=[],
   $standbyurl="",
   $params=["retry=5"],
+  $filename="",
   $vhost
 ) {
 
@@ -89,13 +93,17 @@ define apache::balancer (
     default : { fail "Unsupported operatingsystem ${operatingsystem}" }
   }
 
-  file{"${wwwroot}/${vhost}/conf/balancer-${fname}.conf":
+  file{ "${name} balancer on ${vhost}":
     ensure  => $ensure,
     content => template("apache/balancer.erb"),
     seltype => $operatingsystem ? {
       "RedHat" => "httpd_config_t",
       "CentOS" => "httpd_config_t",
       default  => undef,
+    },
+    name    => $filename ? {
+      ""      => "${wwwroot}/${vhost}/conf/balancer-${fname}.conf",
+      default => "${wwwroot}/${vhost}/conf/${filename}",
     },
     notify  => Exec["apache-graceful"],
     require => Apache::Vhost[$vhost],

@@ -10,6 +10,9 @@ Parameters:
   redirected. Mandatory.
 - *url*: destination URL the redirection should point to. Mandatory.
 - *vhost*: the virtualhost to which this directive will apply. Mandatory.
+- *filename*: basename of the file in which the directive(s) will be put.
+  Useful in the case directive order matters: apache reads the files in conf/
+  in alphabetical order.
 
 Requires:
 - Class["apache"]
@@ -24,7 +27,7 @@ Example usage:
   }
 
 */
-define apache::redirectmatch ($ensure="present", $regex, $url, $vhost) {
+define apache::redirectmatch ($ensure="present", $regex, $url, $filename="", $vhost) {
 
   $fname = regsubst($name, "\s", "_", "G")
 
@@ -40,13 +43,17 @@ define apache::redirectmatch ($ensure="present", $regex, $url, $vhost) {
     default : { fail "Unsupported operatingsystem ${operatingsystem}" }
   }
 
-  file { "${wwwroot}/${vhost}/conf/redirect-${fname}.conf":
+  file { "${name} redirect on ${vhost}":
     ensure  => $ensure,
     content => "# file managed by puppet\nRedirectMatch ${regex} ${url}\n",
     seltype => $operatingsystem ? {
       "RedHat" => "httpd_config_t",
       "CentOS" => "httpd_config_t",
       default  => undef,
+    },
+    name    => $filename ? {
+      ""      => "${wwwroot}/${vhost}/conf/redirect-${fname}.conf",
+      default => "${wwwroot}/${vhost}/conf/${filename}",
     },
     notify  => Exec["apache-graceful"],
     require => Apache::Vhost[$vhost],
