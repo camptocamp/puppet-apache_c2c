@@ -9,7 +9,9 @@
         create 640 root adm
         sharedscripts
         prerotate
-                test -f /usr/share/doc/awstats/examples/awstats_updateall.pl && /usr/share/doc/awstats/examples/awstats_updateall.pl -awstatsprog=/usr/lib/cgi-bin/awstats.pl -confdir=/etc/awstats now > /dev/null
+                if [ -f /usr/share/doc/awstats/examples/awstats_updateall.pl -a -f /usr/lib/cgi-bin/awstats.pl ]; then
+                   /usr/share/doc/awstats/examples/awstats_updateall.pl -awstatsprog=/usr/lib/cgi-bin/awstats.pl -confdir=/etc/awstats now > /dev/null
+                fi
         endscript
         postrotate
                 if [ -f /var/run/apache2.pid ]; then
