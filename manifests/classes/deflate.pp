@@ -12,7 +12,7 @@ class apache::deflate {
     content => "# file managed by puppet
 <IfModule mod_deflate.c>
   AddOutputFilterByType DEFLATE application/x-javascript application/javascript text/css
-  BrowserMatch Safari no-gzip
+  BrowserMatch Safari/4 no-gzip
 </IfModule>
 ",
     notify  => Exec["apache-graceful"],
