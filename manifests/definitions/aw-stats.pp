@@ -2,14 +2,14 @@ define apache::aw-stats($ensure=present) {
 
   include apache::params
 
+  # used in ERB template
+  $wwwroot = $apache::params::root
+
   file { "/etc/awstats/awstats.${name}.conf":
     ensure  => $ensure,
     content => template("apache/awstats.erb"),
     require => [Package["apache"], Class["apache::awstats"]],
   }
-
-  # used in ERB template
-  $wwwroot = $apache::params::root
 
   file { "${apache::params::root}/${name}/conf/awstats.conf":
     ensure  => $ensure,
