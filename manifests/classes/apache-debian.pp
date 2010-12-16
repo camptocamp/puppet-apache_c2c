@@ -24,7 +24,7 @@ class apache::debian inherits apache::base {
   }
   # END inheritance from apache::base
 
-  package {["apache2-mpm-prefork", "libapache2-mod-proxy-html"]:
+  package { "apache2-mpm-prefork":
     ensure  => installed,
     require => Package["apache"],
   }
