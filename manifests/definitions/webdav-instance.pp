@@ -9,7 +9,10 @@ define apache::webdav::instance ($ensure=present, $vhost, $directory=false,$mode
   }
 
   file {$davdir:
-    ensure => directory,
+    ensure => $ensure ? {
+      present => directory,
+      absent  => absent,
+    },
     owner => "www-data",
     group => "www-data",
     mode => $mode,
