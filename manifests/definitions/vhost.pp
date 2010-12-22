@@ -5,6 +5,7 @@ define apache::vhost (
   $htdocs=false,
   $conf=false,
   $readme=false,
+  $docroot=false,
   $user="",
   $admin="",
   $group="root",
@@ -23,6 +24,11 @@ define apache::vhost (
 
   # used in ERB templates
   $wwwroot = $apache::params::root
+
+  $documentroot = $docroot ? {
+    false   => "${wwwroot}/${name}/htdocs",
+    default => $docroot,
+  }
 
   # check if default virtual host is enabled
   if $enable_default == true {
