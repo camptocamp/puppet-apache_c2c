@@ -15,12 +15,13 @@
 
   Include <%= wwwroot %>/<%= name%>/conf/*.conf
 
-  # CGI scripts
-  ScriptAlias /cgi-bin/ <%= wwwroot %>/<%= name %>/cgi-bin/
-  <Directory <%= wwwroot %>/<%= name %>/cgi-bin>
+<% if cgipath -%>
+  ScriptAlias /cgi-bin/ <%= cgipath %>
+  <Directory <%= cgipath %>>
     Options +ExecCGI
     AddHandler cgi-script .cgi
   </Directory>
+<% end -%>
 
   ServerSignature Off
 
