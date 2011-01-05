@@ -5,6 +5,8 @@ define apache::vhost (
   $htdocs=false,
   $conf=false,
   $readme=false,
+  $docroot=false,
+  $cgibin=true,
   $user="",
   $admin="",
   $group="root",
@@ -23,6 +25,17 @@ define apache::vhost (
 
   # used in ERB templates
   $wwwroot = $apache::params::root
+
+  $documentroot = $docroot ? {
+    false   => "${wwwroot}/${name}/htdocs",
+    default => $docroot,
+  }
+
+  $cgipath = $cgibin ? {
+    true    => "${wwwroot}/${name}/cgi-bin/",
+    false   => false,
+    default => $cgibin,
+  }
 
   # check if default virtual host is enabled
   if $enable_default == true {
@@ -117,8 +130,15 @@ define apache::vhost (
       }
 
       # cgi-bin
-      file {"${apache::params::root}/${name}/cgi-bin":
-        ensure => directory,
+      file { "${name} cgi-bin directory":
+        path   => $cgipath ? {
+          false   => "${apache::params::root}/${name}/cgi-bin/",
+          default => $cgipath,
+        },
+        ensure => $cgipath ? {
+          "${apache::params::root}/${name}/cgi-bin/" => directory,
+          default => undef, # don't manage this directory unless under $root/$name
+        },
         owner  => $wwwuser,
         group  => $group,
         mode   => $mode,

@@ -22,6 +22,8 @@ Parameters:
 - *$htdocs*: see apache::vhost
 - *$conf*: see apache::vhost
 - *$readme*: see apache::vhost
+- *$docroot*: see apache::vhost
+- *$cgibin*: see apache::vhost
 - *$user*: see apache::vhost
 - *$admin*: see apache::vhost
 - *$group*: see apache::vhost
@@ -96,6 +98,8 @@ define apache::vhost-ssl (
   $htdocs=false,
   $conf=false,
   $readme=false,
+  $docroot=false,
+  $cgibin=true,
   $user="",
   $admin=$admin,
   $group="root",
@@ -132,6 +136,17 @@ define apache::vhost-ssl (
   # used in ERB templates
   $wwwroot = $apache::params::root
 
+  $documentroot = $docroot ? {
+    false   => "${wwwroot}/${name}/htdocs",
+    default => $docroot,
+  }
+
+  $cgipath = $cgibin ? {
+    true    => "${wwwroot}/${name}/cgi-bin/",
+    false   => false,
+    default => $cgibin,
+  }
+
   # define variable names used in vhost-ssl.erb template
   $certfile      = "${apache::params::root}/$name/ssl/$name.crt"
   $certkeyfile   = "${apache::params::root}/$name/ssl/$name.key"
@@ -167,6 +182,7 @@ define apache::vhost-ssl (
     htdocs         => $htdocs,
     conf           => $conf,
     readme         => $readme,
+    docroot        => $docroot,
     user           => $wwwuser,
     admin          => $admin,
     group          => $group,
