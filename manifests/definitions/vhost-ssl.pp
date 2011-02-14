@@ -60,6 +60,7 @@ Parameters:
   reachable. Defaults to "*:80".
 - *sslports*: array specifying the ports on which the SSL vhost will be
   reachable. Defaults to "*:443".
+- *accesslog_format*: format string for access logs. Defaults to "combined".
 
 Requires:
 - Class["apache-ssl"]
@@ -116,7 +117,8 @@ define apache::vhost-ssl (
   $sslonly=false,
   $enable_default=true,
   $ports=['*:80'],
-  $sslports=['*:443']
+  $sslports=['*:443'],
+  $accesslog_format="combined"
 ) {
 
   # these 2 values are required to generate a valid SSL certificate.
@@ -189,6 +191,7 @@ define apache::vhost-ssl (
     mode           => $mode,
     enable_default => $enable_default,
     ports          => $ports,
+    accesslog_format => $accesslog_format,
   }
 
   if $ensure == "present" {
