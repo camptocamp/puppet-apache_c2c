@@ -15,9 +15,8 @@ class apache::administration {
   $wwwpkgname = $apache::params::pkg
   $wwwuser    = $apache::params::user
 
-  common::concatfilepart { "sudoers.apache":
+  sudo::directive { "apache-administration":
     ensure => present,
-    file => "/etc/sudoers",
     content => template("apache/sudoers.apache.erb"),
     require => Group["apache-admin"],
   }
