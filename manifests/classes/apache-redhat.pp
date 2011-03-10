@@ -60,7 +60,7 @@ class apache::redhat inherits apache::base {
 
   # the following command was used to generate the content of the directory:
   # egrep '(^|#)LoadModule' /etc/httpd/conf/httpd.conf | sed -r 's|#?(.+ (.+)_module .+)|echo "\1" > mods-available/redhat5/\2.load|' | sh
-  # ssl.load was then changed to a template (see apache-redhat-ssl.pp)
+  # ssl.load was then changed to a template (see apache-ssl-redhat.pp)
   file { "${apache::params::conf}/mods-available":
     ensure => directory,
     source => $lsbmajdistrelease ? {
