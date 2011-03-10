@@ -1,0 +1,1 @@
+LoadModule dir_module modules/mod_dir.so

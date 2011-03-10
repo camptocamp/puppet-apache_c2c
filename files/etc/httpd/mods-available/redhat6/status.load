@@ -1,0 +1,1 @@
+LoadModule status_module modules/mod_status.so

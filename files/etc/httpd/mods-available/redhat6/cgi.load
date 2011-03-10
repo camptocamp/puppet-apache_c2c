@@ -1,0 +1,1 @@
+LoadModule cgi_module modules/mod_cgi.so

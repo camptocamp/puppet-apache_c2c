@@ -1,0 +1,1 @@
+LoadModule ldap_module modules/mod_ldap.so

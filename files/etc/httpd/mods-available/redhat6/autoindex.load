@@ -1,0 +1,1 @@
+LoadModule autoindex_module modules/mod_autoindex.so

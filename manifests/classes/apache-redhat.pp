@@ -65,6 +65,7 @@ class apache::redhat inherits apache::base {
     ensure => directory,
     source => $lsbmajdistrelease ? {
       5 => "puppet:///apache//etc/httpd/mods-available/redhat5/",
+      6 => "puppet:///apache//etc/httpd/mods-available/redhat6/",
     },
     recurse => true,
     mode => 644,

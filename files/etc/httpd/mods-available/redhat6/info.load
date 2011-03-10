@@ -1,0 +1,1 @@
+LoadModule info_module modules/mod_info.so
