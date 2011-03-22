@@ -12,6 +12,8 @@ Parameters:
 - *location*: path in virtualhost's context to pass through using the ProxyPass
   directive.
 - *url*: destination to which the ProxyPass directive points to.
+- *params*: a table of key=value (min, max, timeout, retry, etc.) described
+  in the ProxyPass Directive documentation http://httpd.apache.org/docs/current/mod/mod_proxy.html#proxypass
 - *vhost*: the virtualhost to which this directive will apply. Mandatory.
 - *filename*: basename of the file in which the directive(s) will be put.
   Useful in the case directive order matters: apache reads the files in conf/
@@ -27,11 +29,19 @@ Example usage:
     ensure   => present,
     location => "/legacy/",
     url      => "http://legacyserver.example.com",
+    params   => ["retry=5", "ttl=120"],
     vhost    => "www.example.com",
   }
 
 */
-define apache::proxypass ($ensure="present", $location="", $url="", $filename="", $vhost) {
+define apache::proxypass (
+  $ensure="present", 
+  $location="", 
+  $url="", 
+  $params=[], 
+  $filename="", 
+  $vhost
+) {
 
   $fname = regsubst($name, "\s", "_", "G")
 
