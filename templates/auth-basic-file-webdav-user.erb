@@ -11,7 +11,7 @@
   </Limit>
 <% end -%>
 <% if allow_anonymous -%>
-  <Limit GET>
+  <Limit GET OPTIONS PROPFIND>
     Satisfy Any
   </Limit>
 <% end -%>
