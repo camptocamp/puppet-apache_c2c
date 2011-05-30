@@ -1,0 +1,1 @@
+LoadModule deflate_module modules/mod_deflate.so

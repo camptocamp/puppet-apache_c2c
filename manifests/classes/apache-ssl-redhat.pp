@@ -18,15 +18,17 @@ class apache::ssl::redhat inherits apache::base::ssl {
     before => Exec["apache-graceful"],
   }
 
-  if $lsbmajdistrelease == 5 {
-    file {"/etc/httpd/mods-available/ssl.load":
-      ensure => present,
-      content => template("apache/ssl.load.erb"),
-      mode => 644,
-      owner => "root",
-      group => "root",
-      seltype => "httpd_config_t",
-      require => File["/etc/httpd/mods-available"],
+	case $lsbmajdistrelease {
+    5,6: {
+      file {"/etc/httpd/mods-available/ssl.load":
+        ensure => present,
+        content => template("apache/ssl.load.rhel${lsbmajdistrelease}.erb"),
+        mode => 644,
+        owner => "root",
+        group => "root",
+        seltype => "httpd_config_t",
+        require => File["/etc/httpd/mods-available"],
+			}
     }
   }
 }
