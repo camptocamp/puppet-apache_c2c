@@ -54,7 +54,7 @@ Parameters:
   If set to a path, the CSR will be copied into the specified file. Defaults to
   "false", which means don't copy the CSR anywhere.
 - *$sslonly*: if set to "true", only the https virtualhost will be configured.
-  Defaults to "true", which means the virtualhost will be reachable unencrypted
+  Defaults to "false", which means the virtualhost will be reachable unencrypted
   on port 80, as well as encrypted on port 443.
 - *ports*: array specifying the ports on which the non-SSL vhost will be
   reachable. Defaults to "*:80".
