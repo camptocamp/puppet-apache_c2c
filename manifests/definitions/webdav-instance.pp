@@ -1,4 +1,4 @@
-define apache::webdav::instance ($ensure=present, $vhost, $directory=false) {
+define apache::webdav::instance ($ensure=present, $vhost, $directory=false,$mode=2755) {
 
   include apache::params
  
@@ -15,7 +15,7 @@ define apache::webdav::instance ($ensure=present, $vhost, $directory=false) {
     },
     owner => "www-data",
     group => "www-data",
-    mode => 2755,
+    mode => $mode,
   }
 
   # configuration
