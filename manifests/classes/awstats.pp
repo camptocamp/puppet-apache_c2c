@@ -17,7 +17,7 @@ class apache::awstats {
 
   case $operatingsystem {
 
-    Debian: {
+    Debian,Ubuntu: {
       cron { "update all awstats virtual hosts":
         command => "/usr/share/doc/awstats/examples/awstats_updateall.pl -awstatsprog=/usr/lib/cgi-bin/awstats.pl -confdir=/etc/awstats now > /dev/null",
         user    => "root",
