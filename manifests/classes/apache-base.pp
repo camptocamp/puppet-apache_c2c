@@ -11,17 +11,11 @@ class apache::base {
 
   include apache::params
 
+  $access_log = $apache::params::access_log
+  $error_log  = $apache::params::error_log
+
   file {"root directory":
     path => $apache::params::root,
-    ensure => directory,
-    mode => 755,
-    owner => "root",
-    group => "root",
-    require => Package["apache"],
-  }
-
-  file {"cgi-bin directory":
-    path => $apache::params::cgi,
     ensure => directory,
     mode => 755,
     owner => "root",
@@ -93,12 +87,12 @@ class apache::base {
   }
 
   file {"default virtualhost":
-    path => undef,
-    ensure => present,
-    content => undef,
+    path    => "${apache::params::conf}/sites-available/default",
+    ensure  => present,
+    content => template("apache/default-vhost.erb"),
     require => Package["apache"],
-    notify => Exec["apache-graceful"],
-    mode => 644,
+    notify  => Exec["apache-graceful"],
+    mode    => 644,
   }
 
   exec { "apache-graceful":
