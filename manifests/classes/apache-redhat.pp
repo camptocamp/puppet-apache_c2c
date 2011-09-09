@@ -23,8 +23,6 @@ class apache::redhat inherits apache::base {
   }
 
   File["default virtualhost"] { 
-    path => "${apache::params::conf}/sites-available/default",
-    content => template("apache/default-vhost.redhat"),
     seltype => "httpd_config_t",
   }  
   # END inheritance from apache::base
@@ -79,6 +77,12 @@ class apache::redhat inherits apache::base {
   apache::module {["log_config"]:
     ensure => present,
     notify => Exec["apache-graceful"],
+  }
+
+  # it makes no sens to put CGI here, deleted from the default vhost config
+  file {"/var/www/cgi-bin":
+    ensure  => absent,
+    require => Package["apache"],
   }
 
   # no idea why redhat choose to put this file there. apache fails if it's
