@@ -6,7 +6,7 @@
         compress
         delaycompress
         notifempty
-        create 640 root adm
+        create 644 root adm
         sharedscripts
         prerotate
                 if [ -f /usr/share/doc/awstats/examples/awstats_updateall.pl -a -f /usr/lib/cgi-bin/awstats.pl ]; then
