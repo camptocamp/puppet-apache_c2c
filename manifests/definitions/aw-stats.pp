@@ -1,4 +1,4 @@
-define apache::aw-stats($ensure=present) {
+define apache::aw-stats($ensure=present, $aliases=[]) {
 
   include apache::params
 
