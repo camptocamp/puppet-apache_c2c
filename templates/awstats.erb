@@ -168,7 +168,7 @@ SiteDomain="<%= name %>"
 # Note: You can also use @/mypath/myfile if list of aliases are in a file.
 # Example: "www.myserver.com localhost 127.0.0.1 REGEX[mydomain\.(net|org)$]"
 #
-HostAliases=""
+HostAliases="<%=aliases.collect! {|i| "#{i}" }.join(' ') -%>"
 
 
 # If you want to have hosts reported by name instead of ip address, AWStats

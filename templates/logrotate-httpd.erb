@@ -14,7 +14,7 @@
         fi
     endscript
     postrotate
-        if [ -f /var/run/httpd.pid ]; then
+        if [ -f <%= httpd_pid_file %> ]; then
             /sbin/service httpd reload > /dev/null 2>/dev/null || true
         fi
     endscript

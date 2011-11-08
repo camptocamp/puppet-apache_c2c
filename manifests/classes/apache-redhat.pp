@@ -12,9 +12,14 @@ class apache::redhat inherits apache::base {
     require => [File["/usr/local/sbin/a2ensite"], File["/usr/local/sbin/a2dissite"], File["/usr/local/sbin/a2enmod"], File["/usr/local/sbin/a2dismod"]],
   }
 
+  # $httpd_pid_file is used in template logrotate-httpd.erb
+  $httpd_pid_file = $lsbmajdistrelease ? {
+    /4|5/   => "/var/run/httpd.pid",
+    default => "/var/run/httpd/httpd.pid",
+  }
   File["logrotate configuration"] { 
-    path => "/etc/logrotate.d/httpd",
-    source => "puppet:///apache/etc/logrotate.d/httpd",
+    path    => "/etc/logrotate.d/httpd",
+    content => template("apache/logrotate-httpd.erb"),
   }
 
   File["default status module configuration"] {
