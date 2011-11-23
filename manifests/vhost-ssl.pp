@@ -85,8 +85,8 @@ Example usage:
   apache::vhost-ssl { "bar.example.com":
     ensure => present,
     ip_address => "10.0.0.3",
-    cert => "puppet:///exampleproject/ssl-certs/bar.example.com.crt",
-    certchain => "puppet:///exampleproject/ssl-certs/quovadis.chain.crt",
+    cert => "puppet:///modules/exampleproject/ssl-certs/bar.example.com.crt",
+    certchain => "puppet:///modules/exampleproject/ssl-certs/quovadis.chain.crt",
     publish_csr => true,
     sslonly => true,
   }

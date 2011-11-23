@@ -27,7 +27,7 @@ class apache::userdir {
   file {"/etc/skel/public_html/README":
     require => File["/etc/skel/public_html"],
     ensure => present,
-    source => 'puppet:///apache/README_userdir',
+    source => 'puppet:///modules/apache/README_userdir',
   }
 
   apache::module { "userdir":

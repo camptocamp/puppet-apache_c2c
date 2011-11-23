@@ -10,12 +10,12 @@ class apache::debian inherits apache::base {
 
   File["logrotate configuration"] {
     path => "/etc/logrotate.d/apache2",
-    source => "puppet:///apache/etc/logrotate.d/apache2",
+    source => "puppet:///modules/apache/etc/logrotate.d/apache2",
   }
 
   File["default status module configuration"] {
     path => "${apache::params::conf}/mods-available/status.conf",
-    source => "puppet:///apache/etc/apache2/mods-available/status.conf",
+    source => "puppet:///modules/apache/etc/apache2/mods-available/status.conf",
   }
   # END inheritance from apache::base
 

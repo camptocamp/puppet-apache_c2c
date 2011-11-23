@@ -13,7 +13,7 @@ class apache::base::ssl {
   apache::namevhost { "*:443": ensure => present }
 
   file { "/usr/local/sbin/generate-ssl-cert.sh":
-    source => "puppet:///apache/generate-ssl-cert.sh",
+    source => "puppet:///modules/apache/generate-ssl-cert.sh",
     mode   => 755,
   }
 

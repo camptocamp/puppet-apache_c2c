@@ -4,7 +4,7 @@ define apache::userdirinstance ($ensure=present, $vhost) {
 
   file { "${apache::params::root}/${vhost}/conf/userdir.conf":
     ensure => $ensure,
-    source => 'puppet:///apache/userdir.conf',
+    source => 'puppet:///modules/apache/userdir.conf',
     seltype => $operatingsystem ? {
       "RedHat" => "httpd_config_t",
       "CentOS" => "httpd_config_t",

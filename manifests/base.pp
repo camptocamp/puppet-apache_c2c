@@ -106,7 +106,7 @@ class apache::base {
     owner => root,
     group => root,
     mode => 755,
-    source => "puppet:///apache/usr/local/bin/htgroup",
+    source => "puppet:///modules/apache/usr/local/bin/htgroup",
   }
 
 }
