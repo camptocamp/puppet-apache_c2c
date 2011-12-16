@@ -12,7 +12,7 @@
 class apache::dev {
 
   package { "apache-devel":
-    name    => $operatingsystem ? {
+    name    => $::operatingsystem ? {
       RedHat => "httpd-devel",
       CentOS => "httpd-devel",
     },

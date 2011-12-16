@@ -36,7 +36,7 @@ define apache::redirectmatch ($ensure="present", $regex, $url, $filename="", $vh
   file { "${name} redirect on ${vhost}":
     ensure  => $ensure,
     content => "# file managed by puppet\nRedirectMatch ${regex} ${url}\n",
-    seltype => $operatingsystem ? {
+    seltype => $::operatingsystem ? {
       "RedHat" => "httpd_config_t",
       "CentOS" => "httpd_config_t",
       default  => undef,

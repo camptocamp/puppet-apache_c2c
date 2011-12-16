@@ -158,7 +158,7 @@ define apache::vhost-ssl (
   if $cacert != false {
     $cacertfile = "${apache::params::root}/$name/ssl/cacert.crt"
   } else {
-    $cacertfile = $operatingsystem ? {
+    $cacertfile = $::operatingsystem ? {
       /RedHat|CentOS/ => "/etc/pki/tls/certs/ca-bundle.crt",
       Debian => "/etc/ssl/certs/ca-certificates.crt",
     }

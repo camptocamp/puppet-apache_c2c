@@ -2,7 +2,7 @@ define apache::module ($ensure='present') {
 
   include apache::params
 
-  $a2enmod_deps = $operatingsystem ? {
+  $a2enmod_deps = $::operatingsystem ? {
     /RedHat|CentOS/ => [
       Package["apache"],
       File["/etc/httpd/mods-available"],
@@ -20,7 +20,7 @@ define apache::module ($ensure='present') {
   case $ensure {
     'present' : {
       exec { "a2enmod ${name}":
-        command => $operatingsystem ? {
+        command => $::operatingsystem ? {
           RedHat => "/usr/local/sbin/a2enmod ${name}",
           CentOS => "/usr/local/sbin/a2enmod ${name}",
           default => "/usr/sbin/a2enmod ${name}"
@@ -34,7 +34,7 @@ define apache::module ($ensure='present') {
 
     'absent': {
       exec { "a2dismod ${name}":
-        command => $operatingsystem ? {
+        command => $::operatingsystem ? {
           /RedHat|CentOS/ => "/usr/local/sbin/a2dismod ${name}",
           /Debian|Ubuntu/ => "/usr/sbin/a2dismod ${name}",
         },

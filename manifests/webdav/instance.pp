@@ -22,7 +22,7 @@ define apache::webdav::instance ($ensure=present, $vhost, $directory=false,$mode
   file { "${apache::params::root}/${vhost}/conf/webdav-${name}.conf":
     ensure => $ensure,
     content => template("apache/webdav-config.erb"),
-    seltype => $operatingsystem ? {
+    seltype => $::operatingsystem ? {
       "RedHat" => "httpd_config_t",
       "CentOS" => "httpd_config_t",
       default  => undef,

@@ -15,7 +15,7 @@ class apache::awstats {
     require => Package["awstats"],
   }
 
-  case $operatingsystem {
+  case $::operatingsystem {
 
     Debian,Ubuntu: {
       cron { "update all awstats virtual hosts":

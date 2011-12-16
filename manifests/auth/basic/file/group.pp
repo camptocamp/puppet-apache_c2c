@@ -30,7 +30,7 @@ define apache::auth::basic::file::group (
   file { "${apache::params::root}/${vhost}/conf/auth-basic-file-group-${fname}.conf":
     ensure => $ensure,
     content => template("apache/auth-basic-file-group.erb"),
-    seltype => $operatingsystem ? {
+    seltype => $::operatingsystem ? {
       "RedHat" => "httpd_config_t",
       "CentOS" => "httpd_config_t",
       default  => undef,
