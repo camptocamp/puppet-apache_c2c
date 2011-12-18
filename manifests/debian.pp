@@ -6,6 +6,7 @@ class apache::debian inherits apache::base {
   Exec["apache-graceful"] {
     command => "apache2ctl graceful",
     onlyif => "apache2ctl configtest",
+    require => Package["apache"],
   }
 
   File["logrotate configuration"] {
@@ -16,6 +17,7 @@ class apache::debian inherits apache::base {
   File["default status module configuration"] {
     path => "${apache::params::conf}/mods-available/status.conf",
     source => "puppet:///modules/apache/etc/apache2/mods-available/status.conf",
+    require => Package["apache"],
   }
   # END inheritance from apache::base
 
