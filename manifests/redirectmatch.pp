@@ -41,7 +41,7 @@ define apache::redirectmatch ($ensure="present", $regex, $url, $filename="", $vh
       "CentOS" => "httpd_config_t",
       default  => undef,
     },
-    name    => $filename ? {
+    path    => $filename ? {
       ""      => "${apache::params::root}/${vhost}/conf/redirect-${fname}.conf",
       default => "${apache::params::root}/${vhost}/conf/${filename}",
     },
