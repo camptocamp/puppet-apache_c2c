@@ -4,8 +4,8 @@ class apache::debian inherits apache::base {
 
   # BEGIN inheritance from apache::base
   Exec["apache-graceful"] {
-    command => "apache2ctl graceful",
-    onlyif => "apache2ctl configtest",
+    command => "/usr/sbin/apache2ctl graceful",
+    onlyif => "/usr/sbin/apache2ctl configtest",
     require => Package["apache"],
   }
 
