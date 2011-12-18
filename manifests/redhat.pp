@@ -40,11 +40,11 @@ class apache::redhat inherits apache::base {
     source => "puppet:///modules/apache/usr/local/sbin/a2X.redhat",
   }
 
-  $httpd_mpm = $apache_mpm_type ? {
+  $httpd_mpm = $apache::params::mpm_type ? {
     ''         => 'httpd', # default MPM
     'pre-fork' => 'httpd',
     'prefork'  => 'httpd',
-    default    => "httpd.${apache_mpm_type}",
+    default    => "httpd.${apache::params::mpm_type}",
   }
 
   augeas { "select httpd mpm ${httpd_mpm}":

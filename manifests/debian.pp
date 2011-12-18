@@ -19,9 +19,9 @@ class apache::debian inherits apache::base {
   }
   # END inheritance from apache::base
 
-  $mpm_package = $apache_mpm_type ? {
+  $mpm_package = $apache::params::mpm_type ? {
     "" => "apache2-mpm-prefork",
-    default => "apache2-mpm-${apache_mpm_type}",
+    default => "apache2-mpm-${apache::params::mpm_type}",
   }
 
   package { "${mpm_package}":

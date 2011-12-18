@@ -1,16 +1,21 @@
 class apache::params {
 
+  $mpm_type = $::apache_mpm_type ? {
+    '' => '',
+    default => $::apache_mpm_type
+  }
+
   $pkg = $::operatingsystem ? {
     /RedHat|CentOS/ => 'httpd',
     /Debian|Ubuntu/ => 'apache2',
   }
 
-  $root = $apache_root ? {
+  $root = $::apache_root ? {
     "" => $::operatingsystem ? {
       /RedHat|CentOS/ => '/var/www/vhosts',
       /Debian|Ubuntu/ => '/var/www',
     },
-    default => $apache_root
+    default => $::apache_root
   }
 
   $user = $::operatingsystem ? {
