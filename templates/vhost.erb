@@ -13,7 +13,7 @@
   ErrorLog <%= wwwroot %>/<%= name %>/logs/error.log
   CustomLog <%= wwwroot %>/<%= name %>/logs/access.log "<%= accesslog_format %>"
 
-  Include <%= wwwroot %>/<%= name%>/conf/*.conf
+  Include <%= wwwroot %>/<%= name %>/conf/*.conf
 
 <% if cgipath -%>
   ScriptAlias /cgi-bin/ <%= cgipath %>
