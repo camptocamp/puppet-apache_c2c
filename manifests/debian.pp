@@ -30,6 +30,15 @@ class apache::debian inherits apache::base {
     ensure  => installed,
     require => Package["apache"],
   }
+  
+  file { "${apache::params::conf}/apache2.conf":
+    ensure  => present,
+    content => template('apache/apache2.conf.erb'),
+    notify  => Service["apache"],
+    require => Package["apache"],
+    owner   => 'root',
+    group   => 'root',
+  }
 
   # directory not present in lenny
   file { "${apache::params::root}/apache2-default":
