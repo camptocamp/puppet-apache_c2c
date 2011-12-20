@@ -2,7 +2,7 @@ define apache::vhost(
   $ensure=present,
   $config_file='',
   $config_content=false,
-  $htdocs=false,
+  $htdocs=undef,
   $conf=false,
   $readme=false,
   $docroot=false,
