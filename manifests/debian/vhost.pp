@@ -57,15 +57,6 @@ define apache::debian::vhost (
   case $ensure {
     present: {
 
-      group { $group:
-        ensure => present
-      }
-
-      user { $wwwuser:
-        ensure  => present,
-        require => Group[$group] 
-      }
-
       file { "${apache::params::conf}/sites-available/${name}":
         ensure  => present,
         owner   => root,
