@@ -55,19 +55,19 @@ define apache::debian::vhost (
     default   => $config_content
   }
 
-  $config_file_real = $config_file ? {
-    undef     => undef,
-    default   => $config_file
-  }
-
-  if $config_file_real and $config_content_real {
-    err("cannot both set config file and config file content at apache::debian::vhost $name")
-  }
+#  $config_file_real = $config_file ? {
+#    undef     => undef,
+#    default   => $config_file
+#  }
+#
+#  if $config_file_real and $config_content_real {
+#    err("cannot both set config file and config file content at apache::debian::vhost $name")
+#  }
 #== declaring resources
   
-  notice("${apache::params::conf}/sites-available/${name}.conf")
-  notify{"${apache::params::conf}/sites-available/${name}.conf":
-  }
+#  notice("${apache::params::conf}/sites-available/${name}.conf")
+#  notify{"${apache::params::conf}/sites-available/${name}.conf":
+#  }
 
   case $ensure {
     present: {
@@ -76,7 +76,7 @@ define apache::debian::vhost (
         owner   => root,
         group   => root,
         mode    => 0644,
-        source  => $config_file_real,
+#        source  => $config_file_real,
         content => $config_content_real,
         require => Package[$apache::params::pkg],
         notify  => Exec["apache-graceful"],
