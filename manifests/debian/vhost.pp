@@ -6,14 +6,14 @@ define apache::debian::vhost (
   $readme=false,
   $docroot=false,
   $cgibin=undef,
-  $user="",
-  $admin="",
-  $group="root",
+  $user='',
+  $admin='',
+  $group='root',
   $mode=2570,
   $aliases=[],
   $enable_default=true,
   $ports=['*:80'],
-  $accesslog_format="combined"
+  $accesslog_format='combined'
 ) {
 
   # make sure we have access to the params
@@ -60,7 +60,13 @@ define apache::debian::vhost (
       group { $group:
         ensure => present
       }
-       
+
+      user { $group:
+        ensure  => present,
+        require => Group[$group] 
+      }
+
+}       
       file { "${apache::params::conf}/sites-available/${name}":
         ensure  => present,
         owner   => root,
