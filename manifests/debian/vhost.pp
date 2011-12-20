@@ -3,7 +3,7 @@ define apache::debian::vhost (
   $config_file=undef,
   $config_content=undef,
   $htdocs=undef,
-  $conf=false,
+  $conf=undef,
   $readme=false,
   $docroot=false,
   $cgibin=undef,
