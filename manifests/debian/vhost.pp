@@ -61,12 +61,12 @@ define apache::debian::vhost (
         ensure => present
       }
 
-      user { $group:
+      user { $wwwuser:
         ensure  => present,
         require => Group[$group] 
       }
 
-}       
+       
       file { "${apache::params::conf}/sites-available/${name}":
         ensure  => present,
         owner   => root,
@@ -93,6 +93,7 @@ define apache::debian::vhost (
         mode    => $mode,
         require => [
           File["${apache::params::root}/${name}"],
+          User[$wwwuser],
           Group[$group],
         ],
       }
