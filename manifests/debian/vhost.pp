@@ -26,6 +26,7 @@ define apache::debian::vhost (
   if $cgibin != undef {
     err('cgi support for debian is missing')
   }
+  $cgipath = false
 
   # what user do we run under?
   $wwwuser = $user ? {
