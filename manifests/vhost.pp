@@ -42,7 +42,6 @@ define apache::vhost(
     'Debian': {
       apache::debian::vhost{ $name:
         ensure          => $ensure,
-        config_file     => $config_file,
         config_content  => $config_content,
         htdocs          => $htdocs,
         conf            => $conf,
