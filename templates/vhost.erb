@@ -1,6 +1,7 @@
 # file managed by puppet
 <VirtualHost<% ports.each do |port| -%> <%= port %><% end -%>>
   ServerName <%= name %>
+  ServerAdmin <%= admin %>
 
 <% aliases.each do |serveralias| -%>
   ServerAlias <%= serveralias %>
@@ -14,14 +15,6 @@
   CustomLog <%= wwwroot %>/<%= name %>/logs/access.log "<%= accesslog_format %>"
 
   Include <%= wwwroot %>/<%= name %>/conf/*.conf
-
-<% if cgipath -%>
-  ScriptAlias /cgi-bin/ <%= cgipath %>
-  <Directory <%= cgipath %>>
-    Options +ExecCGI
-    AddHandler cgi-script .cgi
-  </Directory>
-<% end -%>
 
   ServerSignature Off
 

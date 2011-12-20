@@ -51,12 +51,12 @@ define apache::debian::vhost (
   $config_content_real = $config_content ? {
     undef     => undef,
     'default' => template('apache/vhost.erb'),
-    default   => $config_content
+    default   => template($config_content)
   }
 
   case $ensure {
     present: {
-      
+
       group { $group:
         ensure => present
       }
