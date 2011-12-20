@@ -66,7 +66,6 @@ define apache::debian::vhost (
         require => Group[$group] 
       }
 
-       
       file { "${apache::params::conf}/sites-available/${name}":
         ensure  => present,
         owner   => root,
@@ -83,7 +82,14 @@ define apache::debian::vhost (
         group   => root,
         mode    => 0755,
         require => File["root directory"],
-        
+      }
+
+      file { "${apache::params::root}/${name}/conf":
+        ensure  => directory,
+        owner   => root,
+        group   => root,
+        mode    => 0755,
+        require => File["root directory"],
       }
 
       file { $htdocs_real:
