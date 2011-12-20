@@ -64,6 +64,10 @@ define apache::debian::vhost (
     err("cannot both set config file and config file content at apache::debian::vhost $name")
   }
 #== declaring resources
+  
+  notice("${apache::params::conf}/sites-available/${name}.conf")
+  notify{"${apache::params::conf}/sites-available/${name}.conf":
+  }
 
   case $ensure {
     present: {
