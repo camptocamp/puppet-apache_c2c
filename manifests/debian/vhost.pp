@@ -56,6 +56,11 @@ define apache::debian::vhost (
 
   case $ensure {
     present: {
+      
+      group { $group:
+        ensure => present
+      }
+       
       file { "${apache::params::conf}/sites-available/${name}":
         ensure  => present,
         owner   => root,
@@ -72,6 +77,7 @@ define apache::debian::vhost (
         group   => root,
         mode    => 0755,
         require => File["root directory"],
+        
       }
 
       file { $htdocs_real:
@@ -79,7 +85,10 @@ define apache::debian::vhost (
         owner   => $wwwuser,
         group   => $group,
         mode    => $mode,
-        require => [File["${apache::params::root}/${name}"]],
+        require => [
+          File["${apache::params::root}/${name}"],
+          Group[$group],
+        ],
       }
 
       # Log files
@@ -108,7 +117,10 @@ define apache::debian::vhost (
         owner   => $wwwuser,
         group   => $group,
         mode    => $mode,
-        require => File["${apache::params::root}/${name}"],
+        require => [
+          File["${apache::params::root}/${name}"],
+          Group[$group],  
+        ]
       }
 
       # README file
