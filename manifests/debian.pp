@@ -4,8 +4,9 @@ class apache::debian inherits apache::base {
 
   # BEGIN inheritance from apache::base
   Exec["apache-graceful"] {
-    command => "apache2ctl graceful",
-    onlyif => "apache2ctl configtest",
+    command => "/usr/sbin/apache2ctl graceful",
+    onlyif => "/usr/sbin/apache2ctl configtest",
+    require => Package["apache"],
   }
 
   File["logrotate configuration"] {
@@ -16,17 +17,27 @@ class apache::debian inherits apache::base {
   File["default status module configuration"] {
     path => "${apache::params::conf}/mods-available/status.conf",
     source => "puppet:///modules/apache/etc/apache2/mods-available/status.conf",
+    require => Package["apache"],
   }
   # END inheritance from apache::base
 
-  $mpm_package = $apache_mpm_type ? {
+  $mpm_package = $apache::params::mpm_type ? {
     "" => "apache2-mpm-prefork",
-    default => "apache2-mpm-${apache_mpm_type}",
+    default => "apache2-mpm-${apache::params::mpm_type}",
   }
 
   package { "${mpm_package}":
     ensure  => installed,
     require => Package["apache"],
+  }
+  
+  file { "${apache::params::conf}/apache2.conf":
+    ensure  => present,
+    content => template('apache/apache2.conf.erb'),
+    notify  => Service["apache"],
+    require => Package["apache"],
+    owner   => 'root',
+    group   => 'root',
   }
 
   # directory not present in lenny
@@ -52,7 +63,7 @@ class apache::debian inherits apache::base {
   }
 
   file { "${apache::params::conf}/conf.d/servername.conf":
-    content => "ServerName ${fqdn}\n",
+    content => "ServerName ${::fqdn}\n",
     notify  => Service["apache"],
     require => Package["apache"],
   }

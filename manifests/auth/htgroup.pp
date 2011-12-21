@@ -9,35 +9,35 @@ define apache::auth::htgroup (
   include apache::params
 
   if $groupFileLocation {
-    $_groupFileLocation = $groupFileLocation
+    $groupFileLocation_real = $groupFileLocation
   } else {
     if $vhost {
-      $_groupFileLocation = "${apache::params::root}/${vhost}/private"
+      $groupFileLocation_real = "${apache::params::root}/${vhost}/private"
     } else {
       fail "parameter vhost is require !"
     }  
   }
 
-  $_authGroupFile = "${_groupFileLocation}/${groupFileName}"
+  $authGroupFile_real = "${groupFileLocation_real}/${groupFileName}"
   
   case $ensure {
 
     'present': {
-      exec {"! test -f $_authGroupFile && OPT='-c'; htgroup \$OPT $_authGroupFile $groupname $members":
-        unless => "grep -qi '^${groupname}: ${members}$' ${_authGroupFile}",
-        require => File[$_groupFileLocation],
+      exec {"! test -f $authGroupFile_real && OPT='-c'; htgroup \$OPT $authGroupFile_real $groupname $members":
+        unless => "grep -qi '^${groupname}: ${members}$' ${authGroupFile_real}",
+        require => File[$groupFileLocation_real],
       }
     }
 
     'absent': {
-      exec {"htgroup -D $_authGroupFile $groupname":
-        onlyif => "grep -q $groupname $_authGroupFile",
-        notify => Exec["delete $_authGroupFile after remove $groupname"],
+      exec {"htgroup -D $authGroupFile_real $groupname":
+        onlyif => "grep -q $groupname $authGroupFile_real",
+        notify => Exec["delete $authGroupFile_real after remove $groupname"],
       }
 
-      exec {"delete $_authGroupFile after remove $groupname":
-        command => "rm -f $_authGroupFile",
-        onlyif => "wc -l $_authGroupFile |grep -q 0",
+      exec {"delete $authGroupFile_real after remove $groupname":
+        command => "rm -f $authGroupFile_real",
+        onlyif => "wc -l $authGroupFile_real |grep -q 0",
         refreshonly => true,
       } 
     }

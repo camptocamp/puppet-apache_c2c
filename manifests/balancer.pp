@@ -93,7 +93,7 @@ define apache::balancer (
       "CentOS" => "httpd_config_t",
       default  => undef,
     },
-    name    => $filename ? {
+    path    => $filename ? {
       ""      => "${apache::params::root}/${vhost}/conf/balancer-${fname}.conf",
       default => "${apache::params::root}/${vhost}/conf/${filename}",
     },

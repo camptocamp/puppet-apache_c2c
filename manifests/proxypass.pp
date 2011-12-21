@@ -63,7 +63,7 @@ define apache::proxypass (
       "CentOS" => "httpd_config_t",
       default  => undef,
     },
-    name    => $filename ? {
+    path    => $filename ? {
       ""      => "${apache::params::root}/${vhost}/conf/proxypass-${fname}.conf",
       default => "${apache::params::root}/${vhost}/conf/${filename}",
     },

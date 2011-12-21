@@ -10,16 +10,16 @@ define apache::auth::htpasswd (
   include apache::params
  
   if $userFileLocation {
-    $_userFileLocation = $userFileLocation
+    $userFileLocation_real = $userFileLocation
   } else {
     if $vhost {
-      $_userFileLocation = "${apache::params::root}/${vhost}/private"
+      $userFileLocation_real = "${apache::params::root}/${vhost}/private"
     } else {
       fail "parameter vhost is require !"
     }
   }
   
-  $_authUserFile = "${_userFileLocation}/${userFileName}"
+  $authUserFile_real = "${userFileLocation_real}/${userFileName}"
   
   case $ensure {
 
@@ -33,29 +33,29 @@ define apache::auth::htpasswd (
       }
 
       if $cryptPassword {
-        exec {"! test -f $_authUserFile && OPT='-c'; htpasswd -bp \$OPT $_authUserFile $username '$cryptPassword'":
-          unless => "grep -q ${username}:${cryptPassword} $_authUserFile",
-          require => File[$_userFileLocation],
+        exec {"! test -f $authUserFile_real && OPT='-c'; htpasswd -bp \$OPT $authUserFile_real $username '$cryptPassword'":
+          unless => "grep -q ${username}:${cryptPassword} $authUserFile_real",
+          require => File[$userFileLocation_real],
         }
       }
 
       if $clearPassword {
-        exec {"! test -f $_authUserFile && OPT='-c'; htpasswd -b \$OPT $_authUserFile $username $clearPassword":
-          unless => "grep $username $_authUserFile && grep ${username}:\$(mkpasswd -S \$(grep $username $_authUserFile |cut -d : -f 2 |cut -c-2) $clearPassword) $_authUserFile",
-          require => File[$_userFileLocation],
+        exec {"! test -f $authUserFile_real && OPT='-c'; htpasswd -b \$OPT $authUserFile_real $username $clearPassword":
+          unless => "grep $username $authUserFile_real && grep ${username}:\$(mkpasswd -S \$(grep $username $authUserFile_real |cut -d : -f 2 |cut -c-2) $clearPassword) $authUserFile_real",
+          require => File[$userFileLocation_real],
         }
       }
     }
 
     'absent': {
-      exec {"htpasswd -D $_authUserFile $username":
-        onlyif => "grep -q $username $_authUserFile",
-        notify => Exec["delete $_authUserFile after remove $username"],
+      exec {"htpasswd -D $authUserFile_real $username":
+        onlyif => "grep -q $username $authUserFile_real",
+        notify => Exec["delete $authUserFile_real after remove $username"],
       }
 
-      exec {"delete $_authUserFile after remove $username":
-        command => "rm -f $_authUserFile",
-        onlyif => "wc -l $_authUserFile |grep -q 0",
+      exec {"delete $authUserFile_real after remove $username":
+        command => "rm -f $authUserFile_real",
+        onlyif => "wc -l $authUserFile_real |grep -q 0",
         refreshonly => true,
       } 
     }

@@ -54,7 +54,7 @@ class apache::awstats {
       }
     }
 
-    default: { fail "Unsupported operatingsystem ${operatingsystem}" }
+    default: { fail "Unsupported operatingsystem ${::operatingsystem}" }
   }
 
 }

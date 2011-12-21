@@ -50,7 +50,7 @@ define apache::directive ($ensure="present", $directive="", $filename="", $vhost
       "CentOS" => "httpd_config_t",
       default  => undef,
     },
-    name    => $filename ? {
+    path    => $filename ? {
       ""      => "${apache::params::root}/${vhost}/conf/directive-${fname}.conf",
       default => "${apache::params::root}/${vhost}/conf/${filename}",
     },

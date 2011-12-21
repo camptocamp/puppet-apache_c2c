@@ -102,7 +102,7 @@ define apache::vhost-ssl (
   $docroot=false,
   $cgibin=true,
   $user="",
-  $admin=$admin,
+  $admin="",
   $group="root",
   $mode=2570,
   $aliases=[],

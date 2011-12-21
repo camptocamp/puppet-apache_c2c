@@ -18,15 +18,15 @@ define apache::auth::basic::file::webdav::user (
   }
   
   if $authUserFile {
-    $_authUserFile = $authUserFile
+    $authUserFile_real = $authUserFile
   } else {
-    $_authUserFile = "${apache::params::root}/${vhost}/private/htpasswd"
+    $authUserFile_real = "${apache::params::root}/${vhost}/private/htpasswd"
   }
   
-  if $users != "valid-user" {
+  if $rw_users != "valid-user" {
     $_users = "user $rw_users"
   } else {
-    $_users = $users
+    $_users = $rw_users
   }
   
   file { "${apache::params::root}/${vhost}/conf/auth-basic-file-webdav-${fname}.conf":
