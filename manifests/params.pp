@@ -38,4 +38,13 @@ class apache::params {
     /Debian|Ubuntu/ => "${log}/error.log",
   }
 
+  $port = $apache_port ? {
+    ''          => '*:80',
+    default     => $apache_port,
+  }
+
+  $ssl_port = $apache_ssl_port ? {
+    ''          => '*:443',
+    default     => $apache_ssl_port,
+  }
 }

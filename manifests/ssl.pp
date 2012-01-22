@@ -26,7 +26,16 @@ Class variables:
 
 Example usage:
 
+  $apache_ssl_port = '127.0.0.1:8443'
   include apache::ssl
+
+Parameters:
+
+  $apache_ssl_port to specify on which main port Apache will listen. 
+  Defaults to '*:443'
+
+
+
 
 */
 class apache::ssl inherits apache {
