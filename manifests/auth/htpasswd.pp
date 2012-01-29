@@ -1,5 +1,5 @@
 define apache::auth::htpasswd (
-  $ensure="present", 
+  $ensure="present",
   $vhost=false,
   $userFileLocation=false,
   $userFileName="htpasswd",
@@ -8,7 +8,7 @@ define apache::auth::htpasswd (
   $clearPassword=false){
 
   include apache::params
- 
+
   if $userFileLocation {
     $_userFileLocation = $userFileLocation
   } else {
@@ -18,9 +18,9 @@ define apache::auth::htpasswd (
       fail "parameter vhost is require !"
     }
   }
-  
+
   $_authUserFile = "${_userFileLocation}/${userFileName}"
-  
+
   case $ensure {
 
     'present': {
@@ -33,9 +33,10 @@ define apache::auth::htpasswd (
       }
 
       if $cryptPassword {
-        exec {"! test -f $_authUserFile && OPT='-c'; htpasswd -bp \$OPT $_authUserFile $username '$cryptPassword'":
-          unless => "grep -q ${username}:${cryptPassword} $_authUserFile",
-          require => File[$_userFileLocation],
+        exec {
+          "test ! -f $_authUserFile && OPT='-c'; htpasswd -bp \$OPT $_authUserFile $username '$cryptPassword'":
+            unless    => "grep -q ${username}:${cryptPassword} $_authUserFile",
+            require   => File[$_userFileLocation],
         }
       }
 
@@ -57,7 +58,7 @@ define apache::auth::htpasswd (
         command => "rm -f $_authUserFile",
         onlyif => "wc -l $_authUserFile |grep -q 0",
         refreshonly => true,
-      } 
+      }
     }
   }
 }

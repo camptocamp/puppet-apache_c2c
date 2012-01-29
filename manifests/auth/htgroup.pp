@@ -1,5 +1,5 @@
 define apache::auth::htgroup (
-  $ensure="present", 
+  $ensure="present",
   $vhost=false,
   $groupFileLocation=false,
   $groupFileName="htgroup",
@@ -15,17 +15,18 @@ define apache::auth::htgroup (
       $_groupFileLocation = "${apache::params::root}/${vhost}/private"
     } else {
       fail "parameter vhost is require !"
-    }  
+    }
   }
 
   $_authGroupFile = "${_groupFileLocation}/${groupFileName}"
-  
+
   case $ensure {
 
     'present': {
-      exec {"! test -f $_authGroupFile && OPT='-c'; htgroup \$OPT $_authGroupFile $groupname $members":
-        unless => "grep -qi '^${groupname}: ${members}$' ${_authGroupFile}",
-        require => File[$_groupFileLocation],
+      exec {
+        "test ! -f $_authGroupFile && OPT='-c'; htgroup \$OPT $_authGroupFile $groupname $members":
+          unless    => "grep -qi '^${groupname}: ${members}$' ${_authGroupFile}",
+          require   => File[$_groupFileLocation],
       }
     }
 
@@ -39,7 +40,7 @@ define apache::auth::htgroup (
         command => "rm -f $_authGroupFile",
         onlyif => "wc -l $_authGroupFile |grep -q 0",
         refreshonly => true,
-      } 
+      }
     }
   }
 }
