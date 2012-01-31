@@ -79,7 +79,7 @@ class apache::redhat inherits apache::base {
   # ssl.load was then changed to a template (see apache-ssl-redhat.pp)
   file { "${apache::params::conf}/mods-available":
     ensure => directory,
-    source => $lsbmajdistrelease ? {
+    source => $operatingsystemrelease[0,1] ? {
       5 => "puppet:///modules/apache/etc/httpd/mods-available/redhat5/",
       6 => "puppet:///modules/apache/etc/httpd/mods-available/redhat6/",
     },
