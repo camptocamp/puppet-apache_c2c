@@ -26,7 +26,7 @@ class apache::base {
   file {"log directory":
     path => $apache::params::log,
     ensure => directory,
-    mode => 755,
+    mode => 700,
     owner => "root",
     group  => "root",
     require => Package["apache"],
