@@ -10,6 +10,7 @@ It shouldn't be necessary to directly include this class.
 class apache::base {
 
   include apache::params
+  include concat::setup
 
   $access_log = $apache::params::access_log
   $error_log  = $apache::params::error_log
@@ -22,6 +23,8 @@ class apache::base {
     group => "root",
     require => Package["apache"],
   }
+
+  concat { "${apache::params::conf}/ports.conf": }
 
   file {"log directory":
     path => $apache::params::log,
