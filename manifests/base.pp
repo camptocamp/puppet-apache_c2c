@@ -36,7 +36,7 @@ class apache::base {
     name    => $apache::params::user,
     ensure  => present,
     require => Package["apache"],
-    shell   => "/bin/sh",
+    shell   => "/sbin/nologin",
   }
 
   group { "apache group":
