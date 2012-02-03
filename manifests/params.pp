@@ -1,5 +1,8 @@
 class apache::params {
 
+  $rawmajdistrelease = split($operatingsystemrelease, '[.]')
+  $majdistrelease = $rawmajdistrelease[0]
+
   $pkg = $operatingsystem ? {
     /RedHat|CentOS/ => 'httpd',
     /Debian|Ubuntu/ => 'apache2',

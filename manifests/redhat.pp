@@ -13,7 +13,7 @@ class apache::redhat inherits apache::base {
   }
 
   # $httpd_pid_file is used in template logrotate-httpd.erb
-  $httpd_pid_file = $lsbmajdistrelease ? {
+  $httpd_pid_file = $majdistrelease ? {
     /4|5/   => "/var/run/httpd.pid",
     default => "/var/run/httpd/httpd.pid",
   }
@@ -79,7 +79,7 @@ class apache::redhat inherits apache::base {
   # ssl.load was then changed to a template (see apache-ssl-redhat.pp)
   file { "${apache::params::conf}/mods-available":
     ensure => directory,
-    source => $operatingsystemrelease[0,1] ? {
+    source => $majdistrelease ? {
       5 => "puppet:///modules/apache/etc/httpd/mods-available/redhat5/",
       6 => "puppet:///modules/apache/etc/httpd/mods-available/redhat6/",
     },
