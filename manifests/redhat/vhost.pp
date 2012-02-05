@@ -115,7 +115,7 @@ define apache::redhat::vhost (
         },
         require => [File["${apache::params::root}/${name}"]],
       }
- 
+
       if $htdocs {
         File["${apache::params::root}/${name}/htdocs"] {
           source  => $htdocs,
@@ -153,11 +153,6 @@ define apache::redhat::vhost (
 
       case $config_file {
 
-        default: {
-          File["${apache::params::conf}/sites-available/${name}"] {
-            source => $config_file,
-          }
-        }
         "": {
 
           if $config_content {
@@ -167,8 +162,13 @@ define apache::redhat::vhost (
           } else {
             # default vhost template
             File["${apache::params::conf}/sites-available/${name}"] {
-              content => template("apache/vhost.erb"), 
+              content => template("apache/vhost.erb"),
             }
+          }
+        }
+        default: {
+          File["${apache::params::conf}/sites-available/${name}"] {
+            source => $config_file,
           }
         }
       }
@@ -255,7 +255,7 @@ define apache::redhat::vhost (
         ensure  => absent,
         require => Exec["disable vhost ${name}"]
       }
-      
+
       file { "${apache::params::conf}/sites-available/${name}":
         ensure  => absent,
         require => Exec["disable vhost ${name}"]

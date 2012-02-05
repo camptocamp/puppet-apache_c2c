@@ -92,7 +92,7 @@ Example usage:
   }
 
 */
-define apache::vhost-ssl (
+define apache::vhostssl (
   $ensure=present,
   $config_file="",
   $config_content=false,
@@ -161,6 +161,7 @@ define apache::vhost-ssl (
     $cacertfile = $::operatingsystem ? {
       /RedHat|CentOS/ => "/etc/pki/tls/certs/ca-bundle.crt",
       Debian => "/etc/ssl/certs/ca-certificates.crt",
+      default => undef
     }
   }
 

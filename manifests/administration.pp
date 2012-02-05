@@ -5,6 +5,7 @@ class apache::administration {
   $distro_specific_apache_sudo = $::operatingsystem ? {
     /RedHat|CentOS/ => "/usr/sbin/apachectl, /sbin/service ${apache::params::pkg}",
     /Debian|Ubuntu/ => "/usr/sbin/apache2ctl",
+    default         => undef
   }
 
   group { "apache-admin":

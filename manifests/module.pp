@@ -11,9 +11,10 @@ define apache::module ($ensure='present') {
       File["/usr/local/sbin/a2dismod"]
     ],
     /Debian|Ubuntu/ => Package["apache"],
+    default         => undef
   }
 
-  if $selinux == "true" {
+  if $::selinux {
     apache::redhat::selinux {$name: }
   }
 
@@ -37,6 +38,7 @@ define apache::module ($ensure='present') {
         command => $::operatingsystem ? {
           /RedHat|CentOS/ => "/usr/local/sbin/a2dismod ${name}",
           /Debian|Ubuntu/ => "/usr/sbin/a2dismod ${name}",
+          default         => undef
         },
         onlyif  => "/bin/sh -c '[ -L ${apache::params::conf}/mods-enabled/${name}.load ] \\
           || [ -e ${apache::params::conf}/mods-enabled/${name}.load ]'",
@@ -45,8 +47,8 @@ define apache::module ($ensure='present') {
        }
     }
 
-    default: { 
-      err ( "Unknown ensure value: '${ensure}'" ) 
+    default: {
+      err ( "Unknown ensure value: '${ensure}'" )
     }
   }
 }

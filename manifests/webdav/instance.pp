@@ -1,7 +1,7 @@
 define apache::webdav::instance ($ensure=present, $vhost, $directory=false,$mode=2755) {
 
   include apache::params
- 
+
   if $directory {
     $davdir = "${directory}/webdav-${name}"
   } else {
@@ -11,7 +11,7 @@ define apache::webdav::instance ($ensure=present, $vhost, $directory=false,$mode
   file {$davdir:
     ensure => $ensure ? {
       present => directory,
-      absent  => absent,
+      default => $ensure
     },
     owner => "www-data",
     group => "www-data",
