@@ -48,11 +48,11 @@ class apache::redhat inherits apache::base {
     default    => "httpd.${apache_mpm_type}",
   }
 
-  augeas { "select httpd mpm ${httpd_mpm}":
-    changes => "set /files/etc/sysconfig/httpd/HTTPD /usr/sbin/${httpd_mpm}",
-    require => Package["apache"],
-    notify  => Service["apache"],
-  }
+  #augeas { "select httpd mpm ${httpd_mpm}":
+  #  changes => "set /files/etc/sysconfig/httpd/HTTPD /usr/sbin/${httpd_mpm}",
+  #  require => Package["apache"],
+  #  notify  => Service["apache"],
+  #}
 
   file { [
       "${apache::params::conf}/sites-available",
