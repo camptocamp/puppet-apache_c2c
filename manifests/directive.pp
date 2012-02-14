@@ -38,9 +38,9 @@ Example usage:
 */
 define apache::directive ($ensure="present", $source=undef, $content=undef, $filename="", $vhost) {
 
-  $fname = regsubst($name, "\s", "_", "G")
+  include apache
 
-  include apache::params
+  $fname = regsubst($name, "\s", "_", "G")
 
   # cant proceed with source and content # thanks to ryancoleman and Volcane, from #puppet IRC Channel
   if $source and $content {
