@@ -36,15 +36,21 @@ Example usage:
   }
 
 */
-define apache::directive ($ensure="present", $directive="", $filename="", $vhost) {
+define apache::directive ($ensure="present", $source=undef, $content=undef, $filename="", $vhost) {
 
   $fname = regsubst($name, "\s", "_", "G")
 
   include apache::params
 
+  # cant proceed with source and content # thanks to ryancoleman and Volcane, from #puppet IRC Channel
+  if $source and $content {
+    fail('source and content parameters are both defined. Only one can be applied.')
+  }
+
   file{ "${name} directive on ${vhost}":
-    ensure => $ensure,
-    content => "# file managed by puppet\n${directive}\n",
+    ensure  => $ensure,
+    source  => $source,
+    content => $content,
     seltype => $operatingsystem ? {
       "RedHat" => "httpd_config_t",
       "CentOS" => "httpd_config_t",
