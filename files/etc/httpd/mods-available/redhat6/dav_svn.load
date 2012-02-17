@@ -1,0 +1,1 @@
+LoadModule dav_svn_module modules/mod_dav_svn.so
