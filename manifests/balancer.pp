@@ -88,12 +88,12 @@ define apache::balancer (
   file{ "${name} balancer on ${vhost}":
     ensure  => $ensure,
     content => template("apache/balancer.erb"),
-    seltype => $operatingsystem ? {
+    seltype => $::operatingsystem ? {
       "RedHat" => "httpd_config_t",
       "CentOS" => "httpd_config_t",
       default  => undef,
     },
-    name    => $filename ? {
+    path    => $filename ? {
       ""      => "${apache::params::root}/${vhost}/conf/balancer-${fname}.conf",
       default => "${apache::params::root}/${vhost}/conf/${filename}",
     },

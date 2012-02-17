@@ -45,12 +45,12 @@ define apache::directive ($ensure="present", $directive="", $filename="", $vhost
   file{ "${name} directive on ${vhost}":
     ensure => $ensure,
     content => "# file managed by puppet\n${directive}\n",
-    seltype => $operatingsystem ? {
+    seltype => $::operatingsystem ? {
       "RedHat" => "httpd_config_t",
       "CentOS" => "httpd_config_t",
       default  => undef,
     },
-    name    => $filename ? {
+    path    => $filename ? {
       ""      => "${apache::params::root}/${vhost}/conf/directive-${fname}.conf",
       default => "${apache::params::root}/${vhost}/conf/${filename}",
     },

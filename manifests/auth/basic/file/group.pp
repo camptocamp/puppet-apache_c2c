@@ -16,21 +16,21 @@ define apache::auth::basic::file::group (
   }
 
   if $authUserFile {
-    $_authUserFile = $authUserFile
+    $authUserFile_real = $authUserFile
   } else {
-    $_authUserFile = "${apache::params::root}/${vhost}/private/htpasswd"
+    $authUserFile_real = "${apache::params::root}/${vhost}/private/htpasswd"
   }
 
   if $authGroupFile {
-    $_authGroupFile = $authGroupFile
+    $authGroupFile_real = $authGroupFile
   } else {
-    $_authGroupFile = "${apache::params::root}/${vhost}/private/htgroup"
+    $authGroupFile_real = "${apache::params::root}/${vhost}/private/htgroup"
   }
 
   file { "${apache::params::root}/${vhost}/conf/auth-basic-file-group-${fname}.conf":
     ensure => $ensure,
     content => template("apache/auth-basic-file-group.erb"),
-    seltype => $operatingsystem ? {
+    seltype => $::operatingsystem ? {
       "RedHat" => "httpd_config_t",
       "CentOS" => "httpd_config_t",
       default  => undef,

@@ -1,7 +1,7 @@
 class apache::redhat inherits apache::base {
 
   include apache::params
-  
+
   # BEGIN inheritance from apache::base
   Exec["apache-graceful"] {
     command => "apachectl graceful",
@@ -13,11 +13,11 @@ class apache::redhat inherits apache::base {
   }
 
   # $httpd_pid_file is used in template logrotate-httpd.erb
-  $httpd_pid_file = $lsbmajdistrelease ? {
+  $httpd_pid_file = $::lsbmajdistrelease ? {
     /4|5/   => "/var/run/httpd.pid",
     default => "/var/run/httpd/httpd.pid",
   }
-  File["logrotate configuration"] { 
+  File["logrotate configuration"] {
     path    => "/etc/logrotate.d/httpd",
     content => template("apache/logrotate-httpd.erb"),
   }
@@ -27,9 +27,9 @@ class apache::redhat inherits apache::base {
     source => "puppet:///modules/apache/etc/httpd/conf/status.conf",
   }
 
-  File["default virtualhost"] { 
+  File["default virtualhost"] {
     seltype => "httpd_config_t",
-  }  
+  }
   # END inheritance from apache::base
 
   file { ["/usr/local/sbin/a2ensite", "/usr/local/sbin/a2dissite", "/usr/local/sbin/a2enmod", "/usr/local/sbin/a2dismod"]:
@@ -40,11 +40,11 @@ class apache::redhat inherits apache::base {
     source => "puppet:///modules/apache/usr/local/sbin/a2X.redhat",
   }
 
-  $httpd_mpm = $apache_mpm_type ? {
+  $httpd_mpm = $apache::params::mpm_type ? {
     ''         => 'httpd', # default MPM
     'pre-fork' => 'httpd',
     'prefork'  => 'httpd',
-    default    => "httpd.${apache_mpm_type}",
+    default    => "httpd.${apache::params::mpm_type}",
   }
 
   augeas { "select httpd mpm ${httpd_mpm}":
@@ -79,9 +79,10 @@ class apache::redhat inherits apache::base {
   # ssl.load was then changed to a template (see apache-ssl-redhat.pp)
   file { "${apache::params::conf}/mods-available":
     ensure => directory,
-    source => $lsbmajdistrelease ? {
+    source => $::lsbmajdistrelease ? {
       5 => "puppet:///modules/apache/etc/httpd/mods-available/redhat5/",
       6 => "puppet:///modules/apache/etc/httpd/mods-available/redhat6/",
+      default => undef
     },
     recurse => true,
     mode => 644,

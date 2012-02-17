@@ -4,7 +4,7 @@
   AuthName "<%= authname %>"
   AuthType Basic
   AuthBasicProvider file
-  AuthUserFile <%= _authUserFile %>
-  AuthGroupFile <%= _authGroupFile %>
+  AuthUserFile <%= authUserFile_real %>
+  AuthGroupFile <%= authGroupFile_real %>
   Require group <%= groups %>
 </Location>

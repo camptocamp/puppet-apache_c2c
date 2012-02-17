@@ -94,7 +94,7 @@ Example usage:
   }
 
 */
-define apache::vhost-ssl (
+define apache::vhostssl (
   $ensure=present,
   $config_file="",
   $config_content=false,
@@ -104,7 +104,7 @@ define apache::vhost-ssl (
   $docroot=false,
   $cgibin=true,
   $user="",
-  $admin=$admin,
+  $admin="",
   $group="root",
   $mode=2570,
   $aliases=[],
@@ -161,9 +161,10 @@ define apache::vhost-ssl (
   if $cacert != false {
     $cacertfile = "${apache::params::root}/$name/ssl/cacert.crt"
   } else {
-    $cacertfile = $operatingsystem ? {
+    $cacertfile = $::operatingsystem ? {
       /RedHat|CentOS/ => "/etc/pki/tls/certs/ca-bundle.crt",
       Debian => "/etc/ssl/certs/ca-certificates.crt",
+      default => undef
     }
   }
 
