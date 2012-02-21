@@ -11,7 +11,6 @@ class apache::svnserver inherits apache::ssl {
     }
 
     default: {
-      $pkglist=['']
       fail "Unsupported operatingsystem ${operatingsystem}"
     }
 
