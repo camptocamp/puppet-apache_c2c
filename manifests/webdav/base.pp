@@ -13,6 +13,11 @@ class apache::webdav::base {
         require => Package["libapache2-mod-encoding"],
       }
 
+    /* Other OS: If you encounter issue with encoding, read the description of
+       the Debian package:
+       http://packages.debian.org/squeeze/libapache2-mod-encoding
+    */
+
   }
 
   apache::module {["dav", "dav_fs"]:
