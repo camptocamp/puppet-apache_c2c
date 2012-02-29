@@ -18,6 +18,8 @@ class apache::webdav::base {
        http://packages.debian.org/squeeze/libapache2-mod-encoding
     */
 
+    }
+
   }
 
   apache::module {["dav", "dav_fs"]:
