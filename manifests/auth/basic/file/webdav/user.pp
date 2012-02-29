@@ -1,6 +1,6 @@
 define apache::auth::basic::file::webdav::user (
   $ensure=present,
-  $authname="Private Area",
+  $authname,
   $vhost,
   $location="/",
   $authUserFile=false,
