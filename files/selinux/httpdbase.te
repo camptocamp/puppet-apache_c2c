@@ -1,0 +1,16 @@
+
+module httpdbase 1.0;
+
+require {
+	type file_t;
+	type httpd_t;
+	type httpd_sys_content_t;
+	type logrotate_t;
+	class dir { read search getattr };
+}
+
+#============= httpd_t ==============
+allow httpd_t file_t:dir { search getattr };
+
+#============= logrotate_t ==============
+allow logrotate_t httpd_sys_content_t:dir read;

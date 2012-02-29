@@ -19,4 +19,9 @@ class apache {
     RedHat,CentOS:  { include apache::redhat}
     default: { fail "Unsupported operatingsystem ${operatingsystem}" }
   }
+
+  if $selinux == "true" {
+    include apache::selinux
+  }
+
 }
