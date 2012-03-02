@@ -55,7 +55,7 @@ define apache::auth::htpasswd (
 
       exec {"delete $_authUserFile after remove $username":
         command => "rm -f $_authUserFile",
-        onlyif => "wc -l $_authUserFile |grep -q 0",
+        onlyif => "wc -l $_authUserFile | egrep -q '^0[^0-9]'",
         refreshonly => true,
       } 
     }

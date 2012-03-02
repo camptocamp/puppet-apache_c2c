@@ -37,7 +37,7 @@ define apache::auth::htgroup (
 
       exec {"delete $_authGroupFile after remove $groupname":
         command => "rm -f $_authGroupFile",
-        onlyif => "wc -l $_authGroupFile |grep -q 0",
+        onlyif => "wc -l $_authGroupFile | egrep -q '^0[^0-9]'",
         refreshonly => true,
       } 
     }
