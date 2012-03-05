@@ -23,21 +23,21 @@ define apache::auth::htgroup (
   case $ensure {
 
     'present': {
-      exec {"! test -f $_authGroupFile && OPT='-c'; htgroup \$OPT $_authGroupFile $groupname $members":
-        unless => "grep -qi '^${groupname}: ${members}$' ${_authGroupFile}",
+      exec {"! test -f ${_authGroupFile} && OPT='-c'; htgroup \$OPT ${_authGroupFile} ${groupname} ${members}":
+        unless  => "egrep -q '^${groupname}: ${members}$' ${_authGroupFile}",
         require => File[$_groupFileLocation],
       }
     }
 
     'absent': {
-      exec {"htgroup -D $_authGroupFile $groupname":
-        onlyif => "grep -q $groupname $_authGroupFile",
-        notify => Exec["delete $_authGroupFile after remove $groupname"],
+      exec {"htgroup -D ${_authGroupFile} ${groupname}":
+        onlyif => "egrep -q '^${groupname}:' ${_authGroupFile}",
+        notify => Exec["delete ${_authGroupFile} after remove ${groupname}"],
       }
 
-      exec {"delete $_authGroupFile after remove $groupname":
-        command => "rm -f $_authGroupFile",
-        onlyif => "wc -l $_authGroupFile | egrep -q '^0[^0-9]'",
+      exec {"delete ${_authGroupFile} after remove ${groupname}":
+        command     => "rm -f ${_authGroupFile}",
+        onlyif      => "wc -l ${_authGroupFile} | egrep -q '^0[^0-9]'",
         refreshonly => true,
       } 
     }
