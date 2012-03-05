@@ -23,7 +23,7 @@ define apache::auth::htgroup (
   case $ensure {
 
     'present': {
-      exec {"! test -f ${_authGroupFile} && OPT='-c'; htgroup \$OPT ${_authGroupFile} ${groupname} ${members}":
+      exec {"test -f ${_authGroupFile} || OPT='-c'; htgroup \$OPT ${_authGroupFile} ${groupname} ${members}":
         unless  => "egrep -q '^${groupname}: ${members}$' ${_authGroupFile}",
         require => File[$_groupFileLocation],
       }
