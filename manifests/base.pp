@@ -68,8 +68,8 @@ class apache::base {
     require => Package["apache"],
   }
 
-  apache::listen { "80": ensure => present }
-  apache::namevhost { "*:80": ensure => present }
+  @apache::listen { "80": ensure => present }
+  @apache::namevhost { "*:80": ensure => present }
 
   apache::module {["alias", "auth_basic", "authn_file", "authz_default", "authz_groupfile", "authz_host", "authz_user", "autoindex", "dir", "env", "mime", "negotiation", "rewrite", "setenvif", "status", "cgi"]:
     ensure => present,
