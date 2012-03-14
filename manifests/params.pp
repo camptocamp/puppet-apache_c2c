@@ -33,6 +33,14 @@ class apache::params {
     /Debian|Ubuntu/ => "${log}/access.log",
   }
 
+  $a2ensite = $operatingsystem ? {
+    /RedHat|CentOS/ => '/usr/local/sbin/a2ensite',
+    /Debian|Ubuntu/ => '/usr/sbin/a2ensite',
+  }
+
+
+
+
   $error_log = $operatingsystem ? {
     /RedHat|CentOS/ => "${log}/error_log",
     /Debian|Ubuntu/ => "${log}/error.log",
