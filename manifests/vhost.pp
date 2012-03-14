@@ -42,7 +42,7 @@ define apache::vhost (
   if $enable_default == true {
 
     exec { "enable default virtual host from ${name}":
-      command => "a2ensite default",
+      command => "${apache::params::a2ensite} default",
       unless  => "test -L ${apache::params::conf}/sites-enabled/000-default",
       notify  => Exec["apache-graceful"],
       require => Package["apache"],
@@ -232,14 +232,14 @@ define apache::vhost (
 
       exec {"enable vhost ${name}":
         command => $operatingsystem ? {
-          RedHat => "/usr/local/sbin/a2ensite ${name}",
-          CentOS => "/usr/local/sbin/a2ensite ${name}",
-          default => "/usr/sbin/a2ensite ${name}"
+          RedHat => "${apache::params::a2ensite} ${name}",
+          CentOS => "${apache::params::a2ensite} ${name}",
+          default => "${apache::params::a2ensite} ${name}"
         },
         notify  => Exec["apache-graceful"],
         require => [$operatingsystem ? {
-          redhat => File["/usr/local/sbin/a2ensite"],
-          CentOS => File["/usr/local/sbin/a2ensite"],
+          redhat => File["${apache::params::a2ensite}"],
+          CentOS => File["${apache::params::a2ensite}"],
           default => Package[$apache::params::pkg]},
           File["${apache::params::conf}/sites-available/${name}"],
           File["${apache::params::root}/${name}/htdocs"],
@@ -276,8 +276,8 @@ define apache::vhost (
         },
         notify  => Exec["apache-graceful"],
         require => [$operatingsystem ? {
-          redhat => File["/usr/local/sbin/a2ensite"],
-          CentOS => File["/usr/local/sbin/a2ensite"],
+          redhat => File["${apache::params::a2ensite}"],
+          CentOS => File["${apache::params::a2ensite}"],
           default => Package[$apache::params::pkg]}],
         onlyif => "/bin/sh -c '[ -L ${apache::params::conf}/sites-enabled/${name} ] \\
           && [ ${apache::params::conf}/sites-enabled/${name} -ef ${apache::params::conf}/sites-available/${name} ]'",
