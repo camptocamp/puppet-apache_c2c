@@ -1,6 +1,6 @@
 define apache::auth::basic::file::user (
   $ensure="present", 
-  $authname,
+  $authname="",
   $vhost,
   $location="/",
   $authUserFile=false,
@@ -18,6 +18,12 @@ define apache::auth::basic::file::user (
     $_authUserFile = $authUserFile
   } else {
     $_authUserFile = "${apache::params::root}/${vhost}/private/htpasswd"
+  }
+
+  if $authname {
+    $_authname = $authname
+  } else {
+    $_authname = $name
   }
 
   if $users != "valid-user" {

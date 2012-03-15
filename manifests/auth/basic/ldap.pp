@@ -1,6 +1,6 @@
 define apache::auth::basic::ldap (
   $ensure="present", 
-  $authname,
+  $authname="",
   $vhost,
   $location="/",
   $authLDAPUrl,
@@ -26,6 +26,12 @@ define apache::auth::basic::ldap (
 
   if defined(Apache::Module["authnz_ldap"]) {} else {
     apache::module {"authnz_ldap": }
+  }
+
+  if $authname {
+    $_authname = $authname
+  } else {
+    $_authname = $name
   }
 
   file { "${apache::params::root}/${vhost}/conf/auth-basic-ldap-${fname}.conf":

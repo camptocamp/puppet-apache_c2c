@@ -1,6 +1,6 @@
 define apache::auth::basic::file::webdav::user (
   $ensure=present,
-  $authname,
+  $authname="",
   $vhost,
   $location="/",
   $authUserFile=false,
@@ -22,7 +22,13 @@ define apache::auth::basic::file::webdav::user (
   } else {
     $_authUserFile = "${apache::params::root}/${vhost}/private/htpasswd"
   }
-  
+
+  if $authname {
+    $_authname = $authname
+  } else {
+    $_authname = $name
+  }
+
   if $users != "valid-user" {
     $_users = "user $rw_users"
   } else {
