@@ -2,7 +2,7 @@
 
 == Definition: apache::directive
 
-Convenient wrapper around File[] resources to add random configuration
+Convenient wrapper around apache::conf resources to add random configuration
 snippets to an apache virtualhost.
 
 Parameters:
@@ -36,25 +36,16 @@ Example usage:
   }
 
 */
-define apache::directive ($ensure="present", $directive="", $filename="", $vhost) {
-
-  $fname = regsubst($name, "\s", "_", "G")
+define apache::directive ($ensure="present", $directive, $filename="", $vhost) {
 
   include apache::params
 
-  file{ "${name} directive on ${vhost}":
-    ensure => $ensure,
-    content => "# file managed by puppet\n${directive}\n",
-    seltype => $operatingsystem ? {
-      "RedHat" => "httpd_config_t",
-      "CentOS" => "httpd_config_t",
-      default  => undef,
-    },
-    name    => $filename ? {
-      ""      => "${apache::params::root}/${vhost}/conf/directive-${fname}.conf",
-      default => "${apache::params::root}/${vhost}/conf/${filename}",
-    },
-    notify  => Service["apache"],
-    require => Apache::Vhost[$vhost],
+  apache::conf {$name:
+    ensure        => $ensure,
+    path          => "${apache::params::www}/${vhost}/conf",
+    prefix        => 'directive',
+    filename      => $filename,
+    configuration => $directive,
+    require       => Apache::Vhost[$vhost],
   }
 }
