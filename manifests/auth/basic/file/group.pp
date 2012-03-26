@@ -1,6 +1,6 @@
 define apache::auth::basic::file::group (
   $ensure="present", 
-  $authname="Private Area",
+  $authname=false,
   $vhost,
   $location="/",
   $authUserFile=false,
@@ -25,6 +25,12 @@ define apache::auth::basic::file::group (
     $_authGroupFile = $authGroupFile
   } else {
     $_authGroupFile = "${apache::params::root}/${vhost}/private/htgroup"
+  }
+
+  if $authname {
+    $_authname = $authname
+  } else {
+    $_authname = $name
   }
 
   file { "${apache::params::root}/${vhost}/conf/auth-basic-file-group-${fname}.conf":
