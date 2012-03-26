@@ -1,6 +1,6 @@
 define apache::auth::basic::file::user (
   $ensure="present", 
-  $authname="",
+  $authname=false,
   $vhost,
   $location="/",
   $authUserFile=false,

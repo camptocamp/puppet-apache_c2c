@@ -1,6 +1,6 @@
 define apache::auth::basic::ldap (
   $ensure="present", 
-  $authname="",
+  $authname=false,
   $vhost,
   $location="/",
   $authLDAPUrl,
