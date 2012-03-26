@@ -6,6 +6,7 @@ class apache::redhat inherits apache::base {
   Exec["apache-graceful"] {
     command => "apachectl graceful",
     onlyif  => "apachectl configtest",
+    path    => ["/usr/sbin"]
   }
 
   Package["apache"] {
@@ -13,7 +14,7 @@ class apache::redhat inherits apache::base {
   }
 
   # $httpd_pid_file is used in template logrotate-httpd.erb
-  $httpd_pid_file = $lsbmajdistrelease ? {
+  $httpd_pid_file = $apache::params::majdistrelease ? {
     /4|5/   => "/var/run/httpd.pid",
     default => "/var/run/httpd/httpd.pid",
   }
@@ -47,11 +48,11 @@ class apache::redhat inherits apache::base {
     default    => "httpd.${apache_mpm_type}",
   }
 
-  augeas { "select httpd mpm ${httpd_mpm}":
-    changes => "set /files/etc/sysconfig/httpd/HTTPD /usr/sbin/${httpd_mpm}",
-    require => Package["apache"],
-    notify  => Service["apache"],
-  }
+  #augeas { "select httpd mpm ${httpd_mpm}":
+  #  changes => "set /files/etc/sysconfig/httpd/HTTPD /usr/sbin/${httpd_mpm}",
+  #  require => Package["apache"],
+  #  notify  => Service["apache"],
+  #}
 
   file { [
       "${apache::params::conf}/sites-available",
@@ -79,7 +80,7 @@ class apache::redhat inherits apache::base {
   # ssl.load was then changed to a template (see apache-ssl-redhat.pp)
   file { "${apache::params::conf}/mods-available":
     ensure => directory,
-    source => $lsbmajdistrelease ? {
+    source => $apache::params::majdistrelease ? {
       5 => "puppet:///modules/apache/etc/httpd/mods-available/redhat5/",
       6 => "puppet:///modules/apache/etc/httpd/mods-available/redhat6/",
     },

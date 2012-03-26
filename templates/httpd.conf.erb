@@ -43,7 +43,7 @@
 # Don't give away too much information about all the subcomponents
 # we are running.  Comment out this line if you don't mind remote sites
 # finding out what major optional modules you are running
-ServerTokens OS
+ServerTokens Prod
 
 #
 # ServerRoot: The top of the directory tree under which the server's
@@ -267,7 +267,7 @@ ServerAdmin root@localhost
 # You will have to access it by its address anyway, and this will make 
 # redirections work in a sensible way.
 #
-#ServerName www.example.com:80
+ServerName apache
 
 #
 # UseCanonicalName: Determines how Apache constructs self-referencing 
@@ -526,7 +526,7 @@ CustomLog logs/access_log combined
 # Set to "EMail" to also include a mailto: link to the ServerAdmin.
 # Set to one of:  On | Off | EMail
 #
-ServerSignature On
+ServerSignature Off
 
 #
 # Aliases: Add here as many aliases as you need (with no limit). The format is 
