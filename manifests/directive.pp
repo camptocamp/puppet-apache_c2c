@@ -36,9 +36,13 @@ Example usage:
   }
 
 */
-define apache::directive ($ensure="present", $directive, $filename="", $vhost) {
+define apache::directive ($ensure="present", $directive="", $filename="", $vhost) {
 
   include apache::params
+
+  if ($ensure == 'present' and $directive == '') {
+    fail 'empty "directive" parameter'
+  }
 
   apache::conf {$name:
     ensure        => $ensure,
