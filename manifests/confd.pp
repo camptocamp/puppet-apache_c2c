@@ -7,7 +7,7 @@ ${apache::params::conf}/conf.d directory
 
 Parameters:
 - *ensure*: present/absent.
-- *configuration*: apache configuration(s) to be applied 
+- *configuration*: apache configuration(s) to be applied
 - *filename*: basename of the file in which the configuration(s) will be put.
   Useful in the case configuration order matters: apache reads the files in conf.d/
   in alphabetical order.
@@ -24,12 +24,13 @@ Example usage:
   }
 
 */
-define apache::confd($ensure=present,$configuration,$filename="") {
+define apache::confd($ensure=present, $configuration, $filename="") {
   include apache::params
   apache::conf {$name:
     ensure        => $ensure,
     path          => "${apache::params::conf}/conf.d",
     filename      => $filename,
     configuration => $configuration,
+    notify        => Service["apache"],
   }
 }
