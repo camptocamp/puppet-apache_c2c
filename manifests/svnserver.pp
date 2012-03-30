@@ -1,15 +1,15 @@
 class apache::svnserver inherits apache::ssl {
-  package {"libapache2-svn":
+  package {'libapache2-svn':
     ensure => present,
   }
 
-  apache::module {"dav":
+  apache::module {'dav':
     ensure => present,
   }
 
-  apache::module {"dav_svn":
+  apache::module {'dav_svn':
     ensure  => present,
-    require => Package["libapache2-svn"],
+    require => Package['libapache2-svn'],
   }
 
 }

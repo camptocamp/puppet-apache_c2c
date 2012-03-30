@@ -1,10 +1,11 @@
 define apache::auth::htgroup (
-  $ensure="present", 
+  $groupname,
+  $members,
+  $ensure='present',
   $vhost=false,
   $groupFileLocation=false,
-  $groupFileName="htgroup",
-  $groupname,
-  $members){
+  $groupFileName='htgroup',
+  ){
 
   include apache::params
 
@@ -14,17 +15,17 @@ define apache::auth::htgroup (
     if $vhost {
       $_groupFileLocation = "${apache::params::root}/${vhost}/private"
     } else {
-      fail "parameter vhost is require !"
-    }  
+      fail 'parameter vhost is require !'
+    }
   }
 
   $_authGroupFile = "${_groupFileLocation}/${groupFileName}"
-  
+
   case $ensure {
 
-    'present': {
+    'present',default: {
       exec {"! test -f $_authGroupFile && OPT='-c'; htgroup \$OPT $_authGroupFile $groupname $members":
-        unless => "grep -qi '^${groupname}: ${members}$' ${_authGroupFile}",
+        unless  => "grep -qi '^${groupname}: ${members}$' ${_authGroupFile}",
         require => File[$_groupFileLocation],
       }
     }
@@ -36,10 +37,10 @@ define apache::auth::htgroup (
       }
 
       exec {"delete $_authGroupFile after remove $groupname":
-        command => "rm -f $_authGroupFile",
-        onlyif => "wc -l $_authGroupFile |grep -q 0",
+        command     => "rm -f $_authGroupFile",
+        onlyif      => "wc -l $_authGroupFile |grep -q 0",
         refreshonly => true,
-      } 
+      }
     }
   }
 }

@@ -1,17 +1,17 @@
 define apache::auth::basic::file::user (
-  $ensure="present", 
-  $authname="Private Area",
   $vhost,
-  $location="/",
+  $ensure='present',
+  $authname='Private Area',
+  $location='/',
   $authUserFile=false,
-  $users="valid-user"){
+  $users='valid-user'){
 
-  $fname = regsubst($name, "\s", "_", "G")
+  $fname = regsubst($name, '\s', '_', 'G')
 
   include apache::params
- 
-  if defined(Apache::Module["authn_file"]) {} else {
-    apache::module {"authn_file": }
+
+  if defined(Apache::Module['authn_file']) {} else {
+    apache::module {'authn_file': }
   }
 
   if $authUserFile {
@@ -20,21 +20,23 @@ define apache::auth::basic::file::user (
     $_authUserFile = "${apache::params::root}/${vhost}/private/htpasswd"
   }
 
-  if $users != "valid-user" {
+  if $users != 'valid-user' {
     $_users = "user $users"
   } else {
     $_users = $users
   }
 
+  $seltype = $::operatingsystem ? {
+    'RedHat' => 'httpd_config_t',
+    'CentOS' => 'httpd_config_t',
+    default  => undef,
+  }
+
   file {"${apache::params::root}/${vhost}/conf/auth-basic-file-user-${fname}.conf":
-    ensure => $ensure,
-    content => template("apache/auth-basic-file-user.erb"),
-    seltype => $operatingsystem ? {
-      "RedHat" => "httpd_config_t",
-      "CentOS" => "httpd_config_t",
-      default  => undef,
-    },
-    notify => Exec["apache-graceful"],
+    ensure  => $ensure,
+    content => template('apache/auth-basic-file-user.erb'),
+    seltype => $seltype,
+    notify  => Exec['apache-graceful'],
   }
 
 }

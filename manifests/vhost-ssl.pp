@@ -75,55 +75,55 @@ Example usage:
   include apache::ssl
 
   apache::vhost-ssl { "foo.example.com":
-    ensure => present,
-    ip_address => "10.0.0.2",
+    ensure      => present,
+    ip_address  => "10.0.0.2",
     publish_csr => "/home/webmaster/foo.example.com.csr",
     days="30",
   }
 
   # go to https://bar.example.com/bar.example.com.csr to retrieve the CSR.
   apache::vhost-ssl { "bar.example.com":
-    ensure => present,
-    ip_address => "10.0.0.3",
-    cert => "puppet:///modules/exampleproject/ssl-certs/bar.example.com.crt",
-    certchain => "puppet:///modules/exampleproject/ssl-certs/quovadis.chain.crt",
+    ensure      => present,
+    ip_address  => "10.0.0.3",
+    cert        => "puppet:///modules/exampleproject/ssl-certs/bar.example.com.crt",
+    certchain   => "puppet:///modules/exampleproject/ssl-certs/quovadis.chain.crt",
     publish_csr => true,
-    sslonly => true,
+    sslonly     => true,
   }
 
 */
 define apache::vhost-ssl (
   $ensure=present,
-  $config_file="",
+  $config_file='',
   $config_content=false,
   $htdocs=false,
   $conf=false,
   $readme=false,
   $docroot=false,
   $cgibin=true,
-  $user="",
+  $user='',
   $admin=$admin,
-  $group="root",
+  $group='root',
   $mode=2570,
   $aliases=[],
-  $ip_address="*",
+  $ip_address='*',
   $cert=false,
   $certkey=false,
   $cacert=false,
   $certchain=false,
   $certcn=false,
-  $days="3650",
+  $days='3650',
   $publish_csr=false,
   $sslonly=false,
   $enable_default=true,
   $ports=['*:80'],
   $sslports=['*:443'],
-  $accesslog_format="combined"
+  $accesslog_format='combined'
 ) {
 
   # these 2 values are required to generate a valid SSL certificate.
-  if (!$sslcert_country) { $sslcert_country = "??" }
-  if (!$sslcert_organisation) { $sslcert_organisation = "undefined organisation" }
+  if (!$sslcert_country) { $sslcert_country = '??' }
+  if (!$sslcert_organisation) { $sslcert_organisation = 'undefined organisation' }
 
   if ($certcn != false ) { $sslcert_commonname = $certcn }
   else { $sslcert_commonname = $name }
@@ -131,7 +131,7 @@ define apache::vhost-ssl (
   include apache::params
 
   $wwwuser = $user ? {
-    ""      => $apache::params::user,
+    ''      => $apache::params::user,
     default => $user,
   }
 
@@ -158,9 +158,9 @@ define apache::vhost-ssl (
   if $cacert != false {
     $cacertfile = "${apache::params::root}/$name/ssl/cacert.crt"
   } else {
-    $cacertfile = $operatingsystem ? {
-      /RedHat|CentOS/ => "/etc/pki/tls/certs/ca-bundle.crt",
-      Debian => "/etc/ssl/certs/ca-certificates.crt",
+    $cacertfile = $::operatingsystem ? {
+      /RedHat|CentOS/ => '/etc/pki/tls/certs/ca-bundle.crt',
+      Debian          => '/etc/ssl/certs/ca-certificates.crt',
     }
   }
 
@@ -168,48 +168,49 @@ define apache::vhost-ssl (
     $certchainfile = "${apache::params::root}/$name/ssl/certchain.crt"
   }
 
+  $config_content = $config_content ? {
+    false   => $sslonly ? {
+      true    => template('apache/vhost-ssl.erb'),
+      default => template('apache/vhost.erb', 'apache/vhost-ssl.erb'),
+    },
+    default => $config_content,
+  }
 
   # call parent definition to actually do the virtualhost setup.
   apache::vhost {$name:
-    ensure         => $ensure,
-    config_file    => $config_file,
-    config_content => $config_content ? {
-      false => $sslonly ? {
-        true => template("apache/vhost-ssl.erb"),
-        default => template("apache/vhost.erb", "apache/vhost-ssl.erb"),
-      },
-      default      => $config_content,
-    },
-    aliases        => $aliases,
-    htdocs         => $htdocs,
-    conf           => $conf,
-    readme         => $readme,
-    docroot        => $docroot,
-    user           => $wwwuser,
-    admin          => $admin,
-    group          => $group,
-    mode           => $mode,
-    enable_default => $enable_default,
-    ports          => $ports,
+    ensure           => $ensure,
+    config_file      => $config_file,
+    config_content   => $config_content,
+    aliases          => $aliases,
+    htdocs           => $htdocs,
+    conf             => $conf,
+    readme           => $readme,
+    docroot          => $docroot,
+    user             => $wwwuser,
+    admin            => $admin,
+    group            => $group,
+    mode             => $mode,
+    enable_default   => $enable_default,
+    ports            => $ports,
     accesslog_format => $accesslog_format,
   }
 
-  if $ensure == "present" {
+  if $ensure == 'present' {
     file { "${apache::params::root}/${name}/ssl":
-      ensure => directory,
-      owner  => "root",
-      group  => "root",
-      mode   => 700,
-      seltype => "cert_t",
+      ensure  => directory,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0700',
+      seltype => 'cert_t',
       require => [File["${apache::params::root}/${name}"]],
     }
 
     # template file used to generate SSL key, cert and csr.
     file { "${apache::params::root}/${name}/ssl/ssleay.cnf":
       ensure  => present,
-      owner   => "root",
-      mode    => 0640,
-      content => template("apache/ssleay.cnf.erb"),
+      owner   => 'root',
+      mode    => '0640',
+      content => template('apache/ssleay.cnf.erb'),
       require => File["${apache::params::root}/${name}/ssl"],
     }
 
@@ -219,42 +220,46 @@ define apache::vhost-ssl (
     exec { "generate-ssl-cert-$name":
       command => "/usr/local/sbin/generate-ssl-cert.sh ${name} ${apache::params::root}/${name}/ssl/ssleay.cnf ${apache::params::root}/${name}/ssl/ ${days}",
       creates => $csrfile,
-      notify  => Exec["apache-graceful"],
+      notify  => Exec['apache-graceful'],
       require => [
         File["${apache::params::root}/${name}/ssl/ssleay.cnf"],
-        File["/usr/local/sbin/generate-ssl-cert.sh"],
+        File['/usr/local/sbin/generate-ssl-cert.sh'],
       ],
     }
 
     # The virtualhost's certificate.
     # Manage content only if $cert is set, else use the certificate generated
     # by generate-ssl-cert.sh
+    $certfile_source = $cert ? {
+      false   => undef,
+      default => $cert,
+    }
+
     file { $certfile:
-      owner => "root",
-      group => "root",
-      mode  => 640,
-      source  => $cert ? {
-        false   => undef,
-        default => $cert,
-      },
-      seltype => "cert_t",
-      notify  => Exec["apache-graceful"],
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0640',
+      source  => $certfile_source,
+      seltype => 'cert_t',
+      notify  => Exec['apache-graceful'],
       require => [File["${apache::params::root}/${name}/ssl"], Exec["generate-ssl-cert-${name}"]],
     }
 
     # The virtualhost's private key.
     # Manage content only if $certkey is set, else use the key generated by
     # generate-ssl-cert.sh
+    $certkey_source = $certkey ? {
+      false   => undef,
+      default => $certkey,
+    }
+
     file { $certkeyfile:
-      owner => "root",
-      group => "root",
-      mode  => 600,
-      source  => $certkey ? {
-        false   => undef,
-        default => $certkey,
-      },
-      seltype => "cert_t",
-      notify  => Exec["apache-graceful"],
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0600',
+      source  => $certkey_source,
+      seltype => 'cert_t',
+      notify  => Exec['apache-graceful'],
       require => [File["${apache::params::root}/${name}/ssl"], Exec["generate-ssl-cert-${name}"]],
     }
 
@@ -262,12 +267,12 @@ define apache::vhost-ssl (
       # The certificate from your certification authority. Defaults to the
       # certificate bundle shipped with your distribution.
       file { $cacertfile:
-        owner   => "root",
-        group   => "root",
-        mode    => 640,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0640',
         source  => $cacert,
-        seltype => "cert_t",
-        notify  => Exec["apache-graceful"],
+        seltype => 'cert_t',
+        notify  => Exec['apache-graceful'],
         require => File["${apache::params::root}/${name}/ssl"],
       }
     }
@@ -278,31 +283,35 @@ define apache::vhost-ssl (
       # The certificate chain file from your certification authority's. They
       # should inform you if you need one.
       file { $certchainfile:
-        owner => "root",
-        group => "root",
-        mode  => 640,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0640',
         source  => $certchain,
-        seltype => "cert_t",
-        notify  => Exec["apache-graceful"],
+        seltype => 'cert_t',
+        notify  => Exec['apache-graceful'],
         require => File["${apache::params::root}/${name}/ssl"],
       }
     }
 
     # put a copy of the CSR in htdocs, or another location if $publish_csr
     # specifies so.
+    $ensure_public_csr = $publish_csr ? {
+      false   => 'absent',
+      default => 'present',
+    }
+
+    $path_public_csr = $publish_csr ? {
+      true    => "${apache::params::root}/${name}/htdocs/${name}.csr",
+      false   => "${apache::params::root}/${name}/htdocs/${name}.csr",
+      default => $publish_csr,
+    }
+
     file { "public CSR file for $name":
-      ensure  => $publish_csr ? {
-        false   => "absent",
-        default => "present",
-      },
-      path    => $publish_csr ? {
-        true    => "${apache::params::root}/${name}/htdocs/${name}.csr",
-        false   => "${apache::params::root}/${name}/htdocs/${name}.csr",
-        default => $publish_csr,
-      },
+      ensure  => $ensure_public_csr,
+      path    => $path_public_csr,
       source  => "file://$csrfile",
-      mode    => 640,
-      seltype => "httpd_sys_content_t",
+      mode    => '0640',
+      seltype => 'httpd_sys_content_t',
       require => Exec["generate-ssl-cert-$name"],
     }
 

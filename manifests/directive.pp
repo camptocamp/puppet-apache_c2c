@@ -36,31 +36,35 @@ Example usage:
   }
 
 */
-define apache::directive ($ensure="present", $source=undef, $content=undef, $filename="", $vhost) {
+define apache::directive ($vhost, $ensure='present', $source=undef, $content=undef, $filename='') {
 
   include apache
 
-  $fname = regsubst($name, "\s", "_", "G")
+  $fname = regsubst($name, '\s', '_', 'G')
 
   # cant proceed with source and content # thanks to ryancoleman and Volcane, from #puppet IRC Channel
   if $source and $content {
     fail('source and content parameters are both defined. Only one can be applied.')
   }
 
+  $seltype = $::operatingsystem ? {
+    'RedHat' => 'httpd_config_t',
+    'CentOS' => 'httpd_config_t',
+    default  => undef,
+  }
+
+  $vhost_file_name = $filename ? {
+    ''      => "${apache::params::root}/${vhost}/conf/directive-${fname}.conf",
+    default => "${apache::params::root}/${vhost}/conf/${filename}",
+  }
+
   file{ "${name} directive on ${vhost}":
     ensure  => $ensure,
     source  => $source,
     content => $content,
-    seltype => $operatingsystem ? {
-      "RedHat" => "httpd_config_t",
-      "CentOS" => "httpd_config_t",
-      default  => undef,
-    },
-    name    => $filename ? {
-      ""      => "${apache::params::root}/${vhost}/conf/directive-${fname}.conf",
-      default => "${apache::params::root}/${vhost}/conf/${filename}",
-    },
-    notify  => Service["apache"],
+    seltype => $seltype,
+    name    => $vhost_file_name,
+    notify  => Service['apache'],
     require => Apache::Vhost[$vhost],
   }
 }

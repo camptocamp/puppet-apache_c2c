@@ -11,12 +11,14 @@
 #
 class apache::dev {
 
-  package { "apache-devel":
-    name    => $operatingsystem ? {
-      RedHat => "httpd-devel",
-      CentOS => "httpd-devel",
-    },
+  $apache_devel_package_name = $::operatingsystem ? {
+    RedHat => 'httpd-devel',
+    CentOS => 'httpd-devel',
+  }
+
+  package { 'apache-devel':
     ensure  => present,
-    require => Package["gcc"],
+    name    => $apache_devel_package_name,
+    require => Package['gcc'],
   }
 }

@@ -28,8 +28,8 @@ define apache::namevhost ($ensure='present') {
     manage  => true,
     content => "NameVirtualHost ${name}\n",
     file    => "${apache::params::conf}/ports.conf",
-    require => Package["apache"],
-    notify  => Service["apache"],
+    require => Package['apache'],
+    notify  => Service['apache'],
   }
 
 }

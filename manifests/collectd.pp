@@ -19,17 +19,17 @@ Usage:
 */
 class apache::collectd {
 
-  if ($operatingsystem == "RedHat" or $operatingsystem == "CentOS") and $apache::params::majdistrelease > "4" {
+  if ($::operatingsystem == 'RedHat' or $::operatingsystem == 'CentOS') and $apache::params::majdistrelease > '4' {
 
-    package { "collectd-apache":
+    package { 'collectd-apache':
       ensure => present,
-      before => Collectd::Plugin["apache"],
+      before => Collectd::Plugin['apache'],
     }
   }
 
-  collectd::plugin { "apache":
+  collectd::plugin { 'apache':
     lines   => ['URL "http://localhost/server-status?auto"'],
-    require => Package["curl"],
+    require => Package['curl'],
   }
 
 }

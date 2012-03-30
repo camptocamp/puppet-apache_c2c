@@ -1,42 +1,42 @@
 class apache::params {
 
-  $rawmajdistrelease = split($operatingsystemrelease, '[.]')
+  $rawmajdistrelease = split($::operatingsystemrelease, '[.]')
   $majdistrelease = $rawmajdistrelease[0]
 
-  $pkg = $operatingsystem ? {
+  $pkg = $::operatingsystem ? {
     /RedHat|CentOS/ => 'httpd',
     /Debian|Ubuntu/ => 'apache2',
   }
 
-  $root = $apache_root ? {
-    "" => $operatingsystem ? {
+  $root = $::apache_root ? {
+    ''      => $::operatingsystem ? {
       /RedHat|CentOS/ => '/var/www/vhosts',
       /Debian|Ubuntu/ => '/var/www',
     },
-    default => $apache_root
+    default => $::apache_root
   }
 
-  $user = $operatingsystem ? {
+  $user = $::operatingsystem ? {
     /RedHat|CentOS/ => 'apache',
     /Debian|Ubuntu/ => 'www-data',
   }
 
-  $conf = $operatingsystem ? {
+  $conf = $::operatingsystem ? {
     /RedHat|CentOS/ => '/etc/httpd',
     /Debian|Ubuntu/ => '/etc/apache2',
   }
 
-  $log = $operatingsystem ? {
+  $log = $::operatingsystem ? {
     /RedHat|CentOS/ => '/var/log/httpd',
     /Debian|Ubuntu/ => '/var/log/apache2',
   }
 
-  $access_log = $operatingsystem ? {
+  $access_log = $::operatingsystem ? {
     /RedHat|CentOS/ => "${log}/access_log",
     /Debian|Ubuntu/ => "${log}/access.log",
   }
 
-  $error_log = $operatingsystem ? {
+  $error_log = $::operatingsystem ? {
     /RedHat|CentOS/ => "${log}/error_log",
     /Debian|Ubuntu/ => "${log}/error.log",
   }
