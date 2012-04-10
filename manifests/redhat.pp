@@ -101,7 +101,7 @@ class apache::redhat inherits apache::base {
   }
 
   # this module is statically compiled on debian and must be enabled here
-  apache::module {['log_config']]:
+  apache::module {['log_config']:
     ensure => present,
     notify => Exec['apache-graceful'],
   }
