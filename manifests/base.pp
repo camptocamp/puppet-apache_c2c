@@ -87,12 +87,26 @@ class apache::base {
   }
 
   file {"default virtualhost":
-    path    => "${apache::params::conf}/sites-available/default",
+    path    => "${apache::params::conf}/sites-available/default-vhost",
     ensure  => present,
     content => template("apache/default-vhost.erb"),
     require => Package["apache"],
     notify  => Exec["apache-graceful"],
+    before  => File["${apache::params::conf}/sites-enabled/000-default-vhost"],
     mode    => 644,
+  }
+
+  if $apache_disable_default_vhost {
+    file { "${apache::params::conf}/sites-enabled/000-default-vhost":
+      ensure => absent,
+      notify => Exec['apache-graceful'],
+    }
+  } else {
+    file { "${apache::params::conf}/sites-enabled/000-default-vhost":
+      ensure => link,
+      target => "${apache::params::conf}/sites-available/default-vhost",
+      notify => Exec['apache-graceful'],
+    }
   }
 
   exec { "apache-graceful":
@@ -107,6 +121,13 @@ class apache::base {
     group => root,
     mode => 755,
     source => "puppet:///modules/apache/usr/local/bin/htgroup",
+  }
+
+  file { ["${apache::params::conf}/sites-enabled/default",
+          "${apache::params::conf}/sites-enabled/000-default",
+          "${apache::params::conf}/sites-enabled/default-ssl"]:
+    ensure => absent,
+    notify => Exec["apache-graceful"],
   }
 
 }

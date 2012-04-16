@@ -30,7 +30,6 @@ Parameters:
 - *$mode*: see apache::vhost
 - *$aliases*: see apache::vhost. The generated SSL certificate will have this
   list as DNS subjectAltName entries.
-- *$enable_default*: see apache::vhost
 - *$ip_address*: the ip address defined in the <VirtualHost> directive.
   Defaults to "*".
 - *$cert*: optional source URL of the certificate (see examples below), if the
@@ -118,7 +117,6 @@ define apache::vhost-ssl (
   $days="3650",
   $publish_csr=false,
   $sslonly=false,
-  $enable_default=true,
   $ports=['*:80'],
   $sslports=['*:443'],
   $accesslog_format="combined"
@@ -197,7 +195,6 @@ define apache::vhost-ssl (
     admin          => $admin,
     group          => $group,
     mode           => $mode,
-    enable_default => $enable_default,
     ports          => $ports,
     accesslog_format => $accesslog_format,
   }

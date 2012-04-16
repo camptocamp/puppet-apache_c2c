@@ -12,7 +12,6 @@ define apache::vhost (
   $group="root",
   $mode=2570,
   $aliases=[],
-  $enable_default=true,
   $ports=['*:80'],
   $accesslog_format="combined"
 ) {
@@ -36,26 +35,6 @@ define apache::vhost (
     true    => "${wwwroot}/${name}/cgi-bin/",
     false   => false,
     default => $cgibin,
-  }
-
-  # check if default virtual host is enabled
-  if $enable_default == true {
-
-    exec { "enable default virtual host from ${name}":
-      command => "${apache::params::a2ensite} default",
-      unless  => "test -L ${apache::params::conf}/sites-enabled/000-default",
-      notify  => Exec["apache-graceful"],
-      require => Package["apache"],
-    }
-
-  } else {
-
-    exec { "disable default virtual host from ${name}":
-      command => "a2dissite default",
-      onlyif  => "test -L ${apache::params::conf}/sites-enabled/000-default",
-      notify  => Exec["apache-graceful"],
-      require => Package["apache"],
-    }
   }
 
   case $ensure {

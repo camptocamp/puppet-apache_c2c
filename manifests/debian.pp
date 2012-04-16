@@ -57,9 +57,4 @@ class apache::debian inherits apache::base {
     require => Package["apache"],
   }
 
-  file { "${apache::params::conf}/sites-available/default-ssl":
-    ensure => absent,
-    force => true,
-  }
-
 }
