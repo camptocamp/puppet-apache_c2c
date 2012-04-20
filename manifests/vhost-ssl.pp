@@ -104,7 +104,7 @@ define apache::vhost-ssl (
   $cgibin=true,
   $user="",
   $admin=$admin,
-  $group="root",
+  $group="",
   $mode=2570,
   $aliases=[],
   $ip_address="*",
@@ -134,6 +134,11 @@ define apache::vhost-ssl (
   $wwwuser = $user ? {
     ""      => $apache::params::user,
     default => $user,
+  }
+
+  $wwwgroup = $group ? {
+    ""      => $apache::params::group,
+    default => $group,
   }
 
   # used in ERB templates
@@ -193,7 +198,7 @@ define apache::vhost-ssl (
     docroot        => $docroot,
     user           => $wwwuser,
     admin          => $admin,
-    group          => $group,
+    group          => $wwwgroup,
     mode           => $mode,
     ports          => $ports,
     accesslog_format => $accesslog_format,
