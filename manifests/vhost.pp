@@ -9,7 +9,7 @@ define apache::vhost (
   $cgibin=true,
   $user="",
   $admin="",
-  $group="root",
+  $group="",
   $mode=2570,
   $aliases=[],
   $ports=['*:80'],
@@ -21,6 +21,11 @@ define apache::vhost (
   $wwwuser = $user ? {
     ""      => $apache::params::user,
     default => $user,
+  }
+
+  $wwwgroup = $group ? {
+    ""      => $apache::params::group,
+    default => $group,
   }
 
   # used in ERB templates
@@ -72,7 +77,7 @@ define apache::vhost (
           "" => $wwwuser,
           default => $admin,
         },
-        group  => $group,
+        group  => $wwwgroup,
         mode   => $mode,
         seltype => $operatingsystem ? {
           redhat => "httpd_config_t",
@@ -85,7 +90,7 @@ define apache::vhost (
       file { "${apache::params::root}/${name}/htdocs":
         ensure => directory,
         owner  => $wwwuser,
-        group  => $group,
+        group  => $wwwgroup,
         mode   => $mode,
         seltype => $operatingsystem ? {
           redhat => "httpd_sys_content_t",
@@ -120,7 +125,7 @@ define apache::vhost (
           default => undef, # don't manage this directory unless under $root/$name
         },
         owner  => $wwwuser,
-        group  => $group,
+        group  => $wwwgroup,
         mode   => $mode,
         seltype => $operatingsystem ? {
           redhat => "httpd_sys_script_exec_t",
@@ -186,7 +191,7 @@ define apache::vhost (
       file {"${apache::params::root}/${name}/private":
         ensure  => directory,
         owner   => $wwwuser,
-        group   => $group,
+        group   => $wwwgroup,
         mode    => $mode,
         seltype => $operatingsystem ? {
           redhat => "httpd_sys_content_t",
