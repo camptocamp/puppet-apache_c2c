@@ -18,6 +18,11 @@ class apache::params {
     /Debian|Ubuntu/ => 'www-data',
   }
 
+  $group = $operatingsystem ? {
+    /RedHat|CentOS/ => 'apache',
+    /Debian|Ubuntu/ => 'www-data',
+  }
+
   $conf = $operatingsystem ? {
     /RedHat|CentOS/ => '/etc/httpd',
     /Debian|Ubuntu/ => '/etc/apache2',
