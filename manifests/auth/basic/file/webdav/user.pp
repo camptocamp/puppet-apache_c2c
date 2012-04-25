@@ -7,7 +7,8 @@ define apache::auth::basic::file::webdav::user (
   $rw_users='valid-user',
   $limits='GET HEAD OPTIONS PROPFIND',
   $ro_users=false,
-  $allow_anonymous=false) {
+  $allow_anonymous=false,
+  $restricted_access=[]) {
 
   $fname = regsubst($name, '\s', '_', 'G')
 

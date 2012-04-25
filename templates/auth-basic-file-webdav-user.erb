@@ -12,6 +12,11 @@
 <% end -%>
 <% if allow_anonymous -%>
   <Limit GET OPTIONS PROPFIND>
+<% unless restricted_access.empty? -%>
+    Order deny,allow
+    Deny from all
+    <%= restricted_access.collect! {|i| "Allow from #{i}"} %>
+<% end -%>
     Satisfy Any
   </Limit>
 <% end -%>
