@@ -20,13 +20,10 @@ define apache::listen ($ensure='present') {
 
   include apache::params
 
-  common::concatfilepart { "apache-ports.conf-${name}":
+  concat::fragment { "apache-ports.conf-${name}":
     ensure  => $ensure,
-    manage  => true,
+    target  => "${apache::params::conf}/ports.conf",
     content => "Listen ${name}\n",
-    file    => "${apache::params::conf}/ports.conf",
-    require => Package["apache"],
-    notify  => Service["apache"],
   }
 
 }

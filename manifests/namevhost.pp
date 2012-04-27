@@ -23,13 +23,10 @@ define apache::namevhost ($ensure='present') {
 
   include apache::params
 
-  common::concatfilepart { "apache-namevhost.conf-${name}":
+  concat::fragment { "apache-namevhost.conf-${name}":
     ensure  => $ensure,
-    manage  => true,
+    target  => "${apache::params::conf}/ports.conf",
     content => "NameVirtualHost ${name}\n",
-    file    => "${apache::params::conf}/ports.conf",
-    require => Package["apache"],
-    notify  => Service["apache"],
   }
 
 }
