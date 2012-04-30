@@ -120,7 +120,7 @@ class apache::base {
     owner => root,
     group => root,
     mode => 755,
-    source => "puppet:///modules/apache/usr/local/bin/htgroup",
+    source => "puppet:///modules/${module_name}/usr/local/bin/htgroup",
   }
 
   file { ["${apache::params::conf}/sites-enabled/default",

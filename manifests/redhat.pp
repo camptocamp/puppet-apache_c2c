@@ -24,7 +24,7 @@ class apache::redhat inherits apache::base {
 
   File["default status module configuration"] {
     path => "${apache::params::conf}/conf.d/status.conf",
-    source => "puppet:///modules/apache/etc/httpd/conf/status.conf",
+    source => "puppet:///modules/${module_name}/etc/httpd/conf/status.conf",
   }
 
   File["default virtualhost"] { 
@@ -37,7 +37,7 @@ class apache::redhat inherits apache::base {
     mode => 755,
     owner => "root",
     group => "root",
-    source => "puppet:///modules/apache/usr/local/sbin/a2X.redhat",
+    source => "puppet:///modules/${module_name}/usr/local/sbin/a2X.redhat",
   }
 
   $httpd_mpm = $apache_mpm_type ? {
@@ -80,8 +80,8 @@ class apache::redhat inherits apache::base {
   file { "${apache::params::conf}/mods-available":
     ensure => directory,
     source => $lsbmajdistrelease ? {
-      5 => "puppet:///modules/apache/etc/httpd/mods-available/redhat5/",
-      6 => "puppet:///modules/apache/etc/httpd/mods-available/redhat6/",
+      5 => "puppet:///modules/${module_name}/etc/httpd/mods-available/redhat5/",
+      6 => "puppet:///modules/${module_name}/etc/httpd/mods-available/redhat6/",
     },
     recurse => true,
     mode => 644,
