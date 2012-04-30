@@ -4,8 +4,8 @@ class apache::redhat inherits apache::base {
   
   # BEGIN inheritance from apache::base
   Exec["apache-graceful"] {
-    command => "apachectl graceful",
-    onlyif  => "apachectl configtest",
+    command => "/usr/sbin/apachectl graceful",
+    onlyif  => "/usr/sbin/apachectl configtest",
   }
 
   Package["apache"] {
@@ -100,6 +100,7 @@ class apache::redhat inherits apache::base {
   # it makes no sens to put CGI here, deleted from the default vhost config
   file {"/var/www/cgi-bin":
     ensure  => absent,
+    force   => true,
     require => Package["apache"],
   }
 
