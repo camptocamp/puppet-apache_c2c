@@ -26,7 +26,7 @@ class apache::base {
   file {"log directory":
     path => $apache::params::log,
     ensure => directory,
-    mode => 755,
+    mode => 700,
     owner => "root",
     group  => "root",
     require => Package["apache"],
@@ -36,7 +36,7 @@ class apache::base {
     name    => $apache::params::user,
     ensure  => present,
     require => Package["apache"],
-    shell   => "/bin/sh",
+    shell   => "/sbin/nologin",
   }
 
   group { "apache group":

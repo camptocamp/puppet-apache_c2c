@@ -1,7 +1,7 @@
 /*
 == Definition: apache::listen
 
-Adds a "Listen" directive to apache's port.conf file.
+Adds a "Listen" directive to apache's ports.conf file.
 
 Parameters:
 - *ensure*: present/absent.
