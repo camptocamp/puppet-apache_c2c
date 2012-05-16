@@ -8,9 +8,15 @@ class apache::debian inherits apache::base {
     onlyif => "apache2ctl configtest",
   }
 
+  # the following variables are used in template logrotate-httpd.erb
+  $logrotate_paths = "${apache::params::root}/*/logs/*.log ${apache::params::log}/*log"
+  $httpd_pid_file = "/var/run/apache2.pid"
+  $httpd_reload_cmd = "/etc/init.d/apache2 restart > /dev/null"
+  $awstats_condition = "-f /usr/share/doc/awstats/examples/awstats_updateall.pl -a -f /usr/lib/cgi-bin/awstats.pl"
+  $awstats_command = "/usr/share/doc/awstats/examples/awstats_updateall.pl -awstatsprog=/usr/lib/cgi-bin/awstats.pl -confdir=/etc/awstats now > /dev/null"
   File["logrotate configuration"] {
-    path => "/etc/logrotate.d/apache2",
-    source => "puppet:///modules/apache/etc/logrotate.d/apache2",
+    path    => "/etc/logrotate.d/apache2",
+    content => template("apache/logrotate-httpd.erb"),
   }
 
   File["default status module configuration"] {

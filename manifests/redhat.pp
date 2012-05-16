@@ -12,11 +12,15 @@ class apache::redhat inherits apache::base {
     require => [File["/usr/local/sbin/a2ensite"], File["/usr/local/sbin/a2dissite"], File["/usr/local/sbin/a2enmod"], File["/usr/local/sbin/a2dismod"]],
   }
 
-  # $httpd_pid_file is used in template logrotate-httpd.erb
+  # the following variables are used in template logrotate-httpd.erb
+  $logrotate_paths = "${apache::params::root}/*/logs/*.log ${apache::params::log}/*log"
   $httpd_pid_file = $lsbmajdistrelease ? {
     /4|5/   => "/var/run/httpd.pid",
     default => "/var/run/httpd/httpd.pid",
   }
+  $httpd_reload_cmd = "/sbin/service httpd reload > /dev/null 2> /dev/null || true"
+  $awstats_condition = "-x /etc/cron.hourly/awstats"
+  $awstats_command = "/etc/cron.hourly/awstats || true"
   File["logrotate configuration"] { 
     path    => "/etc/logrotate.d/httpd",
     content => template("apache/logrotate-httpd.erb"),
