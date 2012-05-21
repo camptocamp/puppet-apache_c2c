@@ -1,6 +1,6 @@
 class apache::security {
 
-  case $operatingsystem {
+  case $::operatingsystem {
 
     RedHat,CentOS: {
       package { "mod_security":

@@ -49,7 +49,7 @@ define apache::vhost (
         owner   => root,
         group   => root,
         mode    => 644,
-        seltype => $operatingsystem ? {
+        seltype => $::operatingsystem ? {
           redhat => "httpd_config_t",
           CentOS => "httpd_config_t",
           default => undef,
@@ -63,7 +63,7 @@ define apache::vhost (
         owner  => root,
         group  => root,
         mode   => 755,
-        seltype => $operatingsystem ? {
+        seltype => $::operatingsystem ? {
           redhat => "httpd_sys_content_t",
           CentOS => "httpd_sys_content_t",
           default => undef,
@@ -79,7 +79,7 @@ define apache::vhost (
         },
         group  => $wwwgroup,
         mode   => $mode,
-        seltype => $operatingsystem ? {
+        seltype => $::operatingsystem ? {
           redhat => "httpd_config_t",
           CentOS => "httpd_config_t",
           default => undef,
@@ -92,7 +92,7 @@ define apache::vhost (
         owner  => $wwwuser,
         group  => $wwwgroup,
         mode   => $mode,
-        seltype => $operatingsystem ? {
+        seltype => $::operatingsystem ? {
           redhat => "httpd_sys_content_t",
           CentOS => "httpd_sys_content_t",
           default => undef,
@@ -127,7 +127,7 @@ define apache::vhost (
         owner  => $wwwuser,
         group  => $wwwgroup,
         mode   => $mode,
-        seltype => $operatingsystem ? {
+        seltype => $::operatingsystem ? {
           redhat => "httpd_sys_script_exec_t",
           CentOS => "httpd_sys_script_exec_t",
           default => undef,
@@ -163,7 +163,7 @@ define apache::vhost (
         owner  => root,
         group  => root,
         mode   => 755,
-        seltype => $operatingsystem ? {
+        seltype => $::operatingsystem ? {
           redhat => "httpd_log_t",
           CentOS => "httpd_log_t",
           default => undef,
@@ -179,7 +179,7 @@ define apache::vhost (
         owner => root,
         group => adm,
         mode => 644,
-        seltype => $operatingsystem ? {
+        seltype => $::operatingsystem ? {
           redhat => "httpd_log_t",
           CentOS => "httpd_log_t",
           default => undef,
@@ -193,7 +193,7 @@ define apache::vhost (
         owner   => $wwwuser,
         group   => $wwwgroup,
         mode    => $mode,
-        seltype => $operatingsystem ? {
+        seltype => $::operatingsystem ? {
           redhat => "httpd_sys_content_t",
           CentOS => "httpd_sys_content_t",
           default => undef,
@@ -215,13 +215,13 @@ define apache::vhost (
       }
 
       exec {"enable vhost ${name}":
-        command => $operatingsystem ? {
+        command => $::operatingsystem ? {
           RedHat => "${apache::params::a2ensite} ${name}",
           CentOS => "${apache::params::a2ensite} ${name}",
           default => "${apache::params::a2ensite} ${name}"
         },
         notify  => Exec["apache-graceful"],
-        require => [$operatingsystem ? {
+        require => [$::operatingsystem ? {
           redhat => File["${apache::params::a2ensite}"],
           CentOS => File["${apache::params::a2ensite}"],
           default => Package[$apache::params::pkg]},
@@ -253,13 +253,13 @@ define apache::vhost (
       }
 
       exec { "disable vhost ${name}":
-        command => $operatingsystem ? {
+        command => $::operatingsystem ? {
           RedHat => "/usr/local/sbin/a2dissite ${name}",
           CentOS => "/usr/local/sbin/a2dissite ${name}",
           default => "/usr/sbin/a2dissite ${name}"
         },
         notify  => Exec["apache-graceful"],
-        require => [$operatingsystem ? {
+        require => [$::operatingsystem ? {
           redhat => File["${apache::params::a2ensite}"],
           CentOS => File["${apache::params::a2ensite}"],
           default => Package[$apache::params::pkg]}],
