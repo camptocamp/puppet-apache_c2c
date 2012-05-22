@@ -14,9 +14,9 @@ Example usage:
 
 */
 class apache {
-  case $operatingsystem {
+  case $::operatingsystem {
     Debian,Ubuntu:  { include apache::debian}
     RedHat,CentOS:  { include apache::redhat}
-    default: { fail "Unsupported operatingsystem ${operatingsystem}" }
+    default: { fail "Unsupported operatingsystem ${::operatingsystem}" }
   }
 }

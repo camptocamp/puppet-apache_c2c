@@ -15,11 +15,11 @@ define apache::aw-stats($ensure=present, $aliases=[]) {
     ensure  => $ensure,
     owner   => root,
     group   => root,
-    source  => $operatingsystem ? {
+    source  => $::operatingsystem ? {
       /RedHat|CentOS/ => "puppet:///modules/apache/awstats.rh.conf",
       /Debian|Ubuntu/ => "puppet:///modules/apache/awstats.deb.conf",
     },
-    seltype => $operatingsystem ? {
+    seltype => $::operatingsystem ? {
       "RedHat" => "httpd_config_t",
       "CentOS" => "httpd_config_t",
       default  => undef,
