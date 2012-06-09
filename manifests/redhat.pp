@@ -101,6 +101,7 @@ class apache::redhat inherits apache::base {
   file {"/var/www/cgi-bin":
     ensure  => absent,
     require => Package["apache"],
+    force   => true,
   }
 
   # no idea why redhat choose to put this file there. apache fails if it's
