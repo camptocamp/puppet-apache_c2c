@@ -5,6 +5,7 @@ require 'puppet-lint/tasks/puppet-lint'
 
 RSpec::Core::RakeTask.new(:spec) do |t|
   t.pattern = 'spec/*/*_spec.rb'
+  t.rspec_opts = ['-c']
 end
 
 task :default => [:spec, :lint]

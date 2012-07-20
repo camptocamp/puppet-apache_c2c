@@ -48,7 +48,7 @@ define apache::vhost (
         ensure  => present,
         owner   => root,
         group   => root,
-        mode    => 644,
+        mode    => '0644',
         seltype => $operatingsystem ? {
           redhat => "httpd_config_t",
           CentOS => "httpd_config_t",
@@ -62,7 +62,7 @@ define apache::vhost (
         ensure => directory,
         owner  => root,
         group  => root,
-        mode   => 755,
+        mode   => '0755',
         seltype => $operatingsystem ? {
           redhat => "httpd_sys_content_t",
           CentOS => "httpd_sys_content_t",
@@ -162,7 +162,7 @@ define apache::vhost (
         ensure => directory,
         owner  => root,
         group  => root,
-        mode   => 755,
+        mode   => '0755',
         seltype => $operatingsystem ? {
           redhat => "httpd_log_t",
           CentOS => "httpd_log_t",
@@ -178,7 +178,7 @@ define apache::vhost (
         ensure => present,
         owner => root,
         group => adm,
-        mode => 644,
+        mode => '0644',
         seltype => $operatingsystem ? {
           redhat => "httpd_log_t",
           CentOS => "httpd_log_t",
@@ -206,7 +206,7 @@ define apache::vhost (
         ensure  => present,
         owner   => root,
         group   => root,
-        mode    => 644,
+        mode    => '0644',
         content => $readme ? {
           false => template("apache/README_vhost.erb"),
           default => $readme,
@@ -270,7 +270,11 @@ define apache::vhost (
 
    disabled: {
       exec { "disable vhost ${name}":
-        command => "a2dissite ${name}",
+        command => $operatingsystem ? {
+          RedHat => "/usr/local/sbin/a2dissite ${name}",
+          CentOS => "/usr/local/sbin/a2dissite ${name}",
+          default => "/usr/sbin/a2dissite ${name}"
+        },
         notify  => Exec["apache-graceful"],
         require => Package[$apache::params::pkg],
         onlyif => "/bin/sh -c '[ -L ${apache::params::conf}/sites-enabled/${name} ] \\
@@ -282,6 +286,6 @@ define apache::vhost (
         require => Exec["disable vhost ${name}"]
       }
     }
-    default: { err ( "Unknown ensure value: '${ensure}'" ) }
+    default: { fail ( "Unknown ensure value: '${ensure}'" ) }
   }
 }

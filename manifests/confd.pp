@@ -19,7 +19,6 @@ Example usage:
 
   apache::confd { "example 1":
     ensure        => present,
-    path          => /var/www/foo/conf
     configuration => "WSGIPythonEggs /var/cache/python-eggs",
   }
 
