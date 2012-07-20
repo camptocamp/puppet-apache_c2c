@@ -39,6 +39,8 @@ define apache::vhost-ssl (
   $accesslog_format="combined"
 ) {
 
+  warning "apache::vhost-ssl is deprecated. Use apache::vhost::ssl instead"
+
   apache::vhost::ssl{$name:
     ensure => $ensure,
     config_file => $config_file,
