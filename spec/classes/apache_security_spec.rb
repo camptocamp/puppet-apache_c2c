@@ -22,4 +22,16 @@ describe 'apache::security' do
 
     end
   end
+
+  describe 'When on wrong OS' do
+    let(:facts) { {
+      :operatingsystem => 'Fedora',
+    } }
+
+    it do
+      expect {
+        should contain_file('/etc/httpd/conf.d/mod_security.conf')
+      }.to raise_error(Puppet::Error, /Operating system not supported: 'Fedora'/)
+    end
+  end
 end
