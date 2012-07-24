@@ -111,16 +111,24 @@ class apache::base {
   }
 
   if $apache_disable_default_vhost {
+
     file { "${apache::params::conf}/sites-enabled/000-default-vhost":
       ensure => absent,
       notify => Exec['apache-graceful'],
     }
+
   } else {
+
     file { "${apache::params::conf}/sites-enabled/000-default-vhost":
       ensure => link,
       target => "${apache::params::conf}/sites-available/default-vhost",
       notify => Exec['apache-graceful'],
     }
+
+    file { "${apache::params::root}/html": 
+      ensure  => directory,
+    }
+
   }
 
   exec { "apache-graceful":
