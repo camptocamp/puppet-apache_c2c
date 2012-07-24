@@ -25,7 +25,7 @@ describe 'apache::proxypass' do
         it { should contain_file('proxy legacy dir to legacy server proxypass on www.example.com').with(
           'ensure'  => 'present',
           'seltype' => VARS[os]['conf_seltype'],
-          'name'    => "#{VARS[os]['root']}/www.example.com/conf/proxypass-proxy_legacy_dir_to_legacy_server.conf"
+          'path'    => "#{VARS[os]['root']}/www.example.com/conf/proxypass-proxy_legacy_dir_to_legacy_server.conf"
         ) }
       end
 
