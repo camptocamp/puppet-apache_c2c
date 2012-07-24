@@ -21,7 +21,7 @@ class apache::security {
       }
     }
 
-    Debian: {
+    Debian,Ubuntu: {
       package { "libapache-mod-security":
         ensure => present,
         alias => "apache-mod_security",
