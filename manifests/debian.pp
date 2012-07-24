@@ -45,10 +45,6 @@ class apache::debian inherits apache::base {
     ensure => absent,
   }
 
-  file { "${apache::params::root}/html":
-    ensure  => directory,
-  }
-
   file { "${apache::params::root}/html/index.html":
     ensure  => present,
     owner   => root,
