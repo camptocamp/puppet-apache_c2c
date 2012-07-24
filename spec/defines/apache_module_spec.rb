@@ -21,7 +21,7 @@ describe 'apache::module' do
             :selinux         => 'true',
           } }
 
-          it { should contain_apache__redhat__selinux('deflate').with_ensure('present') }
+          it { should contain_apache__redhat__selinux('deflate') }
 
           it do should contain_exec('a2enmod deflate').with(
             'command' => "#{VARS[os]['a2enmod']} deflate"
@@ -36,7 +36,7 @@ describe 'apache::module' do
 
         it { should include_class('apache::params') }
 
-        it { should contain_apache__redhat__selinux('deflate').with_ensure('absent') }
+        it { should_not contain_apache__redhat__selinux('deflate') }
 
         it do should contain_exec('a2dismod deflate').with(
           'command' => "#{VARS[os]['a2dismod']} deflate"
