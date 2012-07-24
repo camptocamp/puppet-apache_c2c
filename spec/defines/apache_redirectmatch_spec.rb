@@ -18,10 +18,10 @@ describe 'apache::redirectmatch' do
         it { should include_class('apache::params') }
 
         it { should contain_file('example redirect on www.example.com').with(
-          'ensure'  => 'present',
-          'content' => "# file managed by puppet\nRedirectMatch ^/(foo|bar)/ http://foobar.example.com/\n",
-          'seltype' => VARS[os]['conf_seltype'],
-          'name'    => "#{VARS[os]['root']}/www.example.com/conf/redirect-example.conf"
+          :ensure  => 'present',
+          :content => "# file managed by puppet\nRedirectMatch ^/(foo|bar)/ http://foobar.example.com/\n",
+          :seltype => VARS[os]['conf_seltype'],
+          :path    => "#{VARS[os]['root']}/www.example.com/conf/redirect-example.conf"
         ) }
       end
 
