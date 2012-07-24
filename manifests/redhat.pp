@@ -19,7 +19,6 @@ class apache::redhat inherits apache::base {
 
   # the following variables are used in template logrotate-httpd.erb
   $logrotate_paths = "${apache::params::root}/*/logs/*.log ${apache::params::log}/*log"
-  # $httpd_pid_file is used in template logrotate-httpd.erb
   $httpd_pid_file = $::lsbmajdistrelease ? {
     /4|5/   => '/var/run/httpd.pid',
     default => '/var/run/httpd/httpd.pid',
@@ -93,17 +92,10 @@ class apache::redhat inherits apache::base {
   # egrep '(^|#)LoadModule' /etc/httpd/conf/httpd.conf | sed -r 's|#?(.+ (.+)_module .+)|echo "\1" > mods-available/redhat5/\2.load|' | sh
   # ssl.load was then changed to a template (see apache-ssl-redhat.pp)
   file { "${apache::params::conf}/mods-available":
-<<<<<<< HEAD
-    ensure => directory,
-    source => $::lsbmajdistrelease ? {
-      5 => "puppet:///modules/apache/etc/httpd/mods-available/redhat5/",
-      6 => "puppet:///modules/apache/etc/httpd/mods-available/redhat6/",
-=======
     ensure  => directory,
     source  => $::lsbmajdistrelease ? {
       5 => 'puppet:///modules/apache/etc/httpd/mods-available/redhat5/',
       6 => 'puppet:///modules/apache/etc/httpd/mods-available/redhat6/',
->>>>>>> e6185470073fbfd217c6c0781fe3d592096afb5a
     },
     recurse => true,
     mode    => '0755',
