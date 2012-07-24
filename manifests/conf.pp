@@ -27,7 +27,7 @@ Example usage:
 
 */
 define apache::conf($ensure=present, $filename="", $prefix="configuration", $configuration, $path) {
-  $fname = regsubst($name, "\s", "_", "G")
+  $fname = regsubst($name, '\s', '_', 'G')
 
   if ($path == '') {
     fail('empty "path" parameter')
@@ -38,18 +38,18 @@ define apache::conf($ensure=present, $filename="", $prefix="configuration", $con
   }
 
   file{ "${name} configuration in ${path}":
-    ensure => $ensure,
+    ensure  => $ensure,
     content => "# file managed by puppet\n${configuration}\n",
-    seltype => $operatingsystem ? {
-      "RedHat" => "httpd_config_t",
-      "CentOS" => "httpd_config_t",
+    seltype => $::operatingsystem ? {
+      'RedHat' => 'httpd_config_t',
+      'CentOS' => 'httpd_config_t',
       default  => undef,
     },
-    name      => $filename ? {
-      ""      => "${path}/${prefix}-${fname}.conf",
+    path    => $filename ? {
+      ''      => "${path}/${prefix}-${fname}.conf",
       default => "${path}/${filename}",
     },
-    notify  => Exec["apache-graceful"],
+    notify  => Exec['apache-graceful'],
   }
 
 }
