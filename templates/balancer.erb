@@ -12,6 +12,7 @@ ProxyPassReverse <%= location %> <%= balancer %>/
 
 <% members.each do |member| -%>
     BalancerMember <%= proto %>://<%= member %><% params.each do |param| -%> <%= param %><% end -%>
+
 <% end -%>
 
 <% if standbyurl != "" -%>
