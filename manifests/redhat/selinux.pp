@@ -37,7 +37,7 @@ define apache::redhat::selinux() {
     }
 
     suexec: {
-      if versioncmp($lsbmajdistrelease, 6) < 0 {
+      if versioncmp($::lsbmajdistrelease, 6) < 0 {
         selboolean { "httpd_suexec_disable_trans":
           value => "off",
           persistent => true,

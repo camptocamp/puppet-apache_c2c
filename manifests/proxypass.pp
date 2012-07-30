@@ -58,7 +58,7 @@ define apache::proxypass (
   file { "${name} proxypass on ${vhost}":
     ensure => $ensure,
     content => template("apache/proxypass.erb"),
-    seltype => $operatingsystem ? {
+    seltype => $::operatingsystem ? {
       "RedHat" => "httpd_config_t",
       "CentOS" => "httpd_config_t",
       default  => undef,

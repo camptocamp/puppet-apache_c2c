@@ -58,7 +58,7 @@ class apache::debian inherits apache::base {
   }
 
   file { "${apache::params::conf}/conf.d/servername.conf":
-    content => "ServerName ${fqdn}\n",
+    content => "ServerName ${::fqdn}\n",
     notify  => Service["apache"],
     require => Package["apache"],
   }

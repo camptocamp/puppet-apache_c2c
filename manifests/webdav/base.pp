@@ -1,6 +1,6 @@
 class apache::webdav::base {
 
-  case $operatingsystem {
+  case $::operatingsystem {
 
     Debian,Ubuntu:  {
 

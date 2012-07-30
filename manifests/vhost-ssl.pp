@@ -20,7 +20,7 @@ define apache::vhost-ssl (
   $docroot=false,
   $cgibin=true,
   $user="",
-  $admin=$admin,
+  $admin=$::admin,
   $group="",
   $mode=2570,
   $aliases=[],
