@@ -2,7 +2,11 @@ require 'spec_helper'
 
 describe 'apache::listen' do
   let(:title) { '80' }
-  let(:pre_condition) { "define common::concatfilepart($ensure, $manage, $content, $file) {}" }
+  let(:pre_condition) { "
+class concat::setup {}
+define concat() {}
+define concat::fragment($ensure='present', $target, $content) {}
+  " }
 
   OSES.each do |os|
     describe "When on #{os}" do
@@ -12,11 +16,10 @@ describe 'apache::listen' do
 
       it { should include_class('apache::params') }
 
-      it do should contain_common__concatfilepart('apache-ports.conf-80').with(
+      it do should contain_concat__fragment('apache-ports.conf-80').with(
         'ensure'  => 'present',
-        'manage'  => 'true',
         'content' => "Listen 80\n",
-        'file'    => "#{VARS[os]['conf']}/ports.conf"
+        'target'  => "#{VARS[os]['conf']}/ports.conf"
       ) end
     end
   end

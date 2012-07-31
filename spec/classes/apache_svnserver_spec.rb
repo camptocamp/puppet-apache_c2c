@@ -1,7 +1,12 @@
 require 'spec_helper'
 
 describe 'apache::svnserver' do
-  let(:pre_condition) { "define common::concatfilepart($ensure, $manage, $content, $file) {}" }
+  let(:pre_condition) { "
+class concat::setup {}
+define concat() {}
+define concat::fragment($ensure='present', $target, $content) {}
+  " }
+ 
   OSES.each do |os|
     describe "When on #{os}" do
       let(:facts) { {

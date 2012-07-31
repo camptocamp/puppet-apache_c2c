@@ -1,7 +1,11 @@
 require 'spec_helper'
 
 describe 'apache::namevhost' do
-  let(:pre_condition) { "define common::concatfilepart($ensure, $manage, $content, $file) {}" }
+  let(:pre_condition) { "
+class concat::setup {}
+define concat() {}
+define concat::fragment($ensure='present', $target, $content) {}
+  " }
   let(:title) { '*:80' }
 
   OSES.each do |os|
@@ -18,11 +22,10 @@ describe 'apache::namevhost' do
             :ensure => e,
           } }
 
-          it { should contain_common__concatfilepart('apache-namevhost.conf-*:80').with(
+          it { should contain_concat__fragment('apache-namevhost.conf-*:80').with(
             'ensure'  => e,
-            'manage'  => 'true',
             'content' => "NameVirtualHost *:80\n",
-            'file'    => "#{VARS[os]['conf']}/ports.conf"
+            'target'    => "#{VARS[os]['conf']}/ports.conf"
           ) }
         end
       end

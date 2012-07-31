@@ -62,13 +62,8 @@ define apache::vhost (
         ensure => directory,
         owner  => root,
         group  => root,
-<<<<<<< HEAD
-        mode   => 755,
-        seltype => $::operatingsystem ? {
-=======
         mode   => '0755',
-        seltype => $operatingsystem ? {
->>>>>>> e6185470073fbfd217c6c0781fe3d592096afb5a
+        seltype => $::operatingsystem ? {
           redhat => "httpd_sys_content_t",
           CentOS => "httpd_sys_content_t",
           default => undef,
@@ -167,15 +162,10 @@ define apache::vhost (
         ensure => directory,
         owner  => root,
         group  => root,
-<<<<<<< HEAD
-        mode   => 755,
-        seltype => $::operatingsystem ? {
-=======
         mode   => '0755',
-        seltype => $operatingsystem ? {
->>>>>>> e6185470073fbfd217c6c0781fe3d592096afb5a
-          redhat => "httpd_log_t",
-          CentOS => "httpd_log_t",
+        seltype => $::operatingsystem ? {
+          redhat => 'httpd_log_t',
+          CentOS => 'httpd_log_t',
           default => undef,
         },
         require => File["${apache::params::root}/${name}"],
@@ -188,15 +178,10 @@ define apache::vhost (
         ensure => present,
         owner => root,
         group => adm,
-<<<<<<< HEAD
-        mode => 644,
-        seltype => $::operatingsystem ? {
-=======
         mode => '0644',
-        seltype => $operatingsystem ? {
->>>>>>> e6185470073fbfd217c6c0781fe3d592096afb5a
-          redhat => "httpd_log_t",
-          CentOS => "httpd_log_t",
+        seltype => $::operatingsystem ? {
+          redhat => 'httpd_log_t',
+          CentOS => 'httpd_log_t',
           default => undef,
         },
         require => File["${apache::params::root}/${name}/logs"],
@@ -209,8 +194,8 @@ define apache::vhost (
         group   => $wwwgroup,
         mode    => $mode,
         seltype => $::operatingsystem ? {
-          redhat => "httpd_sys_content_t",
-          CentOS => "httpd_sys_content_t",
+          redhat => 'httpd_sys_content_t',
+          CentOS => 'httpd_sys_content_t',
           default => undef,
         },
         require => File["${apache::params::root}/${name}"],
