@@ -1,7 +1,11 @@
 require 'spec_helper'
 
 describe 'apache::redhat' do
-  let(:pre_condition) { "define common::concatfilepart($ensure, $manage, $content, $file) {}" }
+  let(:pre_condition) { "
+class concat::setup {}
+define concat() {}
+define concat::fragment($ensure='present', $target, $content) {}
+  " }
   ['RedHat', 'CentOS'].each do |os|
     let(:facts) { {
       :operatingsystem   => os,

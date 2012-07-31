@@ -164,8 +164,8 @@ define apache::vhost (
         group  => root,
         mode   => '0755',
         seltype => $::operatingsystem ? {
-          redhat => "httpd_log_t",
-          CentOS => "httpd_log_t",
+          redhat => 'httpd_log_t',
+          CentOS => 'httpd_log_t',
           default => undef,
         },
         require => File["${apache::params::root}/${name}"],
@@ -180,8 +180,8 @@ define apache::vhost (
         group => adm,
         mode => '0644',
         seltype => $::operatingsystem ? {
-          redhat => "httpd_log_t",
-          CentOS => "httpd_log_t",
+          redhat => 'httpd_log_t',
+          CentOS => 'httpd_log_t',
           default => undef,
         },
         require => File["${apache::params::root}/${name}/logs"],
@@ -194,8 +194,8 @@ define apache::vhost (
         group   => $wwwgroup,
         mode    => $mode,
         seltype => $::operatingsystem ? {
-          redhat => "httpd_sys_content_t",
-          CentOS => "httpd_sys_content_t",
+          redhat => 'httpd_sys_content_t',
+          CentOS => 'httpd_sys_content_t',
           default => undef,
         },
         require => File["${apache::params::root}/${name}"],

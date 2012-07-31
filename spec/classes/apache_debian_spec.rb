@@ -1,9 +1,11 @@
 require 'spec_helper'
 
 describe 'apache::debian' do
-  let(:pre_condition) {
-    "define common::concatfilepart($ensure, $manage, $content, $file) {}"
-  }
+  let(:pre_condition) { "
+class concat::setup {}
+define concat() {}
+define concat::fragment($ensure='present', $target, $content) {}
+  " }
 
   let(:node) { "myhost.com" }
 

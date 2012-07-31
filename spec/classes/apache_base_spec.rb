@@ -2,8 +2,10 @@ require 'spec_helper'
 
 describe 'apache::base' do
   let(:pre_condition) { "
-define common::concatfilepart($ensure, $manage, $content, $file) {}
-    " }
+class concat::setup {}
+define concat() {}
+define concat::fragment($ensure='present', $target, $content) {}
+  " }
 
   OSES.each do |os|
     describe "When on #{os}" do
@@ -12,6 +14,10 @@ define common::concatfilepart($ensure, $manage, $content, $file) {}
       } }
 
       it { should include_class('apache::params') }
+
+      it { should include_class('concat::setup') }
+
+      it { should contain_concat("#{VARS[os]['conf']}/ports.conf") }
 
       it do should contain_file('root directory').with(
         'path'   => VARS[os]['root'],
