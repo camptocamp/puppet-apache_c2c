@@ -14,7 +14,7 @@ class apache::base::ssl {
 
   file { "/usr/local/sbin/generate-ssl-cert.sh":
     source => "puppet:///modules/apache/generate-ssl-cert.sh",
-    mode   => 755,
+    mode   => '0755',
   }
 
 }

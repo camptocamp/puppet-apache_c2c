@@ -27,9 +27,15 @@ Example usage:
   }
 
 */
-define apache::redirectmatch ($ensure="present", $regex, $url, $filename="", $vhost) {
+define apache::redirectmatch (
+  $regex,
+  $url,
+  $vhost,
+  $ensure='present',
+  $filename=''
+) {
 
-  $fname = regsubst($name, "\s", "_", "G")
+  $fname = regsubst($name, '\s', '_', 'G')
 
   include apache::params
 
@@ -37,15 +43,15 @@ define apache::redirectmatch ($ensure="present", $regex, $url, $filename="", $vh
     ensure  => $ensure,
     content => "# file managed by puppet\nRedirectMatch ${regex} ${url}\n",
     seltype => $::operatingsystem ? {
-      "RedHat" => "httpd_config_t",
-      "CentOS" => "httpd_config_t",
+      'RedHat' => 'httpd_config_t',
+      'CentOS' => 'httpd_config_t',
       default  => undef,
     },
-    name    => $filename ? {
-      ""      => "${apache::params::root}/${vhost}/conf/redirect-${fname}.conf",
+    path    => $filename ? {
+      ''      => "${apache::params::root}/${vhost}/conf/redirect-${fname}.conf",
       default => "${apache::params::root}/${vhost}/conf/${filename}",
     },
-    notify  => Exec["apache-graceful"],
+    notify  => Exec['apache-graceful'],
     require => Apache::Vhost[$vhost],
   }
 }

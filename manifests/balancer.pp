@@ -45,60 +45,71 @@ Example usage:
 
 */
 define apache::balancer (
-  $ensure="present",
-  $location="",
-  $proto="http",
+  $vhost,
+  $ensure='present',
+  $location='',
+  $proto='http',
   $members=[],
-  $standbyurl="",
-  $params=["retry=5"],
-  $filename="",
-  $vhost
+  $standbyurl='',
+  $params=['retry=5'],
+  $filename=''
 ) {
 
   # normalise name
-  $fname = regsubst($name, "\s", "_", "G")
+  $fname = regsubst($name, '\s', '_', 'G')
 
   include apache::params
 
   $balancer = "balancer://${fname}"
 
-  if !defined(Apache::Module["proxy"]) {
-    apache::module {"proxy": }
+  if !defined(Apache::Module['proxy']) {
+    apache::module {'proxy':
+      ensure => $ensure,
+    }
   }
 
-  if !defined(Apache::Module["proxy_balancer"]) {
-    apache::module {"proxy_balancer": }
+  if !defined(Apache::Module['proxy_balancer']) {
+    apache::module {'proxy_balancer':
+      ensure => $ensure,
+    }
   }
 
   # ensure proxy modules are enabled
   case $proto {
     http: {
-      if !defined(Apache::Module["proxy_http"]) {
-        apache::module {"proxy_http": }
+      if !defined(Apache::Module['proxy_http']) {
+        apache::module {'proxy_http':
+          ensure => $ensure,
+        }
       }
     }
 
     ajp: {
-      if !defined(Apache::Module["proxy_ajp"]) {
-        apache::module {"proxy_ajp": }
+      if !defined(Apache::Module['proxy_ajp']) {
+        apache::module {'proxy_ajp':
+          ensure => $ensure,
+        }
       }
+    }
+
+    default: {
+      fail ("Unknown proto '${proto}'")
     }
   }
 
-  file{ "${name} balancer on ${vhost}":
+  file{"${name} balancer on ${vhost}":
     ensure  => $ensure,
-    content => template("apache/balancer.erb"),
+    content => template('apache/balancer.erb'),
     seltype => $::operatingsystem ? {
-      "RedHat" => "httpd_config_t",
-      "CentOS" => "httpd_config_t",
+      'RedHat' => 'httpd_config_t',
+      'CentOS' => 'httpd_config_t',
       default  => undef,
     },
-    name    => $filename ? {
-      ""      => "${apache::params::root}/${vhost}/conf/balancer-${fname}.conf",
+    path    => $filename ? {
+      ''      => "${apache::params::root}/${vhost}/conf/balancer-${fname}.conf",
       default => "${apache::params::root}/${vhost}/conf/${filename}",
     },
-    notify  => Exec["apache-graceful"],
+    notify  => Exec['apache-graceful'],
     require => Apache::Vhost[$vhost],
   }
-
 }

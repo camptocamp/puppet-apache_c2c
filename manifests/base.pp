@@ -31,7 +31,7 @@ class apache::base {
   file {"root directory":
     path => $apache::params::root,
     ensure => directory,
-    mode => 755,
+    mode => '0755',
     owner => "root",
     group => "root",
     require => Package["apache"],
@@ -40,7 +40,7 @@ class apache::base {
   file {"log directory":
     path => $apache::params::log,
     ensure => directory,
-    mode => 755,
+    mode => '0755',
     owner => "root",
     group  => "root",
     require => Package["apache"],
@@ -77,7 +77,7 @@ class apache::base {
     ensure => present,
     owner => root,
     group => root,
-    mode => 644,
+    mode => '0644',
     source => undef,
     require => Package["apache"],
   }
@@ -107,7 +107,7 @@ class apache::base {
     require => Package["apache"],
     notify  => Exec["apache-graceful"],
     before  => File["${apache::params::conf}/sites-enabled/000-default-vhost"],
-    mode    => 644,
+    mode    => '0644',
   }
 
   if $apache_disable_default_vhost {
@@ -133,7 +133,7 @@ class apache::base {
     ensure => present,
     owner => root,
     group => root,
-    mode => 755,
+    mode => '0755',
     source => "puppet:///modules/apache/usr/local/bin/htgroup",
   }
 

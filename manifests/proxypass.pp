@@ -35,39 +35,43 @@ Example usage:
 
 */
 define apache::proxypass (
-  $ensure="present", 
-  $location="", 
-  $url="", 
-  $params=[], 
-  $filename="", 
-  $vhost
+  $vhost,
+  $ensure='present',
+  $location='',
+  $url='',
+  $params=[],
+  $filename=''
 ) {
 
-  $fname = regsubst($name, "\s", "_", "G")
+  $fname = regsubst($name, '\s', '_', 'G')
 
   include apache::params
 
-  if defined(Apache::Module["proxy"]) {} else {
-    apache::module {"proxy": }
+  if defined(Apache::Module['proxy']) {} else {
+    apache::module {'proxy':
+      ensure => $ensure,
+    }
   }
 
-  if defined(Apache::Module["proxy_http"]) {} else {
-    apache::module {"proxy_http": }
+  if defined(Apache::Module['proxy_http']) {} else {
+    apache::module {'proxy_http':
+      ensure => $ensure,
+    }
   }
 
   file { "${name} proxypass on ${vhost}":
-    ensure => $ensure,
-    content => template("apache/proxypass.erb"),
+    ensure  => $ensure,
+    content => template('apache/proxypass.erb'),
     seltype => $::operatingsystem ? {
-      "RedHat" => "httpd_config_t",
-      "CentOS" => "httpd_config_t",
+      'RedHat' => 'httpd_config_t',
+      'CentOS' => 'httpd_config_t',
       default  => undef,
     },
-    name    => $filename ? {
-      ""      => "${apache::params::root}/${vhost}/conf/proxypass-${fname}.conf",
+    path    => $filename ? {
+      ''      => "${apache::params::root}/${vhost}/conf/proxypass-${fname}.conf",
       default => "${apache::params::root}/${vhost}/conf/${filename}",
     },
-    notify  => Exec["apache-graceful"],
+    notify  => Exec['apache-graceful'],
     require => Apache::Vhost[$vhost],
   }
 }

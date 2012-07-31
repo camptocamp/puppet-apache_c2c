@@ -53,7 +53,7 @@ class apache::debian inherits apache::base {
     ensure  => present,
     owner   => root,
     group   => root,
-    mode    => 644,
+    mode    => '0644',
     content => "<html><body><h1>It works!</h1></body></html>\n",
   }
 
