@@ -49,13 +49,11 @@ define apache::proxypass (
 
   if defined(Apache::Module['proxy']) {} else {
     apache::module {'proxy':
-      ensure => $ensure,
     }
   }
 
   if defined(Apache::Module['proxy_http']) {} else {
     apache::module {'proxy_http':
-      ensure => $ensure,
     }
   }
 
