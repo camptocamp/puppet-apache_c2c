@@ -195,6 +195,7 @@ define apache::vhost::ssl (
     conf           => $conf,
     readme         => $readme,
     docroot        => $docroot,
+    cgibin         => $cgibin,
     user           => $wwwuser,
     admin          => $admin,
     group          => $wwwgroup,
