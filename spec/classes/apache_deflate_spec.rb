@@ -16,7 +16,7 @@ describe 'apache::deflate' do
         'path'    => "#{VARS[os]['conf']}/conf.d/deflate.conf",
         'content' => '# file managed by puppet
 <IfModule mod_deflate.c>
-  AddOutputFilterByType DEFLATE application/x-javascript application/javascript text/css
+  AddOutputFilterByType DEFLATE application/x-javascript application/javascript application/json text/css text/html text/plain text/xml
   BrowserMatch Safari/4 no-gzip
 </IfModule>
 '
