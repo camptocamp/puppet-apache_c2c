@@ -114,6 +114,7 @@ class apache::redhat inherits apache::base {
   # it makes no sens to put CGI here, deleted from the default vhost config
   file {'/var/www/cgi-bin':
     ensure  => absent,
+    force   => true,
     require => Package['apache'],
   }
 
