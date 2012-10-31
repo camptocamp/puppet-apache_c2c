@@ -99,7 +99,7 @@ define apache::vhost (
         },
         require => [File["${apache::params::root}/${name}"]],
       }
- 
+
       if $htdocs {
         File["${apache::params::root}/${name}/htdocs"] {
           source  => $htdocs,
@@ -151,7 +151,7 @@ define apache::vhost (
           } else {
             # default vhost template
             File["${apache::params::conf}/sites-available/${name}"] {
-              content => template("apache/vhost.erb"), 
+              content => template("apache/vhost.erb"),
             }
           }
         }
@@ -235,12 +235,12 @@ define apache::vhost (
       }
     }
 
-    absent:{
+    absent: {
       file { "${apache::params::conf}/sites-enabled/${name}":
         ensure  => absent,
         require => Exec["disable vhost ${name}"]
       }
-      
+
       file { "${apache::params::conf}/sites-available/${name}":
         ensure  => absent,
         require => Exec["disable vhost ${name}"]
@@ -263,12 +263,12 @@ define apache::vhost (
           redhat => File["${apache::params::a2ensite}"],
           CentOS => File["${apache::params::a2ensite}"],
           default => Package[$apache::params::pkg]}],
-        onlyif => "/bin/sh -c '[ -L ${apache::params::conf}/sites-enabled/${name} ] \\
-          && [ ${apache::params::conf}/sites-enabled/${name} -ef ${apache::params::conf}/sites-available/${name} ]'",
+          onlyif => "/bin/sh -c '[ -L ${apache::params::conf}/sites-enabled/${name} ] \\
+            && [ ${apache::params::conf}/sites-enabled/${name} -ef ${apache::params::conf}/sites-available/${name} ]'",
       }
-   }
+    }
 
-   disabled: {
+    disabled: {
       exec { "disable vhost ${name}":
         command => $operatingsystem ? {
           RedHat => "/usr/local/sbin/a2dissite ${name}",

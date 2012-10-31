@@ -18,7 +18,7 @@ class apache::ssl::redhat inherits apache::base::ssl {
     before => Exec["apache-graceful"],
   }
 
-	case $::lsbmajdistrelease {
+  case $::lsbmajdistrelease {
     5,6: {
       file {"/etc/httpd/mods-available/ssl.load":
         ensure => present,
@@ -28,7 +28,7 @@ class apache::ssl::redhat inherits apache::base::ssl {
         group => "root",
         seltype => "httpd_config_t",
         require => File["/etc/httpd/mods-available"],
-			}
+      }
     }
   }
 }

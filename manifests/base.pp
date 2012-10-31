@@ -125,7 +125,7 @@ class apache::base {
       notify => Exec['apache-graceful'],
     }
 
-    file { "${apache::params::root}/html": 
+    file { "${apache::params::root}/html":
       ensure  => directory,
     }
 
