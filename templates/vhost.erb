@@ -14,7 +14,9 @@
   CustomLog <%= wwwroot %>/<%= name %>/logs/access.log "<%= accesslog_format %>"
 
   Include <%= wwwroot %>/<%= name%>/conf/*.conf
-
+<% if is_ssl -%>
+  Include <%= wwwroot %>/<%= name%>/conf/non-ssl/*.conf
+<% end -%>
 <% if cgipath -%>
   ScriptAlias /cgi-bin/ <%= cgipath %>
   <Directory <%= cgipath %>>
