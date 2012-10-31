@@ -10,6 +10,6 @@ class apache::webdav::ssl::debian inherits apache::webdav::base {
         mode    => 755,
       }
     }
-  } 
+  }
 
 }
