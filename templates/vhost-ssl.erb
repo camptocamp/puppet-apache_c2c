@@ -14,6 +14,7 @@
   CustomLog <%= wwwroot %>/<%= name %>/logs/access.log combined
 
   Include <%= wwwroot %>/<%= name%>/conf/*.conf
+  Include <%= wwwroot %>/<%= name%>/conf/ssl/*.conf
 
   SSLEngine On
   SSLCertificateFile <%= certfile %>

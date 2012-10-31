@@ -181,6 +181,7 @@ define apache::vhost::ssl (
 
 
   # call parent definition to actually do the virtualhost setup.
+  $is_ssl = true
   apache::vhost {$name:
     ensure         => $ensure,
     config_file    => $config_file,
@@ -213,6 +214,40 @@ define apache::vhost::ssl (
       seltype => "cert_t",
       require => [File["${apache::params::root}/${name}"]],
     }
+    if !$sslonly {
+      file { "${apache::params::root}/${name}/conf/ssl":
+        ensure    => directory,
+        owner     => $admin ? {
+          ''      => $wwwuser,
+          default => $admin,
+        },
+        group     => $wwwgroup,
+        mode      => $mode,
+        seltype   => $::operatingsystem ? {
+          redhat  => 'httpd_config_t',
+          CentOS  => 'httpd_config_t',
+          default => undef,
+        },
+        require => [File["${apache::params::root}/${name}/conf"]],
+      }
+
+      file { "${apache::params::root}/${name}/conf/non-ssl":
+        ensure    => directory,
+        owner     => $admin ? {
+          ''      => $wwwuser,
+          default => $admin,
+        },
+        group     => $wwwgroup,
+        mode      => $mode,
+        seltype   => $::operatingsystem ? {
+          redhat  => 'httpd_config_t',
+          CentOS  => 'httpd_config_t',
+          default => undef,
+        },
+        require => [File["${apache::params::root}/${name}/conf"]],
+      }
+    }
+
 
     # template file used to generate SSL key, cert and csr.
     file { "${apache::params::root}/${name}/ssl/ssleay.cnf":
