@@ -7,7 +7,7 @@
 <% end -%>
 
   RewriteEngine On
-  RewriteRule /(.*) https://%{HTTP_HOST}<%= ssl_port[0].sub('*','') %>/$1 [R=302]
+  RewriteRule /(.*) https://%{HTTP_HOST}:<%= ssl_port[0].split(':').pop %>/$1 [R=302]
 
   ServerSignature Off
 </VirtualHost>
