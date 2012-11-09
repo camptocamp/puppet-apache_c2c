@@ -55,8 +55,7 @@ Parameters:
   If set to a path, the CSR will be copied into the specified file. Defaults to
   "false", which means don't copy the CSR anywhere.
 - *$sslonly*: if set to "true", only the https virtualhost will be configured.
-  Defaults to "false", which means the virtualhost will be reachable unencrypted
-  on port 80, as well as encrypted on port 443.
+  Defaults to "true", which means there is a redirection from non-SSL port to SSL
 - *ports*: array specifying the ports on which the non-SSL vhost will be
   reachable. Defaults to "*:80".
 - *sslports*: array specifying the ports on which the SSL vhost will be
@@ -116,7 +115,7 @@ define apache::vhost::ssl (
   $certcn=false,
   $days="3650",
   $publish_csr=false,
-  $sslonly=false,
+  $sslonly=true,
   $ports=['*:80'],
   $sslports=['*:443'],
   $accesslog_format="combined"
@@ -186,8 +185,8 @@ define apache::vhost::ssl (
     config_file    => $config_file,
     config_content => $config_content ? {
       false => $sslonly ? {
-        true => template("apache/vhost-ssl.erb"),
-        default => template("apache/vhost.erb", "apache/vhost-ssl.erb"),
+        false => template("apache/vhost.erb", "apache/vhost-ssl.erb"),
+        default => template("apache/vhost-redirect-ssl.erb", "apache/vhost-ssl.erb"),
       },
       default      => $config_content,
     },
