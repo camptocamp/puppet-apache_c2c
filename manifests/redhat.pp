@@ -121,7 +121,12 @@ class apache::redhat inherits apache::base {
   # no idea why redhat choose to put this file there. apache fails if it's
   # present and mod_proxy isn't...
   file { "${apache::params::conf}/conf.d/proxy_ajp.conf":
-    ensure  => absent,
+    ensure  => present,
+    content => "# File managed by puppet
+#
+# This file is installed by 'httpd' RedHat package but we're not using it. We
+# must keep it here to avoid it being recreated on package upgrade.
+",
     require => Package['apache'],
     notify  => Exec['apache-graceful'],
   }
