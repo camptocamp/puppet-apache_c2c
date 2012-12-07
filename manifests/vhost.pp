@@ -136,23 +136,21 @@ define apache::vhost (
       }
 
       case $config_file {
-
         default: {
-          File["${apache::params::conf}/sites-available/${name}"] {
-            source => $config_file,
-          }
-        }
-        "": {
-
-          if $config_content {
             File["${apache::params::conf}/sites-available/${name}"] {
-              content => $config_content,
+              source => $config_file,
             }
+        }
+        '': {
+          if $config_content {
+              $file_content = $config_content
           } else {
             # default vhost template
-            File["${apache::params::conf}/sites-available/${name}"] {
-              content => template("apache/vhost.erb"), 
-            }
+            $file_content = template('apache/vhost.erb')
+          }
+          validate_augeas($file_content, 'Httpd.lns')
+          File["${apache::params::conf}/sites-available/${name}"] {
+            content => $file_content,
           }
         }
       }
