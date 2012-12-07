@@ -180,26 +180,31 @@ define apache::vhost::ssl (
 
 
   # call parent definition to actually do the virtualhost setup.
-  apache::vhost {$name:
-    ensure         => $ensure,
-    config_file    => $config_file,
-    config_content => $config_content ? {
-      false => $sslonly ? {
-        false => template("apache/vhost.erb", "apache/vhost-ssl.erb"),
-        default => template("apache/vhost-redirect-ssl.erb", "apache/vhost-ssl.erb"),
-      },
-      default      => $config_content,
+  $_config_content = $config_content ? {
+    false => $sslonly ? {
+      false   => template('apache/vhost.erb', 'apache/vhost-ssl.erb'),
+      default => template('apache/vhost-redirect-ssl.erb',
+                          'apache/vhost-ssl.erb'),
     },
-    aliases        => $aliases,
-    htdocs         => $htdocs,
-    conf           => $conf,
-    readme         => $readme,
-    docroot        => $docroot,
-    user           => $wwwuser,
-    admin          => $admin,
-    group          => $wwwgroup,
-    mode           => $mode,
-    ports          => $ports,
+    default      => $config_content,
+  }
+
+  validate_augeas($_config_content, 'Httpd.lns')
+
+  apache::vhost {$name:
+    ensure           => $ensure,
+    config_file      => $config_file,
+    aliases          => $aliases,
+    htdocs           => $htdocs,
+    conf             => $conf,
+    config_content   => $_config_content,
+    readme           => $readme,
+    docroot          => $docroot,
+    user             => $wwwuser,
+    admin            => $admin,
+    group            => $wwwgroup,
+    mode             => $mode,
+    ports            => $ports,
     accesslog_format => $accesslog_format,
   }
 
