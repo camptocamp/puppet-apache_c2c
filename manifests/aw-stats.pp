@@ -1,4 +1,6 @@
-define apache::aw-stats($ensure=present, $aliases=[]) {
+# about $allowfullyearview, refer to templates/awstats.erb in this module for
+# a detailed explanation an possible values.
+define apache::aw-stats($ensure=present, $aliases=[], $allowfullyearview=2) {
 
   include apache::params
 
