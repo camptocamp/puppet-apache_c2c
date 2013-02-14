@@ -33,7 +33,7 @@ class apache::redhat inherits apache::base {
 
   File['default status module configuration'] {
     path   => "${apache::params::conf}/conf.d/status.conf",
-    source => 'puppet:///modules/apache/etc/httpd/conf/status.conf',
+    source => "puppet:///modules/${module_name}/etc/httpd/conf/status.conf",
   }
 
   File['default virtualhost'] {
@@ -51,7 +51,7 @@ class apache::redhat inherits apache::base {
     mode   => '0755',
     owner  => 'root',
     group  => 'root',
-    source => 'puppet:///modules/apache/usr/local/sbin/a2X.redhat',
+    source => "puppet:///modules/${module_name}/usr/local/sbin/a2X.redhat",
   }
 
   $httpd_mpm = $apache_mpm_type ? {
@@ -94,8 +94,8 @@ class apache::redhat inherits apache::base {
   file { "${apache::params::conf}/mods-available":
     ensure  => directory,
     source  => $::lsbmajdistrelease ? {
-      5 => 'puppet:///modules/apache/etc/httpd/mods-available/redhat5/',
-      6 => 'puppet:///modules/apache/etc/httpd/mods-available/redhat6/',
+      5 => "puppet:///modules/${module_name}/etc/httpd/mods-available/redhat5/",
+      6 => "puppet:///modules/${module_name}/etc/httpd/mods-available/redhat6/",
     },
     recurse => true,
     mode    => '0755',
@@ -121,7 +121,12 @@ class apache::redhat inherits apache::base {
   # no idea why redhat choose to put this file there. apache fails if it's
   # present and mod_proxy isn't...
   file { "${apache::params::conf}/conf.d/proxy_ajp.conf":
-    ensure  => absent,
+    ensure  => present,
+    content => "# File managed by puppet
+#
+# This file is installed by 'httpd' RedHat package but we're not using it. We
+# must keep it here to avoid it being recreated on package upgrade.
+",
     require => Package['apache'],
     notify  => Exec['apache-graceful'],
   }

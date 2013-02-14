@@ -1,4 +1,6 @@
-define apache::aw-stats($ensure=present, $aliases=[]) {
+# about $allowfullyearview, refer to templates/awstats.erb in this module for
+# a detailed explanation an possible values.
+define apache::aw-stats($ensure=present, $aliases=[], $allowfullyearview=2) {
 
   include apache::params
 
@@ -16,8 +18,8 @@ define apache::aw-stats($ensure=present, $aliases=[]) {
     owner   => root,
     group   => root,
     source  => $::operatingsystem ? {
-      /RedHat|CentOS/ => "puppet:///modules/apache/awstats.rh.conf",
-      /Debian|Ubuntu/ => "puppet:///modules/apache/awstats.deb.conf",
+      /RedHat|CentOS/ => "puppet:///modules/${module_name}/awstats.rh.conf",
+      /Debian|Ubuntu/ => "puppet:///modules/${module_name}/awstats.deb.conf",
     },
     seltype => $::operatingsystem ? {
       "RedHat" => "httpd_config_t",

@@ -1,5 +1,5 @@
 define apache::auth::htpasswd (
-  $ensure="present", 
+  $ensure="present",
   $vhost=false,
   $userFileLocation=false,
   $userFileName="htpasswd",
@@ -8,7 +8,7 @@ define apache::auth::htpasswd (
   $clearPassword=false){
 
   include apache::params
- 
+
   if $userFileLocation {
     $_userFileLocation = $userFileLocation
   } else {
@@ -18,9 +18,9 @@ define apache::auth::htpasswd (
       fail "parameter vhost is require !"
     }
   }
-  
+
   $_authUserFile = "${_userFileLocation}/${userFileName}"
-  
+
   case $ensure {
 
     'present': {
@@ -57,7 +57,7 @@ define apache::auth::htpasswd (
         command     => "rm -f ${_authUserFile}",
         onlyif      => "wc -l ${_authUserFile} | egrep -q '^0[^0-9]'",
         refreshonly => true,
-      } 
+      }
     }
   }
 }

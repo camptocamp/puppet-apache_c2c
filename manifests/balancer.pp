@@ -16,7 +16,8 @@ Parameters:
 - *members*: array of "hostname:port" pairs for each registered backend.
 - *standbyurl*: optional URL of the sorryserver (requests will get directed to
   this address when all backends are dead).
-- *params*: array of parameters to pass to every backend. See: http://httpd.apache.org/docs/2.2/mod/mod_proxy.html#proxypass
+- *params*: array of parameters to pass to every backend.
+  See: http://httpd.apache.org/docs/2.2/mod/mod_proxy.html#proxypass
   Defaults to "retry=5"
 - *vhost*: the virtualhost to which this directive will apply. Mandatory
   parameter.
