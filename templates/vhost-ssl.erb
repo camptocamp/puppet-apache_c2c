@@ -19,11 +19,14 @@
   SSLCertificateFile <%= certfile %>
   SSLCertificateKeyFile <%= certkeyfile %>
   SSLCACertificateFile <%= cacertfile %>
-<% if has_variable?("cacrlfile") -%>
-  SSLCARevocationFile <%= cacrlfile %>
+<% if @cacrlfile -%>
+  SSLCARevocationFile <%= @cacrlfile %>
 <% end -%>
-<% if has_variable?("certchainfile") -%>
-  SSLCertificateChainFile <%= certchainfile %>
+<% if @certchainfile -%>
+  SSLCertificateChainFile <%= @certchainfile %>
+<% end -%>
+<% if @verifyclient -%>
+  SSLVerifyClient <%= @verifyclient %>
 <% end -%>
 
 <% if cgipath -%>
