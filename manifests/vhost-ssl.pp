@@ -1,15 +1,11 @@
-/*
+# == Definition: apache::vhost-ssl
+# 
+# This definition is deprecated and was replaced
+# by apache::vhost::ssl.
+# 
+# The definition now wraps around apache::vhost::ssl
+# for backward compatibility reasons.
 
-== Definition: apache::vhost-ssl
-
-This definition is deprecated and was replaced
-by apache::vhost::ssl.
-
-The definition now wraps around apache::vhost::ssl
-for backward compatibility reasons.
-
-
-*/
 define apache::vhost-ssl (
   $ensure=present,
   $config_file="",
