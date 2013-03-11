@@ -137,7 +137,7 @@ define apache::vhost::ssl (
   if ($options != undef) {
     validate_re(
       $options,
-      '^([+-](StdEnvVars|ExportCertData|FakeBasicAuth|StrictRequire|OptRenegotiate)(\s*|$))+',
+      '^([+-]?(StdEnvVars|ExportCertData|FakeBasicAuth|StrictRequire|OptRenegotiate)(\s+|$))+',
       'options must be one of StdEnvVars, ExportCertData, FakeBasicAuth, StrictRequire, OptRenegotiate'
     )
   }
