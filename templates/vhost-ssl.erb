@@ -28,6 +28,9 @@
 <% if @verifyclient -%>
   SSLVerifyClient <%= @verifyclient %>
 <% end -%>
+<% if @options -%>
+  SSLOptions <%= @options %>
+<% end -%>
 
 <% if cgipath -%>
   ScriptAlias /cgi-bin/ <%= cgipath %>
