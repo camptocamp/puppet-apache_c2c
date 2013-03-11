@@ -28,6 +28,9 @@
 <% if @verifyclient -%>
   SSLVerifyClient <%= @verifyclient %>
 <% end -%>
+<% unless @options.empty? -%>
+  SSLOptions <%= @options.join(' ') %>
+<% end -%>
 
 <% if cgipath -%>
   ScriptAlias /cgi-bin/ <%= cgipath %>
