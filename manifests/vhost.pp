@@ -4,6 +4,8 @@ define apache::vhost (
   $config_content=false,
   $htdocs=false,
   $conf=false,
+  $cgi=false,
+  $private=false,
   $readme=false,
   $docroot=false,
   $cgibin=true,
@@ -100,18 +102,18 @@ define apache::vhost (
         require => [File["${apache::params::root}/${name}"]],
       }
 
-      if $htdocs {
-        File["${apache::params::root}/${name}/htdocs"] {
-          source  => $htdocs,
-          recurse => true,
-        }
-      }
-
-      if $conf {
-        File["${apache::params::root}/${name}/conf"] {
-          source  => $conf,
-          recurse => true,
-        }
+      # Private data
+      file {"${apache::params::root}/${name}/private":
+        ensure  => directory,
+        owner   => $wwwuser,
+        group   => $wwwgroup,
+        mode    => $mode,
+        seltype => $::operatingsystem ? {
+          redhat => 'httpd_sys_content_t',
+          CentOS => 'httpd_sys_content_t',
+          default => undef,
+        },
+        require => File["${apache::params::root}/${name}"],
       }
 
       # cgi-bin
@@ -133,6 +135,34 @@ define apache::vhost (
           default => undef,
         },
         require => [File["${apache::params::root}/${name}"]],
+      }
+
+      if $conf {
+        File["${apache::params::root}/${name}/conf"] {
+          source  => $conf,
+          recurse => true,
+        }
+      }
+
+      if $htdocs {
+        File["${apache::params::root}/${name}/htdocs"] {
+          source  => $htdocs,
+          recurse => true,
+        }
+      }
+
+      if $private {
+        File["${apache::params::root}/${name}/private"] {
+          source  => $private,
+          recurse => true,
+        }
+      }
+
+      if $cgi {
+        File["${name} cgi-bin directory"] {
+          source  => $cgi,
+          recurse => true,
+        }
       }
 
       case $config_file {
@@ -185,20 +215,6 @@ define apache::vhost (
           default => undef,
         },
         require => File["${apache::params::root}/${name}/logs"],
-      }
-
-      # Private data
-      file {"${apache::params::root}/${name}/private":
-        ensure  => directory,
-        owner   => $wwwuser,
-        group   => $wwwgroup,
-        mode    => $mode,
-        seltype => $::operatingsystem ? {
-          redhat => 'httpd_sys_content_t',
-          CentOS => 'httpd_sys_content_t',
-          default => undef,
-        },
-        require => File["${apache::params::root}/${name}"],
       }
 
       # README file

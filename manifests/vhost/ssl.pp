@@ -19,6 +19,8 @@
 # - *$config_content*: see apache::vhost
 # - *$htdocs*: see apache::vhost
 # - *$conf*: see apache::vhost
+# - *$cgi*: see apache::vhost
+# - *$private*: see apache::vhost
 # - *$readme*: see apache::vhost
 # - *$docroot*: see apache::vhost
 # - *$cgibin*: see apache::vhost
@@ -101,6 +103,8 @@ define apache::vhost::ssl (
   $config_content=false,
   $htdocs=false,
   $conf=false,
+  $cgi=false,
+  $private=false,
   $readme=false,
   $docroot=false,
   $cgibin=true,
@@ -209,6 +213,8 @@ define apache::vhost::ssl (
     aliases          => $aliases,
     htdocs           => $htdocs,
     conf             => $conf,
+    cgi              => $cgi,
+    private          => $private,
     readme           => $readme,
     docroot          => $docroot,
     user             => $wwwuser,
