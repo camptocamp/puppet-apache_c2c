@@ -2,10 +2,10 @@ define apache::vhost (
   $ensure=present,
   $config_file="",
   $config_content=false,
-  $htdocs=false,
-  $conf=false,
-  $cgi=false,
-  $private=false,
+  $htdocs_source=false,
+  $conf_source=false,
+  $cgi_source=false,
+  $private_source=false,
   $readme=false,
   $docroot=false,
   $cgibin=true,
@@ -137,36 +137,36 @@ define apache::vhost (
         require => [File["${apache::params::root}/${name}"]],
       }
 
-      if $conf {
+      if $conf_source {
         File["${apache::params::root}/${name}/conf"] {
-          source  => $conf,
+          source  => $conf_source,
           recurse => true,
           purge   => true,
           force   => true,
         }
       }
 
-      if $htdocs {
+      if $htdocs_source {
         File["${apache::params::root}/${name}/htdocs"] {
-          source  => $htdocs,
+          source  => $htdocs_source,
           recurse => true,
           purge   => true,
           force   => true,
         }
       }
 
-      if $private {
+      if $private_source {
         File["${apache::params::root}/${name}/private"] {
-          source  => $private,
+          source  => $private_source,
           recurse => true,
           purge   => true,
           force   => true,
         }
       }
 
-      if $cgi {
+      if $cgi_source {
         File["${name} cgi-bin directory"] {
-          source  => $cgi,
+          source  => $cgi_source,
           recurse => true,
           purge   => true,
           force   => true,
