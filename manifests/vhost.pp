@@ -141,6 +141,8 @@ define apache::vhost (
         File["${apache::params::root}/${name}/conf"] {
           source  => $conf,
           recurse => true,
+          purge   => true,
+          force   => true,
         }
       }
 
@@ -148,6 +150,8 @@ define apache::vhost (
         File["${apache::params::root}/${name}/htdocs"] {
           source  => $htdocs,
           recurse => true,
+          purge   => true,
+          force   => true,
         }
       }
 
@@ -155,6 +159,8 @@ define apache::vhost (
         File["${apache::params::root}/${name}/private"] {
           source  => $private,
           recurse => true,
+          purge   => true,
+          force   => true,
         }
       }
 
@@ -162,6 +168,8 @@ define apache::vhost (
         File["${name} cgi-bin directory"] {
           source  => $cgi,
           recurse => true,
+          purge   => true,
+          force   => true,
         }
       }
 
