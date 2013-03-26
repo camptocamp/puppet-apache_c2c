@@ -19,7 +19,10 @@ Usage:
 */
 class apache::collectd {
 
-  if $::collectd_version { # trick to check which collectd module we are using
+  # trick to check which collectd module we are using
+  include ::collectd
+  if ($::collectd::confdir != '') {
+
     collectd::config::plugin { 'monitor local apache':
       plugin   => 'apache',
       settings => 'URL "http://localhost/server-status?auto"',
