@@ -37,37 +37,6 @@ define apache::vhost-ssl (
   $accesslog_format='combined',
 ) {
 
-  warning 'apache::vhost-ssl is deprecated. Use apache::vhost::ssl instead'
-
-  apache::vhost::ssl{$name:
-    ensure           => $ensure,
-    config_file      => $config_file,
-    config_content   => $config_content,
-    htdocs           => $htdocs,
-    conf             => $conf,
-    readme           => $readme,
-    docroot          => $docroot,
-    cgibin           => $cgibin,
-    user             => $user,
-    admin            => $admin,
-    group            => $group,
-    mode             => $mode,
-    aliases          => $aliases,
-    ip_address       => $ip_address,
-    cert             => $cert,
-    certkey          => $certkey,
-    cacert           => $cacert,
-    cacrl            => $cacrl,
-    certchain        => $certchain,
-    certcn           => $certcn,
-    verifyclient     => $verifyclient,
-    options          => $options,
-    days             => $days,
-    publish_csr      => $publish_csr,
-    sslonly          => $sslonly,
-    ports            => $ports,
-    sslports         => $sslports,
-    accesslog_format => $accesslog_format,
-  }
+  fail 'apache::vhost-ssl is deprecated. Use apache::vhost::ssl instead'
 
 }
