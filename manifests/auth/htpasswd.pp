@@ -15,7 +15,7 @@ define apache::auth::htpasswd (
     if $vhost {
       $_userFileLocation = "${apache::params::root}/${vhost}/private"
     } else {
-      fail "parameter vhost is require !"
+      fail "parameter vhost is required for '$name'"
     }
   }
 
@@ -25,11 +25,11 @@ define apache::auth::htpasswd (
 
     'present': {
       if $cryptPassword and $clearPassword {
-        fail "choose only one of cryptPassword OR clearPassword !"
+        fail "choose only one of cryptPassword OR clearPassword for '$name'"
       }
 
       if !$cryptPassword and !$clearPassword  {
-        fail "choose one of cryptPassword OR clearPassword !"
+        fail "cryptPassword or clearPassword missing for '$name'"
       }
 
       if $cryptPassword {
