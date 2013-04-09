@@ -9,6 +9,7 @@ class apache::administration {
 
   group { "apache-admin":
     ensure => present,
+    system => true,
   }
 
   # used in erb template
