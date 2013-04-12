@@ -17,8 +17,10 @@
 # - *$ensure*: see apache::vhost
 # - *$config_file*: see apache::vhost
 # - *$config_content*: see apache::vhost
-# - *$htdocs*: see apache::vhost
-# - *$conf*: see apache::vhost
+# - *$htdocs_source*: see apache::vhost
+# - *$conf_source*: see apache::vhost
+# - *$cgi_source*: see apache::vhost
+# - *$private_source*: see apache::vhost
 # - *$readme*: see apache::vhost
 # - *$docroot*: see apache::vhost
 # - *$cgibin*: see apache::vhost
@@ -99,8 +101,10 @@ define apache::vhost::ssl (
   $ensure=present,
   $config_file='',
   $config_content=false,
-  $htdocs=false,
-  $conf=false,
+  $htdocs_source=false,
+  $conf_source=false,
+  $cgi_source=false,
+  $private_source=false,
   $readme=false,
   $docroot=false,
   $cgibin=true,
@@ -207,8 +211,10 @@ define apache::vhost::ssl (
     config_file      => $config_file,
     config_content   => $_config_content,
     aliases          => $aliases,
-    htdocs           => $htdocs,
-    conf             => $conf,
+    htdocs_source    => $htdocs_source,
+    conf_source      => $conf_source,
+    cgi_source       => $cgi_source,
+    private_source   => $private_source,
     readme           => $readme,
     docroot          => $docroot,
     user             => $wwwuser,
