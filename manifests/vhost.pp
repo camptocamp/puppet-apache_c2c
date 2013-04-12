@@ -2,8 +2,10 @@ define apache::vhost (
   $ensure=present,
   $config_file="",
   $config_content=false,
-  $htdocs=false,
-  $conf=false,
+  $htdocs_source=false,
+  $conf_source=false,
+  $cgi_source=false,
+  $private_source=false,
   $readme=false,
   $docroot=false,
   $cgibin=true,
@@ -100,18 +102,18 @@ define apache::vhost (
         require => [File["${apache::params::root}/${name}"]],
       }
 
-      if $htdocs {
-        File["${apache::params::root}/${name}/htdocs"] {
-          source  => $htdocs,
-          recurse => true,
-        }
-      }
-
-      if $conf {
-        File["${apache::params::root}/${name}/conf"] {
-          source  => $conf,
-          recurse => true,
-        }
+      # Private data
+      file {"${apache::params::root}/${name}/private":
+        ensure  => directory,
+        owner   => $wwwuser,
+        group   => $wwwgroup,
+        mode    => $mode,
+        seltype => $::operatingsystem ? {
+          redhat => 'httpd_sys_content_t',
+          CentOS => 'httpd_sys_content_t',
+          default => undef,
+        },
+        require => File["${apache::params::root}/${name}"],
       }
 
       # cgi-bin
@@ -133,6 +135,42 @@ define apache::vhost (
           default => undef,
         },
         require => [File["${apache::params::root}/${name}"]],
+      }
+
+      if $conf_source {
+        File["${apache::params::root}/${name}/conf"] {
+          source  => $conf_source,
+          recurse => true,
+          purge   => true,
+          force   => true,
+        }
+      }
+
+      if $htdocs_source {
+        File["${apache::params::root}/${name}/htdocs"] {
+          source  => $htdocs_source,
+          recurse => true,
+          purge   => true,
+          force   => true,
+        }
+      }
+
+      if $private_source {
+        File["${apache::params::root}/${name}/private"] {
+          source  => $private_source,
+          recurse => true,
+          purge   => true,
+          force   => true,
+        }
+      }
+
+      if $cgi_source {
+        File["${name} cgi-bin directory"] {
+          source  => $cgi_source,
+          recurse => true,
+          purge   => true,
+          force   => true,
+        }
       }
 
       case $config_file {
@@ -185,20 +223,6 @@ define apache::vhost (
           default => undef,
         },
         require => File["${apache::params::root}/${name}/logs"],
-      }
-
-      # Private data
-      file {"${apache::params::root}/${name}/private":
-        ensure  => directory,
-        owner   => $wwwuser,
-        group   => $wwwgroup,
-        mode    => $mode,
-        seltype => $::operatingsystem ? {
-          redhat => 'httpd_sys_content_t',
-          CentOS => 'httpd_sys_content_t',
-          default => undef,
-        },
-        require => File["${apache::params::root}/${name}"],
       }
 
       # README file
