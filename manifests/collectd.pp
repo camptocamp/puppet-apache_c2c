@@ -25,7 +25,10 @@ class apache::collectd {
 
     collectd::config::plugin { 'monitor local apache':
       plugin   => 'apache',
-      settings => 'URL "http://localhost/server-status?auto"',
+      settings => '
+  <Instance "apache80">
+    URL "http://localhost/server-status?auto"
+  </Instance>',
     }
   } else {
     collectd::plugin { "apache":
