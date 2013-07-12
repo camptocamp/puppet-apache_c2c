@@ -1,1 +1,1 @@
-LoadModule ldap_module modules/mod_passenger.so
+LoadModule passenger_module modules/mod_passenger.so
