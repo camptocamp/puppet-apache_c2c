@@ -13,7 +13,7 @@ define apache::module ($ensure='present') {
     /Debian|Ubuntu/ => Package['apache'],
   }
 
-  if $selinux == 'true' and $ensure == 'true' {
+  if $selinux == 'true' and $ensure == 'present' {
     apache::redhat::selinux {$name: }
   }
 
