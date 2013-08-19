@@ -13,18 +13,19 @@ define apache::module ($ensure='present') {
     /Debian|Ubuntu/ => Package['apache'],
   }
 
-  if $selinux == 'true' and $ensure == 'true' {
+  if $::selinux == 'true' and $ensure == 'present' {
     apache::redhat::selinux {$name: }
+  }
+
+  $commands_path = $::osfamily ? {
+    'RedHat' => '/usr/local/sbin/',
+    'Debian' => '/usr/sbin/',
   }
 
   case $ensure {
     'present' : {
       exec { "a2enmod ${name}":
-        command => $::operatingsystem ? {
-          RedHat  => "/usr/local/sbin/a2enmod ${name}",
-          CentOS  => "/usr/local/sbin/a2enmod ${name}",
-          default => "/usr/sbin/a2enmod ${name}"
-        },
+        command => "${commands_path}/a2enmod ${name}",
         unless  => "/bin/sh -c '[ -L ${apache::params::conf}/mods-enabled/${name}.load ] \\
           && [ ${apache::params::conf}/mods-enabled/${name}.load -ef ${apache::params::conf}/mods-available/${name}.load ]'",
         require => $a2enmod_deps,
@@ -34,10 +35,7 @@ define apache::module ($ensure='present') {
 
     'absent': {
       exec { "a2dismod ${name}":
-        command => $::operatingsystem ? {
-          /RedHat|CentOS/ => "/usr/local/sbin/a2dismod ${name}",
-          /Debian|Ubuntu/ => "/usr/sbin/a2dismod ${name}",
-        },
+        command => "${commands_path}/a2dismod ${name}",
         onlyif  => "/bin/sh -c '[ -L ${apache::params::conf}/mods-enabled/${name}.load ] \\
           || [ -e ${apache::params::conf}/mods-enabled/${name}.load ]'",
         require => $a2enmod_deps,
