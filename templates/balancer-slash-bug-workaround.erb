@@ -7,7 +7,7 @@
 
 ProxyPass <%= location %> <%= balancer %>/
 <% members.each do |member| -%>
-ProxyPassReverse <%= proto %>://<%= member %>/
+ProxyPassReverse <%= location %> <%= proto %>://<%= member %>/
 <% end -%>
 
 <Proxy <%= balancer %>>
