@@ -24,6 +24,10 @@ Parameters:
 - *filename*: basename of the file in which the directive(s) will be put.
   Useful in the case directive order matters: apache reads the files in conf/
   in alphabetical order.
+- *use_slash_bug_workaround*: set ProxyPassReverse directives in a way that
+  works around a bug in apache < 2.2.25 or < 2.4.2 that adds a slash on
+  redirections sent by the backend
+  (c.f. https://issues.apache.org/bugzilla/show_bug.cgi?id=51982)
 
 Requires:
 - Class["apache"]
@@ -53,7 +57,8 @@ define apache::balancer (
   $members=[],
   $standbyurl='',
   $params=['retry=5'],
-  $filename=''
+  $filename='',
+  $use_slash_bug_workaround=false,
 ) {
 
   # normalise name
@@ -98,9 +103,14 @@ define apache::balancer (
     }
   }
 
+  $balancer_template = $use_slash_bug_workaround ? {
+    false => 'apache/balancer.erb',
+    true  => 'apache/balancer-slash-bug-workaround.erb',
+  }
+
   file{"${name} balancer on ${vhost}":
     ensure  => $ensure,
-    content => template('apache/balancer.erb'),
+    content => template($balancer_template),
     seltype => $::operatingsystem ? {
       'RedHat' => 'httpd_config_t',
       'CentOS' => 'httpd_config_t',
