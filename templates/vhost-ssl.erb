@@ -1,24 +1,24 @@
 # file managed by puppet
-<VirtualHost<% sslports.each do |port| -%> <%= port %><% end -%>>
-  ServerName <%= name %>
+<VirtualHost<% @sslports.each do |port| -%> <%= port %><% end -%>>
+  ServerName <%= @name %>
 
-<% aliases.each do |serveralias| -%>
+<% @aliases.each do |serveralias| -%>
   ServerAlias <%= serveralias %>
 <% end -%>
 
-  DocumentRoot <%= documentroot %>
+  DocumentRoot <%= @documentroot %>
 
   LogLevel warn
 
-  ErrorLog <%= wwwroot %>/<%= name %>/logs/error.log
-  CustomLog <%= wwwroot %>/<%= name %>/logs/access.log combined
+  ErrorLog <%= @wwwroot %>/<%= @name %>/logs/error.log
+  CustomLog <%= @wwwroot %>/<%= @name %>/logs/access.log combined
 
-  Include <%= wwwroot %>/<%= name%>/conf/*.conf
+  Include <%= @wwwroot %>/<%= @name%>/conf/*.conf
 
   SSLEngine On
-  SSLCertificateFile <%= certfile %>
-  SSLCertificateKeyFile <%= certkeyfile %>
-  SSLCACertificateFile <%= cacertfile %>
+  SSLCertificateFile <%= @certfile %>
+  SSLCertificateKeyFile <%= @certkeyfile %>
+  SSLCACertificateFile <%= @cacertfile %>
 <% if @cacrlfile -%>
   SSLCARevocationFile <%= @cacrlfile %>
 <% end -%>
@@ -32,9 +32,9 @@
   SSLOptions <%= @options.join(' ') %>
 <% end -%>
 
-<% if cgipath -%>
-  ScriptAlias /cgi-bin/ <%= cgipath %>
-  <Directory <%= cgipath %>>
+<% if @cgipath -%>
+  ScriptAlias /cgi-bin/ <%= @cgipath %>
+  <Directory <%= @cgipath %>>
     Options +ExecCGI
     AddHandler cgi-script .cgi
   </Directory>
