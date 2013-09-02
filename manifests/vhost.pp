@@ -18,7 +18,7 @@ define apache::vhost (
   $accesslog_format="combined"
 ) {
 
-  include apache::params
+  include ::apache::params
 
   $wwwuser = $user ? {
     ""      => $apache::params::user,
