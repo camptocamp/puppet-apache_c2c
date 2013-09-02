@@ -138,10 +138,7 @@ define apache::vhost::ssl (
       'verifyclient must be one of none, optional, require or optional_no_ca'
     )
   }
-  validate_array($aliases)
   validate_array($options)
-  validate_array($ports)
-  validate_array($sslports)
 
   # these 2 values are required to generate a valid SSL certificate.
   if (!$sslcert_country) { $sslcert_country = '??' }

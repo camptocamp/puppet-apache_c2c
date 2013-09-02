@@ -20,9 +20,6 @@ define apache::vhost (
 
   include ::apache::params
 
-  validate_array($aliases)
-  validate_array($ports)
-
   $wwwuser = $user ? {
     ""      => $apache::params::user,
     default => $user,

@@ -1,8 +1,8 @@
 # file managed by puppet
-<VirtualHost<% @sslports.each do |port| -%> <%= port %><% end -%>>
+<VirtualHost<% [@sslports].flatten.compact.each do |port| -%> <%= port %><% end -%>>
   ServerName <%= @name %>
 
-<% @aliases.each do |serveralias| -%>
+<% [@aliases].flatten.compact.each do |serveralias| -%>
   ServerAlias <%= serveralias %>
 <% end -%>
 
