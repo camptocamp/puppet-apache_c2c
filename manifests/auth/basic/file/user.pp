@@ -6,6 +6,8 @@ define apache::auth::basic::file::user (
   $authUserFile=false,
   $users="valid-user"){
 
+  validate_string($users)
+
   $fname = regsubst($name, "\s", "_", "G")
 
   include apache::params

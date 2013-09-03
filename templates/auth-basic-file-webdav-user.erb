@@ -5,7 +5,7 @@
   AuthBasicProvider file
   AuthUserFile <%= _authUserFile %>
   require <%= _users %>
-<% if ro_users -%>
+<% if ro_users != '' -%>
   <Limit <%= limits %>>
     require user <%= ro_users %>
   </Limit>
@@ -15,7 +15,9 @@
 <% unless restricted_access.empty? -%>
     Order deny,allow
     Deny from all
-    <%= restricted_access.collect! {|i| "Allow from #{i}"} %>
+<% restricted_access.each do |access| -%>
+    Allow from <%= access %>
+<% end -%>
 <% end -%>
     Satisfy Any
   </Limit>
