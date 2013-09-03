@@ -1,6 +1,6 @@
 
 ## This part comes from modules/apache/manifests/classes/administration.pp
-User_Alias TOMCAT_ADMIN = <%= @sudo_user_alias.join(', ') %>
+User_Alias TOMCAT_ADMIN = <%= @sudo_user_alias.select { |a| not a.empty? }.join(', ') %>
 Cmnd_Alias APACHE_ADMIN = <%= @sudo_cmnd %>
 APACHE_ADMIN ALL=(<%= wwwuser %>) ALL : ALL=(root) APACHE_ADMIN
 ##
