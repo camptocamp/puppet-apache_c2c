@@ -1,13 +1,15 @@
-class apache::administration {
+class apache::administration (
+  $sudo_user = $sudo_apache_admin_user,
+) {
 
-  include apache::params
+  include ::apache::params
 
-  $distro_specific_apache_sudo = $::operatingsystem ? {
-    /RedHat|CentOS/ => "/usr/sbin/apachectl, /sbin/service ${apache::params::pkg}",
-    /Debian|Ubuntu/ => "/usr/sbin/apache2ctl",
+  $distro_specific_apache_sudo = $::osfamily ? {
+    'RedHat' => "/usr/sbin/apachectl, /sbin/service ${apache::params::pkg}",
+    'Debian' => '/usr/sbin/apache2ctl',
   }
 
-  group { "apache-admin":
+  group { 'apache-admin':
     ensure => present,
     system => true,
   }
@@ -16,10 +18,14 @@ class apache::administration {
   $wwwpkgname = $apache::params::pkg
   $wwwuser    = $apache::params::user
 
-  sudo::directive { "apache-administration":
-    ensure => present,
-    content => template("apache/sudoers.apache.erb"),
-    require => Group["apache-admin"],
+  sudo::directive { 'apache-administration':
+    ensure  => present,
+    content => template('apache/sudoers.apache.erb'),
+    require => Group['apache-admin'],
   }
+
+  $sudo_group = '%apache-admin'
+  $sudo_user_alias = flatten([$sudo_group, $sudo_user])
+  $sudo_cmnd = "/etc/init.d/${wwwpkgname}, /bin/su ${wwwuser}, /bin/su - ${wwwuser}, ${distro_specific_apache_sudo}"
 
 }

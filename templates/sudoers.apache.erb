@@ -1,15 +1,7 @@
 
 ## This part comes from modules/apache/manifests/classes/administration.pp
-<% if has_variable?("sudo_apache_admin_user") -%>
-User_Alias APACHE_ADMIN = %apache-admin,<%= sudo_apache_admin_user %>
-<% else -%>
-User_Alias APACHE_ADMIN = %apache-admin
-<% end -%>
-<% if has_variable?("sudo_apache_admin_cmnd") -%>
-Cmnd_Alias APACHE_ADMIN = <%= sudo_apache_admin_cmnd %>
-<% else -%>
-Cmnd_Alias APACHE_ADMIN = /etc/init.d/<%= wwwpkgname %>, /bin/su <%= wwwuser %>, /bin/su - <%= wwwuser %>, <%= distro_specific_apache_sudo %>
-<% end -%>
+User_Alias TOMCAT_ADMIN = <%= @sudo_user_alias.join(', ') %>
+Cmnd_Alias APACHE_ADMIN = <%= @sudo_cmnd %>
 APACHE_ADMIN ALL=(<%= wwwuser %>) ALL : ALL=(root) APACHE_ADMIN
 ##
 
