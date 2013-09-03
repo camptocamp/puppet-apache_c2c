@@ -7,6 +7,8 @@ define apache::auth::basic::file::group (
   $authGroupFile=false,
   $groups){
 
+  validate_string($groups)
+
   $fname = regsubst($name, "\s", "_", "G")
 
   include apache::params
