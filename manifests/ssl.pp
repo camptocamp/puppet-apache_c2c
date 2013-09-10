@@ -29,7 +29,9 @@ Example usage:
   include apache::ssl
 
 */
-class apache::ssl inherits apache {
+class apache::ssl (
+  $root = $apache::root,
+) inherits apache {
   case $::operatingsystem {
     Debian,Ubuntu:  { include apache::ssl::debian}
     RedHat,CentOS:  { include apache::ssl::redhat}
