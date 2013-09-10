@@ -1,6 +1,8 @@
 class apache::redhat inherits apache::base {
 
   include apache::params
+  $wwwroot = $apache::root
+  validate_absolute_path($wwwroot)
 
   # BEGIN inheritance from apache::base
   Exec['apache-graceful'] {
@@ -18,7 +20,7 @@ class apache::redhat inherits apache::base {
   }
 
   # the following variables are used in template logrotate-httpd.erb
-  $logrotate_paths = "${apache::params::root}/*/logs/*.log ${apache::params::log}/*log"
+  $logrotate_paths = "${wwwroot}/*/logs/*.log ${apache::params::log}/*log"
   $httpd_pid_file = $::lsbmajdistrelease ? {
     /4|5/   => '/var/run/httpd.pid',
     default => '/var/run/httpd/httpd.pid',

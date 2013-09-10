@@ -1,6 +1,6 @@
 # file managed by puppet
 <VirtualHost *:80>
-  DocumentRoot <%=scope.lookupvar("apache::params::root")%>/html
+  DocumentRoot <%=scope.lookupvar("apache::root")%>/html
   ServerName localhost
 
   <Directory />

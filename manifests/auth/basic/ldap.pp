@@ -18,7 +18,8 @@ define apache::auth::basic::ldap (
 
   $fname = regsubst($name, "\s", "_", "G")
 
-  include apache::params
+  $wwwroot = $apache::root
+  validate_absolute_path($wwwroot)
 
   if defined(Apache::Module["ldap"]) {} else {
     apache::module {"ldap": }
@@ -34,7 +35,7 @@ define apache::auth::basic::ldap (
     $_authname = $name
   }
 
-  file { "${apache::params::root}/${vhost}/conf/auth-basic-ldap-${fname}.conf":
+  file { "${wwwroot}/${vhost}/conf/auth-basic-ldap-${fname}.conf":
     ensure => $ensure,
     content => template("apache/auth-basic-ldap.erb"),
     seltype => $::operatingsystem ? {

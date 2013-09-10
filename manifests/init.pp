@@ -13,7 +13,10 @@ Example usage:
   include apache
 
 */
-class apache {
+class apache (
+  $root = $apache::params::root,
+) inherits ::apache::params {
+
   case $::operatingsystem {
     Debian,Ubuntu:  { include apache::debian}
     RedHat,CentOS:  { include apache::redhat}

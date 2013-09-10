@@ -38,7 +38,8 @@ Example usage:
 */
 define apache::directive ($ensure="present", $directive="", $filename="", $vhost) {
 
-  include apache::params
+  $wwwroot = $apache::root
+  validate_absolute_path($wwwroot)
 
   if ($ensure == 'present' and $directive == '') {
     fail 'empty "directive" parameter'
@@ -46,7 +47,7 @@ define apache::directive ($ensure="present", $directive="", $filename="", $vhost
 
   apache::conf {$name:
     ensure        => $ensure,
-    path          => "${apache::params::root}/${vhost}/conf",
+    path          => "${wwwroot}/${vhost}/conf",
     prefix        => 'directive',
     filename      => $filename,
     configuration => $directive,

@@ -8,11 +8,14 @@ define apache::auth::htgroup (
 
   include apache::params
 
+  $wwwroot = $apache::root
+  validate_absolute_path($wwwroot)
+
   if $groupFileLocation {
     $_groupFileLocation = $groupFileLocation
   } else {
     if $vhost {
-      $_groupFileLocation = "${apache::params::root}/${vhost}/private"
+      $_groupFileLocation = "${wwwroot}/${vhost}/private"
     } else {
       fail "parameter vhost is require !"
     }

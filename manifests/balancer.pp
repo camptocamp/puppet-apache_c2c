@@ -64,7 +64,8 @@ define apache::balancer (
   # normalise name
   $fname = regsubst($name, '\s', '_', 'G')
 
-  include apache::params
+  $wwwroot = $apache::root
+  validate_absolute_path($wwwroot)
 
   $balancer = "balancer://${fname}"
 
@@ -117,8 +118,8 @@ define apache::balancer (
       default  => undef,
     },
     path    => $filename ? {
-      ''      => "${apache::params::root}/${vhost}/conf/balancer-${fname}.conf",
-      default => "${apache::params::root}/${vhost}/conf/${filename}",
+      ''      => "${wwwroot}/${vhost}/conf/balancer-${fname}.conf",
+      default => "${wwwroot}/${vhost}/conf/${filename}",
     },
     notify  => Exec['apache-graceful'],
     require => Apache::Vhost[$vhost],
