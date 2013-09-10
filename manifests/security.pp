@@ -1,8 +1,8 @@
 class apache::security {
 
-  case $::operatingsystem {
+  case $::osfamily {
 
-    RedHat,CentOS: {
+    RedHat: {
       package { 'mod_security':
         ensure => present,
         alias  => 'apache-mod_security',
@@ -21,7 +21,7 @@ class apache::security {
       }
     }
 
-    Debian,Ubuntu: {
+    Debian: {
       package { 'libapache-mod-security':
         ensure => present,
         alias  => 'apache-mod_security',
@@ -29,7 +29,7 @@ class apache::security {
     }
 
     default: {
-      fail ("Operating system not supported: '${operatingsystem}'")
+      fail ("Operating system not supported: '${::osfamily}'")
     }
   }
 
