@@ -1,6 +1,8 @@
 class apache::debian inherits apache::base {
 
   include apache::params
+  $wwwroot = $apache::root
+  validate_absolute_path($wwwroot)
 
   # BEGIN inheritance from apache::base
   Exec["apache-graceful"] {
@@ -9,7 +11,7 @@ class apache::debian inherits apache::base {
   }
 
   # the following variables are used in template logrotate-httpd.erb
-  $logrotate_paths = "${apache::params::root}/*/logs/*.log ${apache::params::log}/*log"
+  $logrotate_paths = "${wwwroot}/*/logs/*.log ${apache::params::log}/*log"
   $httpd_pid_file = "/var/run/apache2.pid"
   $httpd_reload_cmd = "/etc/init.d/apache2 restart > /dev/null"
   $awstats_condition = "-f /usr/share/doc/awstats/examples/awstats_updateall.pl -a -f /usr/lib/cgi-bin/awstats.pl"
@@ -36,16 +38,16 @@ class apache::debian inherits apache::base {
   }
 
   # directory not present in lenny
-  file { "${apache::params::root}/apache2-default":
+  file { "${wwwroot}/apache2-default":
     ensure => absent,
     force  => true,
   }
 
-  file { "${apache::params::root}/index.html":
+  file { "${wwwroot}/index.html":
     ensure => absent,
   }
 
-  file { "${apache::params::root}/html/index.html":
+  file { "${wwwroot}/html/index.html":
     ensure  => present,
     owner   => root,
     group   => root,

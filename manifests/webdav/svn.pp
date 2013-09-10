@@ -1,10 +1,11 @@
 define apache::webdav::svn ($ensure, $vhost, $parentPath, $confname) {
 
-  include apache::params
+  $wwwroot = $apache::root
+  validate_absolute_path($wwwroot)
 
   $location = $name
 
-  file { "${apache::params::root}/${vhost}/conf/${confname}.conf":
+  file { "${wwwroot}/${vhost}/conf/${confname}.conf":
     ensure  => $ensure,
     content => template("apache/webdav-svn.erb"),
     seltype => $::operatingsystem ? {
