@@ -3,7 +3,7 @@
 define apache::aw-stats($ensure=present, $aliases=[], $allowfullyearview=2) {
 
   # used in ERB template
-  $wwwroot = $wwwroot
+  $wwwroot = $apache::root
   validate_absolute_path($wwwroot)
 
   file { "/etc/awstats/awstats.${name}.conf":
