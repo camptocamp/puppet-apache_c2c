@@ -7,13 +7,14 @@ define apache::auth::htpasswd (
   $cryptPassword=false,
   $clearPassword=false){
 
-  include apache::params
+  $wwwroot = $apache::root
+  validate_absolute_path($wwwroot)
 
   if $userFileLocation {
     $_userFileLocation = $userFileLocation
   } else {
     if $vhost {
-      $_userFileLocation = "${apache::params::root}/${vhost}/private"
+      $_userFileLocation = "${wwwroot}/${vhost}/private"
     } else {
       fail "parameter vhost is required for '$name'"
     }

@@ -45,7 +45,8 @@ define apache::proxypass (
 
   $fname = regsubst($name, '\s', '_', 'G')
 
-  include apache::params
+  $wwwroot = $apache::root
+  validate_absolute_path($wwwroot)
 
   if defined(Apache::Module['proxy']) {} else {
     apache::module {'proxy':
@@ -66,8 +67,8 @@ define apache::proxypass (
       default  => undef,
     },
     path    => $filename ? {
-      ''      => "${apache::params::root}/${vhost}/conf/proxypass-${fname}.conf",
-      default => "${apache::params::root}/${vhost}/conf/${filename}",
+      ''      => "${wwwroot}/${vhost}/conf/proxypass-${fname}.conf",
+      default => "${wwwroot}/${vhost}/conf/${filename}",
     },
     notify  => Exec['apache-graceful'],
     require => Apache::Vhost[$vhost],

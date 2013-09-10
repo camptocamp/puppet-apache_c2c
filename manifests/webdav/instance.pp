@@ -1,11 +1,12 @@
 define apache::webdav::instance ($ensure=present, $vhost, $directory=false,$mode=2755) {
 
-  include apache::params
+  $wwwroot = $apache::root
+  validate_absolute_path($wwwroot)
 
   if $directory {
     $davdir = "${directory}/webdav-${name}"
   } else {
-    $davdir = "${apache::params::root}/${vhost}/private/webdav-${name}"
+    $davdir = "${wwwroot}/${vhost}/private/webdav-${name}"
   }
 
   file {$davdir:
@@ -19,7 +20,7 @@ define apache::webdav::instance ($ensure=present, $vhost, $directory=false,$mode
   }
 
   # configuration
-  file { "${apache::params::root}/${vhost}/conf/webdav-${name}.conf":
+  file { "${wwwroot}/${vhost}/conf/webdav-${name}.conf":
     ensure => $ensure,
     content => template("apache/webdav-config.erb"),
     seltype => $::operatingsystem ? {

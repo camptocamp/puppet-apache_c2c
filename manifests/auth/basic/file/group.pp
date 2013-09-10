@@ -9,6 +9,9 @@ define apache::auth::basic::file::group (
 
   validate_string($groups)
 
+  $wwwroot = $apache::root
+  validate_absolute_path($wwwroot)
+
   $fname = regsubst($name, "\s", "_", "G")
 
   include apache::params
@@ -20,13 +23,13 @@ define apache::auth::basic::file::group (
   if $authUserFile {
     $_authUserFile = $authUserFile
   } else {
-    $_authUserFile = "${apache::params::root}/${vhost}/private/htpasswd"
+    $_authUserFile = "${wwwroot}/${vhost}/private/htpasswd"
   }
 
   if $authGroupFile {
     $_authGroupFile = $authGroupFile
   } else {
-    $_authGroupFile = "${apache::params::root}/${vhost}/private/htgroup"
+    $_authGroupFile = "${wwwroot}/${vhost}/private/htgroup"
   }
 
   if $authname {
@@ -35,7 +38,7 @@ define apache::auth::basic::file::group (
     $_authname = $name
   }
 
-  file { "${apache::params::root}/${vhost}/conf/auth-basic-file-group-${fname}.conf":
+  file { "${wwwroot}/${vhost}/conf/auth-basic-file-group-${fname}.conf":
     ensure => $ensure,
     content => template("apache/auth-basic-file-group.erb"),
     seltype => $::operatingsystem ? {

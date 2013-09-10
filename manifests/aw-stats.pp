@@ -2,10 +2,9 @@
 # a detailed explanation an possible values.
 define apache::aw-stats($ensure=present, $aliases=[], $allowfullyearview=2) {
 
-  include apache::params
-
   # used in ERB template
-  $wwwroot = $apache::params::root
+  $wwwroot = $wwwroot
+  validate_absolute_path($wwwroot)
 
   file { "/etc/awstats/awstats.${name}.conf":
     ensure  => $ensure,
@@ -13,7 +12,7 @@ define apache::aw-stats($ensure=present, $aliases=[], $allowfullyearview=2) {
     require => [Package["apache"], Class["apache::awstats"]],
   }
 
-  file { "${apache::params::root}/${name}/conf/awstats.conf":
+  file { "${wwwroot}/${name}/conf/awstats.conf":
     ensure  => $ensure,
     owner   => root,
     group   => root,

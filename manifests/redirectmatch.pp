@@ -37,7 +37,8 @@ define apache::redirectmatch (
 
   $fname = regsubst($name, '\s', '_', 'G')
 
-  include apache::params
+  $wwwroot = $apache::root
+  validate_absolute_path($wwwroot)
 
   file { "${name} redirect on ${vhost}":
     ensure  => $ensure,
@@ -48,8 +49,8 @@ define apache::redirectmatch (
       default  => undef,
     },
     path    => $filename ? {
-      ''      => "${apache::params::root}/${vhost}/conf/redirect-${fname}.conf",
-      default => "${apache::params::root}/${vhost}/conf/${filename}",
+      ''      => "${wwwroot}/${vhost}/conf/redirect-${fname}.conf",
+      default => "${wwwroot}/${vhost}/conf/${filename}",
     },
     notify  => Exec['apache-graceful'],
     require => Apache::Vhost[$vhost],

@@ -160,7 +160,8 @@ define apache::vhost::ssl (
   }
 
   # used in ERB templates
-  $wwwroot = $apache::params::root
+  $wwwroot = $wwwroot
+  validate_absolute_path($wwwroot)
 
   $documentroot = $docroot ? {
     false   => "${wwwroot}/${name}/htdocs",
@@ -174,13 +175,13 @@ define apache::vhost::ssl (
   }
 
   # define variable names used in vhost-ssl.erb template
-  $certfile      = "${apache::params::root}/$name/ssl/$name.crt"
-  $certkeyfile   = "${apache::params::root}/$name/ssl/$name.key"
-  $csrfile       = "${apache::params::root}/$name/ssl/$name.csr"
+  $certfile      = "${wwwroot}/$name/ssl/$name.crt"
+  $certkeyfile   = "${wwwroot}/$name/ssl/$name.key"
+  $csrfile       = "${wwwroot}/$name/ssl/$name.csr"
 
   # By default, use CA certificate list shipped with the distribution.
   if $cacert != false {
-    $cacertfile = "${apache::params::root}/$name/ssl/cacert.crt"
+    $cacertfile = "${wwwroot}/$name/ssl/cacert.crt"
   } else {
     $cacertfile = $::operatingsystem ? {
       /RedHat|CentOS/ => '/etc/pki/tls/certs/ca-bundle.crt',
@@ -190,11 +191,11 @@ define apache::vhost::ssl (
 
   # If a revocation file is provided
   if $cacrl != false {
-    $cacrlfile = "${apache::params::root}/$name/ssl/cacert.crl"
+    $cacrlfile = "${wwwroot}/$name/ssl/cacert.crl"
   }
 
   if $certchain != false {
-    $certchainfile = "${apache::params::root}/$name/ssl/certchain.crt"
+    $certchainfile = "${wwwroot}/$name/ssl/certchain.crt"
   }
 
   # call parent definition to actually do the virtualhost setup.
@@ -226,33 +227,33 @@ define apache::vhost::ssl (
   }
 
   if $ensure == 'present' {
-    file { "${apache::params::root}/${name}/ssl":
+    file { "${wwwroot}/${name}/ssl":
       ensure  => directory,
       owner   => 'root',
       group   => 'root',
       mode    => '0700',
       seltype => 'cert_t',
-      require => [File["${apache::params::root}/${name}"]],
+      require => [File["${wwwroot}/${name}"]],
     }
 
     # template file used to generate SSL key, cert and csr.
-    file { "${apache::params::root}/${name}/ssl/ssleay.cnf":
+    file { "${wwwroot}/${name}/ssl/ssleay.cnf":
       ensure  => present,
       owner   => 'root',
       mode    => '0640',
       content => template('apache/ssleay.cnf.erb'),
-      require => File["${apache::params::root}/${name}/ssl"],
+      require => File["${wwwroot}/${name}/ssl"],
     }
 
     # The certificate and the private key will be generated only if $name.crt
     # or $name.key are absent from the "ssl/" subdir.
     # The CSR will be re-generated each time this resource is triggered.
     exec { "generate-ssl-cert-$name":
-      command => "/usr/local/sbin/generate-ssl-cert.sh ${name} ${apache::params::root}/${name}/ssl/ssleay.cnf ${apache::params::root}/${name}/ssl/ ${days}",
+      command => "/usr/local/sbin/generate-ssl-cert.sh ${name} ${wwwroot}/${name}/ssl/ssleay.cnf ${wwwroot}/${name}/ssl/ ${days}",
       creates => $csrfile,
       notify  => Exec['apache-graceful'],
       require => [
-        File["${apache::params::root}/${name}/ssl/ssleay.cnf"],
+        File["${wwwroot}/${name}/ssl/ssleay.cnf"],
         File['/usr/local/sbin/generate-ssl-cert.sh'],
       ],
     }
@@ -272,7 +273,7 @@ define apache::vhost::ssl (
       seltype => 'cert_t',
       notify  => Exec['apache-graceful'],
       require => [
-        File["${apache::params::root}/${name}/ssl"],
+        File["${wwwroot}/${name}/ssl"],
         Exec["generate-ssl-cert-${name}"],
         ],
     }
@@ -292,7 +293,7 @@ define apache::vhost::ssl (
       seltype => 'cert_t',
       notify  => Exec['apache-graceful'],
       require => [
-        File["${apache::params::root}/${name}/ssl"],
+        File["${wwwroot}/${name}/ssl"],
         Exec["generate-ssl-cert-${name}"],
         ],
     }
@@ -307,7 +308,7 @@ define apache::vhost::ssl (
         source  => $cacert,
         seltype => 'cert_t',
         notify  => Exec['apache-graceful'],
-        require => File["${apache::params::root}/${name}/ssl"],
+        require => File["${wwwroot}/${name}/ssl"],
       }
     }
 
@@ -320,7 +321,7 @@ define apache::vhost::ssl (
         source  => $cacrl,
         seltype => 'cert_t',
         notify  => Exec['apache-graceful'],
-        require => File["${apache::params::root}/${name}/ssl"],
+        require => File["${wwwroot}/${name}/ssl"],
       }
     }
 
@@ -335,7 +336,7 @@ define apache::vhost::ssl (
         source  => $certchain,
         seltype => 'cert_t',
         notify  => Exec['apache-graceful'],
-        require => File["${apache::params::root}/${name}/ssl"],
+        require => File["${wwwroot}/${name}/ssl"],
       }
     }
 
@@ -346,8 +347,8 @@ define apache::vhost::ssl (
       default => 'present',
     }
     $public_csr_path = $publish_csr ? {
-      true    => "${apache::params::root}/${name}/htdocs/${name}.csr",
-      false   => "${apache::params::root}/${name}/htdocs/${name}.csr",
+      true    => "${wwwroot}/${name}/htdocs/${name}.csr",
+      false   => "${wwwroot}/${name}/htdocs/${name}.csr",
       default => $publish_csr,
     }
     $public_csr_source = $publish_csr ? {

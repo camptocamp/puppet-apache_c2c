@@ -10,6 +10,9 @@ It shouldn't be necessary to directly include this class.
 class apache::base {
 
   include apache::params
+  $wwwroot = $apache::root
+  validate_absolute_path($wwwroot)
+
   include concat::setup
 
   $access_log = $apache::params::access_log
@@ -29,7 +32,7 @@ class apache::base {
   }
 
   file {"root directory":
-    path => $apache::params::root,
+    path => $wwwroot,
     ensure => directory,
     mode => '0755',
     owner => "root",
@@ -125,7 +128,7 @@ class apache::base {
       notify => Exec['apache-graceful'],
     }
 
-    file { "${apache::params::root}/html":
+    file { "${wwwroot}/html":
       ensure  => directory,
     }
 
