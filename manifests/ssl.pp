@@ -30,8 +30,13 @@ Example usage:
 
 */
 class apache::ssl (
-  $root = $apache::root,
-) inherits apache {
+  $root = $apache::params::root,
+) {
+
+  class { '::apache':
+    root => $root,
+  }
+
   case $::operatingsystem {
     Debian,Ubuntu:  { include apache::ssl::debian}
     RedHat,CentOS:  { include apache::ssl::redhat}
