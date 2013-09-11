@@ -31,7 +31,7 @@ Example usage:
 */
 class apache::ssl (
   $root = $apache::params::root,
-) {
+) inherits ::apache::params {
 
   class { '::apache':
     root => $root,
