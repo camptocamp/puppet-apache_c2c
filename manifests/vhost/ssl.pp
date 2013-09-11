@@ -160,7 +160,7 @@ define apache::vhost::ssl (
   }
 
   # used in ERB templates
-  $wwwroot = $apache::root
+  $wwwroot = $apache::ssl::root
   validate_absolute_path($wwwroot)
 
   $documentroot = $docroot ? {
