@@ -1,18 +1,32 @@
-/*
-
-== Class: apache
-
-Installs apache, ensures a few useful modules are installed (see apache::base),
-ensures that the service is running and the logs get rotated.
-
-By including subclasses where distro specific stuff is handled, it ensure that
-the apache class behaves the same way on diffrent distributions.
-
-Example usage:
-
-  include apache
-
-*/
+# = Class: apache
+# 
+# Installs apache, ensures a few useful modules are installed (see apache::base),
+# ensures that the service is running and the logs get rotated.
+# 
+# By including subclasses where distro specific stuff is handled, it ensure that
+# the apache class behaves the same way on diffrent distributions.
+# 
+# == Parameters ===
+#
+# [*root*]
+#   Root directory of vhosts, defaults to /var/www on Debian, /var/www/vhosts
+#   on RedHat.
+#
+# [*service_ensure*]
+#   Ensure value passed to the Apache service. Valid values are 'running'
+#   (default), 'stopped', or 'undef' to not manage it.
+#
+# [*service_enable*]
+#   Enable value passed to the Apache service, defining the service's status
+#   at boot. Valid values are true (default) and false.
+#
+# [*disable_port80*]
+#   Disable the default HTTP port 80. Default is false (the port 80 is enabled).
+#
+# == Example ===
+# 
+#   include apache
+# 
 class apache (
   $root            = $apache::params::root,
   $service_ensure  = 'running',

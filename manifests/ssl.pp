@@ -1,34 +1,60 @@
-/*
-
-== Class: apache::ssl
-
-This class basically does the same thing the "apache" class does + enable
-mod_ssl.
-
-It also drops a little shell script in /usr/local/sbin/generate-ssl-cert.sh,
-which is used by apache::vhost-ssl to generate an SSL key and certificate. This
-script calls openssl with /var/www/<vhost>/ssl/ssleay.cnf as a template. The
-content of this file is influenced by a few class variables described below.
-
-Class variables:
-- *sslcert_country*: the content of the "countryName" field in generated
-  certificates. Setting this field is mandatory.
-- *sslcert_state*: the content of the "stateOrProvinceName" field in generated
-  certificates.
-- *sslcert_locality*: the content of the "localityName" field in generated
-  certificates.
-- *sslcert_organisation*:  the content of the "organizationName" field in
-  generated certificates. Setting this field is mandatory.
-- *sslcert_unit*: the content of the "organizationalUnitName" field in
-  generated certificates.
-- *sslcert_email*: the content of the "emailAddress" field in generated
-  certificates.
-
-Example usage:
-
-  include apache::ssl
-
-*/
+# = Class: apache::ssl
+# 
+# This class basically does the same thing the "apache" class does + enable
+# mod_ssl.
+# 
+# It also drops a little shell script in /usr/local/sbin/generate-ssl-cert.sh,
+# which is used by apache::vhost-ssl to generate an SSL key and certificate. This
+# script calls openssl with /var/www/<vhost>/ssl/ssleay.cnf as a template. The
+# content of this file is influenced by a few class variables described below.
+# 
+# == Class variables ==
+#
+# [*sslcert_country*]
+#   Content of the "countryName" field in generated certificates. Setting this
+#   field is mandatory.
+#
+# [*sslcert_state*]
+#   Content of the "stateOrProvinceName" field in generated certificates.
+#
+# [*sslcert_locality*]
+#   Content of the "localityName" field in generated certificates.
+#
+# [*sslcert_organisation*]
+#   Content of the "organizationName" field in generated certificates. Setting
+#   this field is mandatory.
+#
+# [*sslcert_unit*]
+#   Content of the "organizationalUnitName" field in generated certificates.
+#
+# [*sslcert_email*]
+#   Content of the "emailAddress" field in generated certificates.
+# 
+# == Parameters ===
+#
+# [*root*]
+#   Root directory of vhosts, defaults to /var/www on Debian, /var/www/vhosts
+#   on RedHat.
+#
+# [*service_ensure*]
+#   Ensure value passed to the Apache service. Valid values are 'running'
+#   (default), 'stopped', or 'undef' to not manage it.
+#
+# [*service_enable*]
+#   Enable value passed to the Apache service, defining the service's status
+#   at boot. Valid values are true (default) and false.
+#
+# [*disable_port80*]
+#   Disable the default HTTP port 80. Default is false (the port 80 is enabled).
+#
+# [*disable_port443*]
+#   Disable the default HTTPS port 443. Default is false (the port 443 is
+#   enabled).
+#
+# == Example ==
+#
+#  include apache::ssl
+#
 class apache::ssl (
   $root            = $apache::params::root,
   $service_ensure  = 'running',
