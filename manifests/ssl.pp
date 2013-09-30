@@ -30,11 +30,22 @@ Example usage:
 
 */
 class apache::ssl (
-  $root = $apache::params::root,
+  $root            = $apache::params::root,
+  $service_ensure  = 'running',
+  $service_enable  = true,
+  $disable_port80  = false,
+  $disable_port443 = false,
 ) inherits ::apache::params {
 
+  validate_bool ($service_enable)
+  validate_bool ($disable_port80)
+  validate_bool ($disable_port443)
+
   class { '::apache':
-    root => $root,
+    root           => $root,
+    service_ensure => $service_ensure,
+    service_enable => $service_enable,
+    disable_port80 => $disable_port80,
   }
 
   case $::operatingsystem {

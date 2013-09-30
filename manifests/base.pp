@@ -67,10 +67,14 @@ class apache::base {
     ensure => installed,
   }
 
+  $service_ensure = $apache::service_ensure ? {
+    'undef' => undef,
+    default => $apache::service_ensure,
+  }
   service { "apache":
     name       => $apache::params::pkg,
-    ensure     => running,
-    enable     => true,
+    ensure     => $service_ensure,
+    enable     => $apache::service_enable,
     hasrestart => true,
     require    => Package["apache"],
   }
@@ -85,8 +89,12 @@ class apache::base {
     require => Package["apache"],
   }
 
-  apache::listen { "80": ensure => present }
-  apache::namevhost { "*:80": ensure => present }
+  if ! $apache::disable_port80 {
+
+    apache::listen { "80": ensure => present }
+    apache::namevhost { "*:80": ensure => present }
+
+  }
 
   apache::module {["alias", "auth_basic", "authn_file", "authz_default", "authz_groupfile", "authz_host", "authz_user", "autoindex", "dir", "env", "mime", "negotiation", "rewrite", "setenvif", "status", "cgi"]:
     ensure => present,

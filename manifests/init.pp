@@ -14,8 +14,15 @@ Example usage:
 
 */
 class apache (
-  $root = $apache::params::root,
+  $root            = $apache::params::root,
+  $service_ensure  = 'running',
+  $service_enable  = true,
+  $disable_port80  = false,
 ) inherits ::apache::params {
+
+  validate_absolute_path ($root)  
+  validate_bool ($service_enable)
+  validate_bool ($disable_port80)
 
   case $::operatingsystem {
     Debian,Ubuntu:  { include apache::debian}
