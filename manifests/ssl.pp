@@ -38,7 +38,7 @@
 #
 # [*service_ensure*]
 #   Ensure value passed to the Apache service. Valid values are 'running'
-#   (default), 'stopped', or 'undef' to not manage it.
+#   (default), 'stopped', or 'unmanaged' (ensure is not set).
 #
 # [*service_enable*]
 #   Enable value passed to the Apache service, defining the service's status
@@ -64,7 +64,7 @@ class apache::ssl (
 ) inherits ::apache::params {
 
   validate_absolute_path ($root)
-  validate_re ($service_ensure, 'running|stopped|undef')
+  validate_re ($service_ensure, 'running|stopped|unmanaged')
   validate_bool ($service_enable)
   validate_bool ($disable_port80)
   validate_bool ($disable_port443)
