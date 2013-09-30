@@ -35,6 +35,7 @@ class apache (
 ) inherits ::apache::params {
 
   validate_absolute_path ($root)  
+  validate_re ($service_ensure, 'running|stopped|undef')
   validate_bool ($service_enable)
   validate_bool ($disable_port80)
 
