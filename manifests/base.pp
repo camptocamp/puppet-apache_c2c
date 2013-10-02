@@ -68,8 +68,8 @@ class apache::base {
   }
 
   $service_ensure = $apache::service_ensure ? {
-    'undef' => undef,
-    default => $apache::service_ensure,
+    'unmanaged' => undef,
+    default     => $apache::service_ensure,
   }
   service { "apache":
     name       => $apache::params::pkg,
