@@ -9,8 +9,12 @@ It shouldn't be necessary to directly include this class.
 */
 class apache::base::ssl {
 
-  apache::listen { "443": ensure => present }
-  apache::namevhost { "*:443": ensure => present }
+  if ! $apache::ssl::disable_port443 {
+
+    apache::listen { "443": ensure => present }
+    apache::namevhost { "*:443": ensure => present }
+
+  }
 
   file { "/usr/local/sbin/generate-ssl-cert.sh":
     source => "puppet:///modules/${module_name}/generate-ssl-cert.sh",
