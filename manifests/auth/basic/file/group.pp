@@ -1,23 +1,24 @@
-define apache::auth::basic::file::group (
-  $ensure="present",
-  $authname=false,
+define apache::auth::basic::file::group(
   $vhost,
-  $location="/",
-  $authUserFile=false,
-  $authGroupFile=false,
-  $groups){
+  $groups,
+  $ensure        = 'present',
+  $authname      = false,
+  $location      = '/',
+  $authUserFile  = false,
+  $authGroupFile = false,
+) {
 
   validate_string($groups)
 
   $wwwroot = $apache::root
   validate_absolute_path($wwwroot)
 
-  $fname = regsubst($name, "\s", "_", "G")
+  $fname = regsubst($name, '\s', '_', 'G')
 
   include apache::params
 
-  if defined(Apache::Module["authn_file"]) {} else {
-    apache::module {"authn_file": }
+  if defined(Apache::Module['authn_file']) {} else {
+    apache::module {'authn_file': }
   }
 
   if $authUserFile {
@@ -38,15 +39,16 @@ define apache::auth::basic::file::group (
     $_authname = $name
   }
 
+  $seltype = $::operatingsystem ? {
+    'RedHat' => 'httpd_config_t',
+    'CentOS' => 'httpd_config_t',
+    default  => undef,
+  }
   file { "${wwwroot}/${vhost}/conf/auth-basic-file-group-${fname}.conf":
-    ensure => $ensure,
-    content => template("apache/auth-basic-file-group.erb"),
-    seltype => $::operatingsystem ? {
-      "RedHat" => "httpd_config_t",
-      "CentOS" => "httpd_config_t",
-      default  => undef,
-    },
-    notify => Exec["apache-graceful"],
+    ensure  => $ensure,
+    content => template('apache/auth-basic-file-group.erb'),
+    seltype => $seltype,
+    notify  => Exec['apache-graceful'],
   }
 
 }
