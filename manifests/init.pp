@@ -1,11 +1,11 @@
 # = Class: apache
-# 
-# Installs apache, ensures a few useful modules are installed (see apache::base),
-# ensures that the service is running and the logs get rotated.
-# 
+#
+# Installs apache, ensures a few useful modules are installed (see
+# apache::base), ensures that the service is running and the logs get rotated.
+#
 # By including subclasses where distro specific stuff is handled, it ensure that
 # the apache class behaves the same way on diffrent distributions.
-# 
+#
 # == Parameters ===
 #
 # [*root*]
@@ -24,9 +24,9 @@
 #   Disable the default HTTP port 80. Default is false (the port 80 is enabled).
 #
 # == Example ===
-# 
+#
 #   include apache
-# 
+#
 class apache (
   $root            = $apache::params::root,
   $service_ensure  = 'running',
@@ -34,7 +34,7 @@ class apache (
   $disable_port80  = false,
 ) inherits ::apache::params {
 
-  validate_absolute_path ($root)  
+  validate_absolute_path ($root)
   validate_re ($service_ensure, 'running|stopped|unmanaged')
   validate_bool ($service_enable)
   validate_bool ($disable_port80)
