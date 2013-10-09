@@ -6,7 +6,7 @@ class apache::params {
   }
 
   $root = $apache_root ? {
-    "" => $::operatingsystem ? {
+    '' => $::operatingsystem ? {
       /RedHat|CentOS/ => '/var/www/vhosts',
       /Debian|Ubuntu/ => '/var/www',
     },
