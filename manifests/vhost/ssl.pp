@@ -200,8 +200,10 @@ define apache::vhost::ssl (
 
   # call parent definition to actually do the virtualhost setup.
   $_sslonly = $sslonly ? {
-    false   => template('apache/vhost.erb', 'apache/vhost-ssl.erb'),
-    default => template('apache/vhost-redirect-ssl.erb','apache/vhost-ssl.erb'),
+    false   => template(
+      "${module_name}/vhost.erb", "${module_name}/vhost-ssl.erb"),
+    default => template(
+      "${module_name}/vhost-redirect-ssl.erb","${module_name}/vhost-ssl.erb"),
   }
   $_config_content = $config_content ? {
     false   => $_sslonly,

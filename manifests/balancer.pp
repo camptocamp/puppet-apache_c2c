@@ -102,8 +102,8 @@ define apache::balancer (
   }
 
   $balancer_template = $use_slash_bug_workaround ? {
-    false => 'apache/balancer.erb',
-    true  => 'apache/balancer-slash-bug-workaround.erb',
+    false => "${module_name}/balancer.erb",
+    true  => "${module_name}/balancer-slash-bug-workaround.erb",
   }
 
   $seltype = $::operatingsystem ? {
