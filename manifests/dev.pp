@@ -1,4 +1,3 @@
-#
 # == Class: apache::dev
 #
 # Installs package(s) required to build apache modules using apxs.
@@ -10,12 +9,13 @@
 #   include apache::dev
 #
 class apache::dev {
+  $pkg_name = $::operatingsystem ? {
+    /RedHat|CentOS/ => 'httpd-devel',
+    /Debian|Ubuntu/ => 'apache2-threaded-dev',
+  }
   package { 'apache-devel':
-    name    => $::operatingsystem ? {
-      /RedHat|CentOS/ => 'httpd-devel',
-      /Debian|Ubuntu/ => 'apache2-threaded-dev',
-    },
     ensure  => present,
+    name    => $pkg_name,
     require => Package['gcc'],
   }
 }
