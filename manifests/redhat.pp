@@ -91,14 +91,16 @@ class apache::redhat inherits apache::base {
   }
 
   # the following command was used to generate the content of the directory:
-  # egrep '(^|#)LoadModule' /etc/httpd/conf/httpd.conf | sed -r 's|#?(.+ (.+)_module .+)|echo "\1" > mods-available/redhat5/\2.load|' | sh
+  # egrep '(^|#)LoadModule' /etc/httpd/conf/httpd.conf | sed -r 's|\
+  # #?(.+ (.+)_module .+)|echo "\1" > mods-available/redhat5/\2.load|' | sh
   # ssl.load was then changed to a template (see apache-ssl-redhat.pp)
+  $source = $::lsbmajdistrelease ? {
+    5 => "puppet:///modules/${module_name}/etc/httpd/mods-available/redhat5/",
+    6 => "puppet:///modules/${module_name}/etc/httpd/mods-available/redhat6/",
+  }
   file { "${apache::params::conf}/mods-available":
     ensure  => directory,
-    source  => $::lsbmajdistrelease ? {
-      5 => "puppet:///modules/${module_name}/etc/httpd/mods-available/redhat5/",
-      6 => "puppet:///modules/${module_name}/etc/httpd/mods-available/redhat6/",
-    },
+    source  => $source,
     recurse => true,
     mode    => '0755',
     owner   => 'root',
