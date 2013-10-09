@@ -36,5 +36,6 @@ class apache::ssl::redhat inherits apache::base::ssl {
         require => File['/etc/httpd/mods-available'],
       }
     }
+    default: {}
   }
 }
