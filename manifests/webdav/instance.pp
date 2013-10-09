@@ -1,4 +1,9 @@
-define apache::webdav::instance ($ensure=present, $vhost, $directory=false,$mode=2755) {
+define apache::webdav::instance(
+  $vhost,
+  $ensure    = present,
+  $directory = false,
+  $mode      = '2755',
+) {
 
   $wwwroot = $apache::root
   validate_absolute_path($wwwroot)
@@ -9,27 +14,29 @@ define apache::webdav::instance ($ensure=present, $vhost, $directory=false,$mode
     $davdir = "${wwwroot}/${vhost}/private/webdav-${name}"
   }
 
+  $davdir_ensure = $ensure ? {
+    present => directory,
+    absent  => absent,
+  }
   file {$davdir:
-    ensure => $ensure ? {
-      present => directory,
-      absent  => absent,
-    },
-    owner => "www-data",
-    group => "www-data",
-    mode => $mode,
+    ensure => $davdir_ensure,
+    owner  => 'www-data',
+    group  => 'www-data',
+    mode   => $mode,
   }
 
   # configuration
+  $conffile_seltype = $::operatingsystem ? {
+    'RedHat' => 'httpd_config_t',
+    'CentOS' => 'httpd_config_t',
+    default  => undef,
+  }
   file { "${wwwroot}/${vhost}/conf/webdav-${name}.conf":
-    ensure => $ensure,
-    content => template("apache/webdav-config.erb"),
-    seltype => $::operatingsystem ? {
-      "RedHat" => "httpd_config_t",
-      "CentOS" => "httpd_config_t",
-      default  => undef,
-    },
+    ensure  => $ensure,
+    content => template('apache/webdav-config.erb'),
+    seltype => $conffile_seltype,
     require => File[$davdir],
-    notify => Exec["apache-graceful"],
+    notify  => Exec['apache-graceful'],
   }
 
 }
