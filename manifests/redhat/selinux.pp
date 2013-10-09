@@ -1,4 +1,4 @@
-define apache::redhat::selinux() {
+define apache::redhat::selinux {
 
   case $name {
 
@@ -19,7 +19,8 @@ define apache::redhat::selinux() {
     proxy, rewrite, ldap, shib: {
       if defined(Selboolean['httpd_can_network_connect']) { }
       else {
-        selboolean { 'httpd_can_network_connect': # or httpd_can_network_relay ??
+        # or httpd_can_network_relay ??
+        selboolean { 'httpd_can_network_connect':
           value      => 'on',
           persistent => true,
         }
@@ -29,7 +30,10 @@ define apache::redhat::selinux() {
     php, php4, php5, perl, wsgi, python: {
       if defined(Selboolean['httpd_builtin_scripting']) { }
       else {
-        selboolean { ['httpd_builtin_scripting', 'httpd_can_network_connect_db']:
+        selboolean { [
+          'httpd_builtin_scripting',
+          'httpd_can_network_connect_db',
+        ]:
           value      => 'on',
           persistent => true,
         }
@@ -51,6 +55,8 @@ define apache::redhat::selinux() {
         persistent => true,
       }
     }
+
+    default: {}
 
   }
 }
