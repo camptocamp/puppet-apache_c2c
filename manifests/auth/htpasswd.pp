@@ -1,11 +1,12 @@
 define apache::auth::htpasswd (
-  $ensure='present',
-  $vhost=false,
-  $userFileLocation=false,
-  $userFileName='htpasswd',
   $username,
-  $cryptPassword=false,
-  $clearPassword=false){
+  $ensure           = 'present',
+  $vhost            = false,
+  $userFileLocation = false,
+  $userFileName     = 'htpasswd',
+  $cryptPassword    = false,
+  $clearPassword    = false,
+) {
 
   $wwwroot = $apache::root
   validate_absolute_path($wwwroot)
