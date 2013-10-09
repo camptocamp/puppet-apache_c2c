@@ -1,8 +1,8 @@
 define apache::auth::htpasswd (
-  $ensure="present",
+  $ensure='present',
   $vhost=false,
   $userFileLocation=false,
-  $userFileName="htpasswd",
+  $userFileName='htpasswd',
   $username,
   $cryptPassword=false,
   $clearPassword=false){
@@ -16,7 +16,7 @@ define apache::auth::htpasswd (
     if $vhost {
       $_userFileLocation = "${wwwroot}/${vhost}/private"
     } else {
-      fail "parameter vhost is required for '$name'"
+      fail "parameter vhost is required for '${name}'"
     }
   }
 
@@ -26,11 +26,11 @@ define apache::auth::htpasswd (
 
     'present': {
       if $cryptPassword and $clearPassword {
-        fail "choose only one of cryptPassword OR clearPassword for '$name'"
+        fail "choose only one of cryptPassword OR clearPassword for '${name}'"
       }
 
       if !$cryptPassword and !$clearPassword  {
-        fail "cryptPassword or clearPassword missing for '$name'"
+        fail "cryptPassword or clearPassword missing for '${name}'"
       }
 
       if $cryptPassword {
@@ -60,5 +60,7 @@ define apache::auth::htpasswd (
         refreshonly => true,
       }
     }
+
+    default: {}
   }
 }
