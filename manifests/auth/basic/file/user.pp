@@ -1,20 +1,21 @@
-define apache::auth::basic::file::user (
-  $ensure="present",
-  $authname=false,
+define apache::auth::basic::file::user(
   $vhost,
-  $location="/",
-  $authUserFile=false,
-  $users="valid-user"){
+  $ensure       = 'present',
+  $authname     = false,
+  $location     = '/',
+  $authUserFile = false,
+  $users        = 'valid-user',
+) {
 
   validate_string($users)
 
-  $fname = regsubst($name, "\s", "_", "G")
+  $fname = regsubst($name, '\s', '_', 'G')
 
   $wwwroot = $apache::root
   validate_absolute_path($wwwroot)
 
-  if !defined(Apache::Module["authn_file"]) {
-    apache::module {"authn_file": }
+  if !defined(Apache::Module['authn_file']) {
+    apache::module {'authn_file': }
   }
 
   if $authUserFile {
@@ -29,21 +30,22 @@ define apache::auth::basic::file::user (
     $_authname = $name
   }
 
-  if $users != "valid-user" {
-    $_users = "user $users"
+  if $users != 'valid-user' {
+    $_users = "user ${users}"
   } else {
     $_users = $users
   }
 
+  $seltype = $::operatingsystem ? {
+    'RedHat' => 'httpd_config_t',
+    'CentOS' => 'httpd_config_t',
+    default  => undef,
+  }
   file {"${wwwroot}/${vhost}/conf/auth-basic-file-user-${fname}.conf":
-    ensure => $ensure,
-    content => template("apache/auth-basic-file-user.erb"),
-    seltype => $::operatingsystem ? {
-      "RedHat" => "httpd_config_t",
-      "CentOS" => "httpd_config_t",
-      default  => undef,
-    },
-    notify => Exec["apache-graceful"],
+    ensure  => $ensure,
+    content => template('apache/auth-basic-file-user.erb'),
+    seltype => $seltype,
+    notify  => Exec['apache-graceful'],
   }
 
 }
