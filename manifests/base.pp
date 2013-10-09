@@ -113,7 +113,7 @@ class apache::base {
   file {'default virtualhost':
     ensure  => present,
     path    => "${apache::params::conf}/sites-available/default-vhost",
-    content => template('apache/default-vhost.erb'),
+    content => template("${module_name}/default-vhost.erb"),
     require => Package['apache'],
     notify  => Exec['apache-graceful'],
     before  => File["${apache::params::conf}/sites-enabled/000-default-vhost"],

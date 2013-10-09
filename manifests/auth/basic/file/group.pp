@@ -46,7 +46,7 @@ define apache::auth::basic::file::group(
   }
   file { "${wwwroot}/${vhost}/conf/auth-basic-file-group-${fname}.conf":
     ensure  => $ensure,
-    content => template('apache/auth-basic-file-group.erb'),
+    content => template("${module_name}/auth-basic-file-group.erb"),
     seltype => $seltype,
     notify  => Exec['apache-graceful'],
   }

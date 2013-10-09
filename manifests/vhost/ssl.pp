@@ -241,7 +241,7 @@ define apache::vhost::ssl (
       ensure  => present,
       owner   => 'root',
       mode    => '0640',
-      content => template('apache/ssleay.cnf.erb'),
+      content => template("${module_name}/ssleay.cnf.erb"),
       require => File["${wwwroot}/${name}/ssl"],
     }
 

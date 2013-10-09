@@ -30,7 +30,7 @@ class apache::redhat inherits apache::base {
   $awstats_command = '/etc/cron.hourly/awstats || true'
   File['logrotate configuration'] {
     path    => '/etc/logrotate.d/httpd',
-    content => template('apache/logrotate-httpd.erb'),
+    content => template("${module_name}/logrotate-httpd.erb"),
   }
 
   File['default status module configuration'] {
@@ -84,7 +84,7 @@ class apache::redhat inherits apache::base {
 
   file { "${apache::params::conf}/conf/httpd.conf":
     ensure  => present,
-    content => template('apache/httpd.conf.erb'),
+    content => template("${module_name}/httpd.conf.erb"),
     seltype => 'httpd_config_t',
     notify  => Service['apache'],
     require => Package['apache'],

@@ -43,7 +43,7 @@ define apache::auth::basic::file::user(
   }
   file {"${wwwroot}/${vhost}/conf/auth-basic-file-user-${fname}.conf":
     ensure  => $ensure,
-    content => template('apache/auth-basic-file-user.erb'),
+    content => template("${module_name}/auth-basic-file-user.erb"),
     seltype => $seltype,
     notify  => Exec['apache-graceful'],
   }

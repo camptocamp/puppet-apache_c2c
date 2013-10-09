@@ -12,7 +12,7 @@ define apache::webdav::svn ($ensure, $vhost, $parentPath, $confname) {
   }
   file { "${wwwroot}/${vhost}/conf/${confname}.conf":
     ensure  => $ensure,
-    content => template('apache/webdav-svn.erb'),
+    content => template("${module_name}/webdav-svn.erb"),
     seltype => $seltype,
     notify  => Exec['apache-graceful'],
   }

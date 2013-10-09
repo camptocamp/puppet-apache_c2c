@@ -206,7 +206,7 @@ define apache::vhost (
           } else {
             # default vhost template
             File["${apache::params::conf}/sites-available/${name}"] {
-              content => template('apache/vhost.erb'),
+              content => template("${module_name}/vhost.erb"),
             }
           }
         }
@@ -246,7 +246,7 @@ define apache::vhost (
 
       # README file
       $readme_content = $readme ? {
-        false   => template('apache/README_vhost.erb'),
+        false   => template("${module_name}/README_vhost.erb"),
         default => $readme,
       }
       file {"${wwwroot}/${name}/README":

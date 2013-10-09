@@ -33,7 +33,7 @@ define apache::webdav::instance(
   }
   file { "${wwwroot}/${vhost}/conf/webdav-${name}.conf":
     ensure  => $ensure,
-    content => template('apache/webdav-config.erb'),
+    content => template("${module_name}/webdav-config.erb"),
     seltype => $conffile_seltype,
     require => File[$davdir],
     notify  => Exec['apache-graceful'],

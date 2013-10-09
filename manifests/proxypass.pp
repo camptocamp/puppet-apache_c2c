@@ -67,7 +67,7 @@ define apache::proxypass (
   }
   file { "${name} proxypass on ${vhost}":
     ensure  => $ensure,
-    content => template('apache/proxypass.erb'),
+    content => template("${module_name}/proxypass.erb"),
     seltype => $seltype,
     path    => $path,
     notify  => Exec['apache-graceful'],
