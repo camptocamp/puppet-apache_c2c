@@ -1,10 +1,11 @@
-define apache::auth::htgroup (
-  $ensure="present",
-  $vhost=false,
-  $groupFileLocation=false,
-  $groupFileName="htgroup",
+define apache::auth::htgroup(
   $groupname,
-  $members){
+  $members,
+  $ensure            = 'present',
+  $vhost             = false,
+  $groupFileLocation = false,
+  $groupFileName     = 'htgroup',
+) {
 
   include apache::params
 
@@ -17,7 +18,7 @@ define apache::auth::htgroup (
     if $vhost {
       $_groupFileLocation = "${wwwroot}/${vhost}/private"
     } else {
-      fail "parameter vhost is require !"
+      fail 'parameter vhost is require !'
     }
   }
 
@@ -44,5 +45,7 @@ define apache::auth::htgroup (
         refreshonly => true,
       }
     }
+
+    default: {}
   }
 }
