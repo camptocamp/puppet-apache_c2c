@@ -1,4 +1,4 @@
-define apache::auth::htgroup(
+define apache_c2c::auth::htgroup(
   $groupname,
   $members,
   $ensure            = 'present',
@@ -7,9 +7,9 @@ define apache::auth::htgroup(
   $groupFileName     = 'htgroup',
 ) {
 
-  include apache::params
+  include apache_c2c::params
 
-  $wwwroot = $apache::root
+  $wwwroot = $apache_c2c::root
   validate_absolute_path($wwwroot)
 
   if $groupFileLocation {

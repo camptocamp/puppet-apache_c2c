@@ -14,17 +14,17 @@
 #
 # Requires:
 # - Class["apache"]
-# - matching Apache::Vhost[] instance
+# - matching Apache_c2c::Vhost[] instance
 #
 # Example usage:
 #
-#   apache::redirectmatch { "example":
+#   apache_c2c::redirectmatch { "example":
 #     regex => "^/(foo|bar)",
 #     url   => "http://foobar.example.com/",
 #     vhost => "www.example.com",
 #   }
 #
-define apache::redirectmatch (
+define apache_c2c::redirectmatch (
   $regex,
   $url,
   $vhost,
@@ -34,7 +34,7 @@ define apache::redirectmatch (
 
   $fname = regsubst($name, '\s', '_', 'G')
 
-  $wwwroot = $apache::root
+  $wwwroot = $apache_c2c::root
   validate_absolute_path($wwwroot)
 
   $seltype = $::operatingsystem ? {
@@ -52,6 +52,6 @@ define apache::redirectmatch (
     seltype => $seltype,
     path    => $path,
     notify  => Exec['apache-graceful'],
-    require => Apache::Vhost[$vhost],
+    require => Apache_c2c::Vhost[$vhost],
   }
 }

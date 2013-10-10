@@ -1,11 +1,11 @@
-class apache::administration (
+class apache_c2c::administration (
   $sudo_user = $sudo_apache_admin_user,
 ) {
 
-  include ::apache::params
+  include ::apache_c2c::params
 
   $distro_specific_apache_sudo = $::osfamily ? {
-    'RedHat' => "/usr/sbin/apachectl, /sbin/service ${apache::params::pkg}",
+    'RedHat' => "/usr/sbin/apachectl, /sbin/service ${apache_c2c::params::pkg}",
     'Debian' => '/usr/sbin/apache2ctl',
   }
 
@@ -15,8 +15,8 @@ class apache::administration (
   }
 
   # used in erb template
-  $wwwpkgname = $apache::params::pkg
-  $wwwuser    = $apache::params::user
+  $wwwpkgname = $apache_c2c::params::pkg
+  $wwwuser    = $apache_c2c::params::user
 
   $sudo_group = '%apache-admin'
   $sudo_user_alias = flatten([$sudo_group, $sudo_user])

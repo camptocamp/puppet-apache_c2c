@@ -1,9 +1,9 @@
 # about $allowfullyearview, refer to templates/awstats.erb in this module for
 # a detailed explanation an possible values.
-define apache::aw-stats($ensure=present, $aliases=[], $allowfullyearview=2) {
+define apache_c2c::aw-stats($ensure=present, $aliases=[], $allowfullyearview=2) {
 
   # used in ERB template
-  $wwwroot = $apache::root
+  $wwwroot = $apache_c2c::root
   validate_absolute_path($wwwroot)
 
   file { "/etc/awstats/awstats.${name}.conf":
@@ -28,6 +28,6 @@ define apache::aw-stats($ensure=present, $aliases=[], $allowfullyearview=2) {
     source  => $source,
     seltype => $seltype,
     notify  => Exec['apache-graceful'],
-    require => Apache::Vhost[$name],
+    require => Apache_c2c::Vhost[$name],
   }
 }

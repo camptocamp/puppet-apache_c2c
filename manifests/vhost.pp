@@ -1,4 +1,4 @@
-define apache::vhost (
+define apache_c2c::vhost (
   $ensure=present,
   $config_file='',
   $config_content=false,
@@ -18,20 +18,20 @@ define apache::vhost (
   $accesslog_format='combined',
 ) {
 
-  include ::apache::params
+  include ::apache_c2c::params
 
   $wwwuser = $user ? {
-    ''      => $apache::params::user,
+    ''      => $apache_c2c::params::user,
     default => $user,
   }
 
   $wwwgroup = $group ? {
-    ''      => $apache::params::group,
+    ''      => $apache_c2c::params::group,
     default => $group,
   }
 
   # used in ERB templates
-  $wwwroot = $apache::root
+  $wwwroot = $apache_c2c::root
   validate_absolute_path($wwwroot)
 
   $documentroot = $docroot ? {
@@ -58,13 +58,13 @@ define apache::vhost (
         CentOS  => 'httpd_config_t',
         default => undef,
       }
-      file { "${apache::params::conf}/sites-available/${name}":
+      file { "${apache_c2c::params::conf}/sites-available/${name}":
         ensure  => present,
         owner   => root,
         group   => root,
         mode    => '0644',
         seltype => $vhost_seltype,
-        require => Package[$apache::params::pkg],
+        require => Package[$apache_c2c::params::pkg],
         notify  => Exec['apache-graceful'],
       }
 
@@ -193,19 +193,19 @@ define apache::vhost (
       case $config_file {
 
         default: {
-          File["${apache::params::conf}/sites-available/${name}"] {
+          File["${apache_c2c::params::conf}/sites-available/${name}"] {
             source => $config_file,
           }
         }
         '': {
 
           if $config_content {
-            File["${apache::params::conf}/sites-available/${name}"] {
+            File["${apache_c2c::params::conf}/sites-available/${name}"] {
               content => $config_content,
             }
           } else {
             # default vhost template
-            File["${apache::params::conf}/sites-available/${name}"] {
+            File["${apache_c2c::params::conf}/sites-available/${name}"] {
               content => template("${module_name}/vhost.erb"),
             }
           }
@@ -259,36 +259,36 @@ define apache::vhost (
       }
 
       $enable_vhost_command = $::operatingsystem ? {
-        RedHat  => "${apache::params::a2ensite} ${name}",
-        CentOS  => "${apache::params::a2ensite} ${name}",
-        default => "${apache::params::a2ensite} ${name}"
+        RedHat  => "${apache_c2c::params::a2ensite} ${name}",
+        CentOS  => "${apache_c2c::params::a2ensite} ${name}",
+        default => "${apache_c2c::params::a2ensite} ${name}"
       }
       exec {"enable vhost ${name}":
         command => $enable_vhost_command,
         notify  => Exec['apache-graceful'],
         require => [
           $::operatingsystem ? {
-            redhat  => File[$apache::params::a2ensite],
-            CentOS  => File[$apache::params::a2ensite],
-            default => Package[$apache::params::pkg]
+            redhat  => File[$apache_c2c::params::a2ensite],
+            CentOS  => File[$apache_c2c::params::a2ensite],
+            default => Package[$apache_c2c::params::pkg]
           },
-          File["${apache::params::conf}/sites-available/${name}"],
+          File["${apache_c2c::params::conf}/sites-available/${name}"],
           File["${wwwroot}/${name}/htdocs"],
           File["${wwwroot}/${name}/logs"],
           File["${wwwroot}/${name}/conf"]
         ],
-        unless  => "/bin/sh -c '[ -L ${apache::params::conf}/sites-enabled/${name} ] \\
-          && [ ${apache::params::conf}/sites-enabled/${name} -ef ${apache::params::conf}/sites-available/${name} ]'",
+        unless  => "/bin/sh -c '[ -L ${apache_c2c::params::conf}/sites-enabled/${name} ] \\
+          && [ ${apache_c2c::params::conf}/sites-enabled/${name} -ef ${apache_c2c::params::conf}/sites-available/${name} ]'",
       }
     }
 
     absent: {
-      file { "${apache::params::conf}/sites-enabled/${name}":
+      file { "${apache_c2c::params::conf}/sites-enabled/${name}":
         ensure  => absent,
         require => Exec["disable vhost ${name}"]
       }
 
-      file { "${apache::params::conf}/sites-available/${name}":
+      file { "${apache_c2c::params::conf}/sites-available/${name}":
         ensure  => absent,
         require => Exec["disable vhost ${name}"]
       }
@@ -303,12 +303,12 @@ define apache::vhost (
         command => $disable_vhost_command,
         notify  => Exec['apache-graceful'],
         require => [$::operatingsystem ? {
-          redhat  => File[$apache::params::a2ensite],
-          CentOS  => File[$apache::params::a2ensite],
-          default => Package[$apache::params::pkg]
+          redhat  => File[$apache_c2c::params::a2ensite],
+          CentOS  => File[$apache_c2c::params::a2ensite],
+          default => Package[$apache_c2c::params::pkg]
           }],
-        onlyif  => "/bin/sh -c '[ -L ${apache::params::conf}/sites-enabled/${name} ] \\
-          && [ ${apache::params::conf}/sites-enabled/${name} -ef ${apache::params::conf}/sites-available/${name} ]'",
+        onlyif  => "/bin/sh -c '[ -L ${apache_c2c::params::conf}/sites-enabled/${name} ] \\
+          && [ ${apache_c2c::params::conf}/sites-enabled/${name} -ef ${apache_c2c::params::conf}/sites-available/${name} ]'",
       }
     }
 
@@ -316,12 +316,12 @@ define apache::vhost (
       exec { "disable vhost ${name}":
         command => $disable_vhost_command,
         notify  => Exec['apache-graceful'],
-        require => Package[$apache::params::pkg],
-        onlyif  => "/bin/sh -c '[ -L ${apache::params::conf}/sites-enabled/${name} ] \\
-          && [ ${apache::params::conf}/sites-enabled/${name} -ef ${apache::params::conf}/sites-available/${name} ]'",
+        require => Package[$apache_c2c::params::pkg],
+        onlyif  => "/bin/sh -c '[ -L ${apache_c2c::params::conf}/sites-enabled/${name} ] \\
+          && [ ${apache_c2c::params::conf}/sites-enabled/${name} -ef ${apache_c2c::params::conf}/sites-available/${name} ]'",
       }
 
-      file { "${apache::params::conf}/sites-enabled/${name}":
+      file { "${apache_c2c::params::conf}/sites-enabled/${name}":
         ensure  => absent,
         require => Exec["disable vhost ${name}"]
       }

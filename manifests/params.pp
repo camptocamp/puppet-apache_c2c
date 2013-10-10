@@ -1,4 +1,4 @@
-class apache::params {
+class apache_c2c::params {
 
   $pkg = $::operatingsystem ? {
     /RedHat|CentOS/ => 'httpd',
