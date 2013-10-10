@@ -1,7 +1,7 @@
 # == Definition: apache::confd
 #
 # Convenient wrapper around apache::conf definition to put configuration
-# snippets in ${apache::params::conf}/conf.d directory
+# snippets in ${apache_c2c::params::conf}/conf.d directory
 #
 # Parameters:
 # - *ensure*: present/absent.
@@ -15,20 +15,20 @@
 #
 # Example usage:
 #
-#   apache::confd { "example 1":
+#   apache_c2c::confd { "example 1":
 #     ensure        => present,
 #     configuration => "WSGIPythonEggs /var/cache/python-eggs",
 #   }
 #
-define apache::confd(
+define apache_c2c::confd(
   $configuration,
   $ensure        = present,
   $filename      = '',
 ) {
-  include apache::params
-  apache::conf {$name:
+  include apache_c2c::params
+  apache_c2c::conf {$name:
     ensure        => $ensure,
-    path          => "${apache::params::conf}/conf.d",
+    path          => "${apache_c2c::params::conf}/conf.d",
     filename      => $filename,
     configuration => $configuration,
     notify        => Service['apache'],

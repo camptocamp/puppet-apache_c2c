@@ -6,7 +6,7 @@
 # The definition now wraps around apache::vhost::ssl
 # for backward compatibility reasons.
 
-define apache::vhost-ssl (
+define apache_c2c::vhost-ssl (
   $ensure=present,
   $config_file='',
   $config_content=false,

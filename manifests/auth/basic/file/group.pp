@@ -1,4 +1,4 @@
-define apache::auth::basic::file::group(
+define apache_c2c::auth::basic::file::group(
   $vhost,
   $groups,
   $ensure        = 'present',
@@ -10,15 +10,15 @@ define apache::auth::basic::file::group(
 
   validate_string($groups)
 
-  $wwwroot = $apache::root
+  $wwwroot = $apache_c2c::root
   validate_absolute_path($wwwroot)
 
   $fname = regsubst($name, '\s', '_', 'G')
 
-  include apache::params
+  include apache_c2c::params
 
-  if defined(Apache::Module['authn_file']) {} else {
-    apache::module {'authn_file': }
+  if defined(Apache_c2c::Module['authn_file']) {} else {
+    apache_c2c::module {'authn_file': }
   }
 
   if $authUserFile {

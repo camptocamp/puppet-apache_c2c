@@ -1,4 +1,4 @@
-define apache::auth::htpasswd (
+define apache_c2c::auth::htpasswd (
   $username,
   $ensure           = 'present',
   $vhost            = false,
@@ -8,7 +8,7 @@ define apache::auth::htpasswd (
   $clearPassword    = false,
 ) {
 
-  $wwwroot = $apache::root
+  $wwwroot = $apache_c2c::root
   validate_absolute_path($wwwroot)
 
   if $userFileLocation {

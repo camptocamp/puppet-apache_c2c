@@ -1,4 +1,4 @@
-class apache::security {
+class apache_c2c::security {
 
   case $::osfamily {
 
@@ -33,7 +33,7 @@ class apache::security {
     }
   }
 
-  apache::module { ['unique_id', 'security']:
+  apache_c2c::module { ['unique_id', 'security']:
     ensure  => present,
     require => Package['apache-mod_security'],
   }

@@ -1,4 +1,4 @@
-define apache::auth::basic::ldap(
+define apache_c2c::auth::basic::ldap(
   $vhost,
   $authLDAPUrl,
   $ensure='present',
@@ -19,15 +19,15 @@ define apache::auth::basic::ldap(
 
   $fname = regsubst($name, '\s', '_', 'G')
 
-  $wwwroot = $apache::root
+  $wwwroot = $apache_c2c::root
   validate_absolute_path($wwwroot)
 
-  if defined(Apache::Module['ldap']) {} else {
-    apache::module {'ldap': }
+  if defined(Apache_c2c::Module['ldap']) {} else {
+    apache_c2c::module {'ldap': }
   }
 
-  if defined(Apache::Module['authnz_ldap']) {} else {
-    apache::module {'authnz_ldap': }
+  if defined(Apache_c2c::Module['authnz_ldap']) {} else {
+    apache_c2c::module {'authnz_ldap': }
   }
 
   if $authname {

@@ -1,9 +1,9 @@
-define apache::userdirinstance(
+define apache_c2c::userdirinstance(
   $vhost,
   $ensure = present,
 ) {
 
-  $wwwroot = $apache::root
+  $wwwroot = $apache_c2c::root
   validate_absolute_path($wwwroot)
 
   $seltype = $::operatingsystem ? {

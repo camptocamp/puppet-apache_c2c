@@ -1,4 +1,4 @@
-class apache::ssl::redhat inherits apache::base::ssl {
+class apache_c2c::ssl::redhat inherits apache_c2c::base::ssl {
 
   package {'mod_ssl':
     ensure => installed,
@@ -17,7 +17,7 @@ class apache::ssl::redhat inherits apache::base::ssl {
     before  => Exec['apache-graceful'],
   }
 
-  apache::module { 'ssl':
+  apache_c2c::module { 'ssl':
     ensure  => present,
     require => File['/etc/httpd/conf.d/ssl.conf'],
     notify  => Service['apache'],

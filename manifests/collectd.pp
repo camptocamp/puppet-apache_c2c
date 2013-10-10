@@ -13,9 +13,9 @@
 # Usage:
 #   include apache
 #   include collectd
-#   include apache::collectd
+#   include apache_c2c::collectd
 #
-class apache::collectd {
+class apache_c2c::collectd {
 
   # trick to check which collectd module we are using
   include ::collectd

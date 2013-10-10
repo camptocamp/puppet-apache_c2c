@@ -1,11 +1,11 @@
-define apache::webdav::instance(
+define apache_c2c::webdav::instance(
   $vhost,
   $ensure    = present,
   $directory = false,
   $mode      = '2755',
 ) {
 
-  $wwwroot = $apache::root
+  $wwwroot = $apache_c2c::root
   validate_absolute_path($wwwroot)
 
   if $directory {

@@ -1,4 +1,4 @@
-class apache::awstats {
+class apache_c2c::awstats {
 
   package { 'awstats':
     ensure => installed

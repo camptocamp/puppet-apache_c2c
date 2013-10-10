@@ -20,11 +20,11 @@
 #
 # Requires:
 # - Class["apache"]
-# - matching Apache::Vhost[] instance
+# - matching Apache_c2c::Vhost[] instance
 #
 # Example usage:
 #
-#   apache::proxypass { "proxy legacy dir to legacy server":
+#   apache_c2c::proxypass { "proxy legacy dir to legacy server":
 #     ensure   => present,
 #     location => "/legacy/",
 #     url      => "http://legacyserver.example.com",
@@ -32,7 +32,7 @@
 #     vhost    => "www.example.com",
 #   }
 #
-define apache::proxypass (
+define apache_c2c::proxypass (
   $vhost,
   $ensure='present',
   $location='',
@@ -43,16 +43,16 @@ define apache::proxypass (
 
   $fname = regsubst($name, '\s', '_', 'G')
 
-  $wwwroot = $apache::root
+  $wwwroot = $apache_c2c::root
   validate_absolute_path($wwwroot)
 
-  if defined(Apache::Module['proxy']) {} else {
-    apache::module {'proxy':
+  if defined(Apache_c2c::Module['proxy']) {} else {
+    apache_c2c::module {'proxy':
     }
   }
 
-  if defined(Apache::Module['proxy_http']) {} else {
-    apache::module {'proxy_http':
+  if defined(Apache_c2c::Module['proxy_http']) {} else {
+    apache_c2c::module {'proxy_http':
     }
   }
 
@@ -71,6 +71,6 @@ define apache::proxypass (
     seltype => $seltype,
     path    => $path,
     notify  => Exec['apache-graceful'],
-    require => Apache::Vhost[$vhost],
+    require => Apache_c2c::Vhost[$vhost],
   }
 }

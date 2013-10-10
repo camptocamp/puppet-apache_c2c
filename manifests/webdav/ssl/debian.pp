@@ -1,4 +1,4 @@
-class apache::webdav::ssl::debian inherits apache::webdav::base {
+class apache_c2c::webdav::ssl::debian inherits apache_c2c::webdav::base {
 
   case $::lsbdistcodename {
     etch: {

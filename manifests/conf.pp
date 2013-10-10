@@ -19,13 +19,13 @@
 #
 # Example usage:
 #
-#   apache::conf { "example 1":
+#   apache_c2c::conf { "example 1":
 #     ensure        => present,
 #     path          => /var/www/foo/conf
 #     configuration => "WSGIPythonEggs /var/cache/python-eggs",
 #   }
 #
-define apache::conf(
+define apache_c2c::conf(
   $configuration,
   $path,
   $ensure   = present,

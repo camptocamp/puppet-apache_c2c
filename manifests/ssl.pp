@@ -54,15 +54,15 @@
 #
 # == Example ==
 #
-#  include apache::ssl
+#  include apache_c2c::ssl
 #
-class apache::ssl (
-  $root            = $apache::params::root,
+class apache_c2c::ssl (
+  $root            = $apache_c2c::params::root,
   $service_ensure  = 'running',
   $service_enable  = true,
   $disable_port80  = false,
   $disable_port443 = false,
-) inherits ::apache::params {
+) inherits ::apache_c2c::params {
 
   validate_absolute_path ($root)
   validate_re ($service_ensure, 'running|stopped|unmanaged')
@@ -70,7 +70,7 @@ class apache::ssl (
   validate_bool ($disable_port80)
   validate_bool ($disable_port443)
 
-  class { '::apache':
+  class { '::apache_c2c':
     root           => $root,
     service_ensure => $service_ensure,
     service_enable => $service_enable,
@@ -78,8 +78,8 @@ class apache::ssl (
   }
 
   case $::operatingsystem {
-    Debian,Ubuntu:  { include apache::ssl::debian}
-    RedHat,CentOS:  { include apache::ssl::redhat}
+    Debian,Ubuntu:  { include apache_c2c::ssl::debian}
+    RedHat,CentOS:  { include apache_c2c::ssl::redhat}
     default: { fail "Unsupported operatingsystem ${::operatingsystem}" }
   }
 }

@@ -1,4 +1,4 @@
-define apache::auth::basic::file::webdav::user (
+define apache_c2c::auth::basic::file::webdav::user (
   $vhost,
   $ensure=present,
   $authname=false,
@@ -17,11 +17,11 @@ define apache::auth::basic::file::webdav::user (
 
   $fname = regsubst($name, '\s', '_', 'G')
 
-  $wwwroot = $apache::root
+  $wwwroot = $apache_c2c::root
   validate_absolute_path($wwwroot)
 
-  if !defined(Apache::Module['authn_file']) {
-    apache::module {'authn_file': }
+  if !defined(Apache_c2c::Module['authn_file']) {
+    apache_c2c::module {'authn_file': }
   }
 
   if $authUserFile {
