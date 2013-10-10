@@ -97,6 +97,14 @@
 #     sslonly => true,
 #   }
 
+define apache::vhost::ssl::validate_options {
+  validate_re(
+    $name,
+    '^[+-]?(StdEnvVars|ExportCertData|FakeBasicAuth|StrictRequire|OptRenegotiate)$',
+    'options must be one of StdEnvVars, ExportCertData, FakeBasicAuth, StrictRequire, OptRenegotiate'
+  )
+}
+
 define apache::vhost::ssl (
   $ensure=present,
   $config_file='',
@@ -139,6 +147,7 @@ define apache::vhost::ssl (
     )
   }
   validate_array($options)
+  apache::vhost::ssl::validate_options{$options:}
 
   # these 2 values are required to generate a valid SSL certificate.
   if (!$sslcert_country) { $sslcert_country = '??' }
