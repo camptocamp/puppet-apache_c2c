@@ -4,12 +4,12 @@
 #
 # It shouldn't be necessary to directly include this class.
 #
-class apache::base::ssl {
+class apache_c2c::base::ssl {
 
-  if ! $apache::ssl::disable_port443 {
+  if ! $apache_c2c::ssl::disable_port443 {
 
-    apache::listen { '443': ensure => present }
-    apache::namevhost { '*:443': ensure => present }
+    apache_c2c::listen { '443': ensure => present }
+    apache_c2c::namevhost { '*:443': ensure => present }
 
   }
 

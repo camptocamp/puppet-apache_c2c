@@ -1,6 +1,6 @@
-define apache::webdav::svn ($ensure, $vhost, $parentPath, $confname) {
+define apache_c2c::webdav::svn ($ensure, $vhost, $parentPath, $confname) {
 
-  $wwwroot = $apache::root
+  $wwwroot = $apache_c2c::root
   validate_absolute_path($wwwroot)
 
   $location = $name

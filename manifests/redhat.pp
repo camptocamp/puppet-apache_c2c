@@ -1,7 +1,7 @@
-class apache::redhat inherits apache::base {
+class apache_c2c::redhat inherits apache_c2c::base {
 
-  include apache::params
-  $wwwroot = $apache::root
+  include apache_c2c::params
+  $wwwroot = $apache_c2c::root
   validate_absolute_path($wwwroot)
 
   # BEGIN inheritance from apache::base
@@ -20,7 +20,7 @@ class apache::redhat inherits apache::base {
   }
 
   # the following variables are used in template logrotate-httpd.erb
-  $logrotate_paths = "${wwwroot}/*/logs/*.log ${apache::params::log}/*log"
+  $logrotate_paths = "${wwwroot}/*/logs/*.log ${apache_c2c::params::log}/*log"
   $httpd_pid_file = $::lsbmajdistrelease ? {
     /4|5/   => '/var/run/httpd.pid',
     default => '/var/run/httpd/httpd.pid',
@@ -34,7 +34,7 @@ class apache::redhat inherits apache::base {
   }
 
   File['default status module configuration'] {
-    path   => "${apache::params::conf}/conf.d/status.conf",
+    path   => "${apache_c2c::params::conf}/conf.d/status.conf",
     source => "puppet:///modules/${module_name}/etc/httpd/conf/status.conf",
   }
 
@@ -70,9 +70,9 @@ class apache::redhat inherits apache::base {
   }
 
   file { [
-      "${apache::params::conf}/sites-available",
-      "${apache::params::conf}/sites-enabled",
-      "${apache::params::conf}/mods-enabled"
+      "${apache_c2c::params::conf}/sites-available",
+      "${apache_c2c::params::conf}/sites-enabled",
+      "${apache_c2c::params::conf}/mods-enabled"
     ]:
     ensure  => directory,
     mode    => '0755',
@@ -82,7 +82,7 @@ class apache::redhat inherits apache::base {
     require => Package['apache'],
   }
 
-  file { "${apache::params::conf}/conf/httpd.conf":
+  file { "${apache_c2c::params::conf}/conf/httpd.conf":
     ensure  => present,
     content => template("${module_name}/httpd.conf.erb"),
     seltype => 'httpd_config_t',
@@ -98,7 +98,7 @@ class apache::redhat inherits apache::base {
     5 => "puppet:///modules/${module_name}/etc/httpd/mods-available/redhat5/",
     6 => "puppet:///modules/${module_name}/etc/httpd/mods-available/redhat6/",
   }
-  file { "${apache::params::conf}/mods-available":
+  file { "${apache_c2c::params::conf}/mods-available":
     ensure  => directory,
     source  => $source,
     recurse => true,
@@ -110,7 +110,7 @@ class apache::redhat inherits apache::base {
   }
 
   # this module is statically compiled on debian and must be enabled here
-  apache::module {'log_config':
+  apache_c2c::module {'log_config':
     ensure => present,
     notify => Exec['apache-graceful'],
   }
@@ -124,7 +124,7 @@ class apache::redhat inherits apache::base {
 
   # no idea why redhat choose to put this file there. apache fails if it's
   # present and mod_proxy isn't...
-  file { "${apache::params::conf}/conf.d/proxy_ajp.conf":
+  file { "${apache_c2c::params::conf}/conf.d/proxy_ajp.conf":
     ensure  => present,
     content => "# File managed by puppet
 #

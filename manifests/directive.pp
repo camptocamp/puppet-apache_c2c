@@ -14,11 +14,11 @@
 #
 # Requires:
 # - Class["apache"]
-# - matching Apache::Vhost[] instance
+# - matching Apache_c2c::Vhost[] instance
 #
 # Example usage:
 #
-#   apache::directive { "example 1":
+#   apache_c2c::directive { "example 1":
 #     ensure    => present,
 #     directive => "
 #       RewriteEngine on
@@ -27,32 +27,32 @@
 #     vhost     => "www.example.com",
 #   }
 #
-#   apache::directive { "example 2":
+#   apache_c2c::directive { "example 2":
 #     ensure    => present,
 #     directive => content("example/snippet.erb"),
 #     vhost     => "www.example.com",
 #   }
 #
-define apache::directive(
+define apache_c2c::directive(
   $vhost,
   $ensure    = 'present',
   $directive = '',
   $filename  = '',
 ) {
 
-  $wwwroot = $apache::root
+  $wwwroot = $apache_c2c::root
   validate_absolute_path($wwwroot)
 
   if ($ensure == 'present' and $directive == '') {
     fail 'empty "directive" parameter'
   }
 
-  apache::conf {$name:
+  apache_c2c::conf {$name:
     ensure        => $ensure,
     path          => "${wwwroot}/${vhost}/conf",
     prefix        => 'directive',
     filename      => $filename,
     configuration => $directive,
-    require       => Apache::Vhost[$vhost],
+    require       => Apache_c2c::Vhost[$vhost],
   }
 }

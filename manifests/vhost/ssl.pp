@@ -78,9 +78,9 @@
 #   $sslcert_locality="San Francisco"
 #   $sslcert_organisation="Snake Oil, Ltd."
 #
-#   include apache::ssl
+#   include apache_c2c::ssl
 #
-#   apache::vhost::ssl { "foo.example.com":
+#   apache_c2c::vhost::ssl { "foo.example.com":
 #     ensure => present,
 #     ip_address => "10.0.0.2",
 #     publish_csr => "/home/webmaster/foo.example.com.csr",
@@ -88,7 +88,7 @@
 #   }
 #
 #   # go to https://bar.example.com/bar.example.com.csr to retrieve the CSR.
-#   apache::vhost::ssl { "bar.example.com":
+#   apache_c2c::vhost::ssl { "bar.example.com":
 #     ensure => present,
 #     ip_address => "10.0.0.3",
 #     cert => "puppet:///modules/exampleproject/ssl-certs/bar.example.com.crt",
@@ -97,7 +97,7 @@
 #     sslonly => true,
 #   }
 
-define apache::vhost::ssl (
+define apache_c2c::vhost::ssl (
   $ensure=present,
   $config_file='',
   $config_content=false,
@@ -147,20 +147,20 @@ define apache::vhost::ssl (
   if ($certcn != false ) { $sslcert_commonname = $certcn }
   else { $sslcert_commonname = $name }
 
-  include apache::params
+  include apache_c2c::params
 
   $wwwuser = $user ? {
-    ''      => $apache::params::user,
+    ''      => $apache_c2c::params::user,
     default => $user,
   }
 
   $wwwgroup = $group ? {
-    ''      => $apache::params::group,
+    ''      => $apache_c2c::params::group,
     default => $group,
   }
 
   # used in ERB templates
-  $wwwroot = $apache::root
+  $wwwroot = $apache_c2c::root
   validate_absolute_path($wwwroot)
 
   $documentroot = $docroot ? {
@@ -209,7 +209,7 @@ define apache::vhost::ssl (
     false   => $_sslonly,
     default => $config_content,
   }
-  apache::vhost {$name:
+  apache_c2c::vhost {$name:
     ensure           => $ensure,
     config_file      => $config_file,
     config_content   => $_config_content,

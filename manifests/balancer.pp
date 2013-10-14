@@ -29,11 +29,11 @@
 #
 # Requires:
 # - Class["apache"]
-# - matching Apache::Vhost[] instance
+# - matching Apache_c2c::Vhost[] instance
 #
 # Example usage:
 #
-#   apache::balancer { "my balanced service":
+#   apache_c2c::balancer { "my balanced service":
 #     location   => "/mywebapp/",
 #     proto      => "ajp",
 #     members    => [
@@ -46,7 +46,7 @@
 #     vhost      => "www.example.com",
 #   }
 #
-define apache::balancer (
+define apache_c2c::balancer (
   $vhost,
   $ensure='present',
   $location='',
@@ -61,19 +61,19 @@ define apache::balancer (
   # normalise name
   $fname = regsubst($name, '\s', '_', 'G')
 
-  $wwwroot = $apache::root
+  $wwwroot = $apache_c2c::root
   validate_absolute_path($wwwroot)
 
   $balancer = "balancer://${fname}"
 
-  if !defined(Apache::Module['proxy']) {
-    apache::module {'proxy':
+  if !defined(Apache_c2c::Module['proxy']) {
+    apache_c2c::module {'proxy':
       ensure => $ensure,
     }
   }
 
-  if !defined(Apache::Module['proxy_balancer']) {
-    apache::module {'proxy_balancer':
+  if !defined(Apache_c2c::Module['proxy_balancer']) {
+    apache_c2c::module {'proxy_balancer':
       ensure => $ensure,
     }
   }
@@ -81,16 +81,16 @@ define apache::balancer (
   # ensure proxy modules are enabled
   case $proto {
     http: {
-      if !defined(Apache::Module['proxy_http']) {
-        apache::module {'proxy_http':
+      if !defined(Apache_c2c::Module['proxy_http']) {
+        apache_c2c::module {'proxy_http':
           ensure => $ensure,
         }
       }
     }
 
     ajp: {
-      if !defined(Apache::Module['proxy_ajp']) {
-        apache::module {'proxy_ajp':
+      if !defined(Apache_c2c::Module['proxy_ajp']) {
+        apache_c2c::module {'proxy_ajp':
           ensure => $ensure,
         }
       }
@@ -121,6 +121,6 @@ define apache::balancer (
     seltype => $seltype,
     path    => $path,
     notify  => Exec['apache-graceful'],
-    require => Apache::Vhost[$vhost],
+    require => Apache_c2c::Vhost[$vhost],
   }
 }
