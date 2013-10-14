@@ -1,0 +1,35 @@
+
+Your website is hosted in <%= wwwroot %>/<%= name %>/
+
+Information about the sub-directories you have access to:
+
+ - htdocs/
+   is where you put the files you are publishing on your website. The first
+   file presented to the visitors (eg: when they visit "http://<%= name %>/")
+   must be named "index.html". "index.php" also works for PHP websites.
+<% if cgipath -%>
+
+ - cgi-bin/
+   is where you put perl or shell scripts that will be executed when they are
+   accessed by visitors. The content of this directory is available at this
+   address: http://<%= name %>/cgi-bin/
+<% end -%>
+
+ - private/
+   in this directory you can store any data that needs to be accessible by the
+   web server but not published on the web. For example password files or user
+   sessions.
+
+ - logs/
+   in this directory you will find the full access and error logs for your
+   website.
+
+ - conf/
+   you can put apache configuration files in this directory. They will be
+   included within the <VirtualHost> section of your website. For more
+   details see http://httpd.apache.org/docs/
+
+ - ssl/
+   if you have https enabled, the SSL certificates of your website will be
+   located here.
+

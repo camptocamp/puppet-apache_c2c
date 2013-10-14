@@ -1,0 +1,1 @@
+LoadModule passenger_module modules/mod_passenger.so

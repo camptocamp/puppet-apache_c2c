@@ -1,0 +1,13 @@
+# file managed by puppet
+<VirtualHost<% [@ports].flatten.compact.each do |port| -%> <%= port %><% end -%>>
+  ServerName <%= @name %>
+
+<% [@aliases].flatten.compact.each do |serveralias| -%>
+  ServerAlias <%= serveralias %>
+<% end -%>
+
+  RewriteEngine On
+  RewriteRule /(.*) https://%{HTTP_HOST}:<%= [@sslports].flatten.compact[0].split(':').pop %>/$1 [R=302,NE]
+
+  ServerSignature Off
+</VirtualHost>

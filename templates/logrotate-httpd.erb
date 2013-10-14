@@ -1,0 +1,21 @@
+# file managed by puppet
+<%= logrotate_paths %> {
+    weekly
+    missingok
+    rotate 52
+    compress
+    delaycompress
+    notifempty
+    create 644 root adm
+    sharedscripts
+    prerotate
+        if [ <%= awstats_condition %> ]; then
+            <%= awstats_command %>
+        fi
+    endscript
+    postrotate
+        if [ -f <%= httpd_pid_file %> ]; then
+            <%= httpd_reload_cmd %>
+        fi
+    endscript
+}

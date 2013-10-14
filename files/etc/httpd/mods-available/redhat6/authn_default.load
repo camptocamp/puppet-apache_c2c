@@ -1,0 +1,1 @@
+LoadModule authn_default_module modules/mod_authn_default.so

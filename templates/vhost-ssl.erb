@@ -1,0 +1,45 @@
+# file managed by puppet
+<VirtualHost<% [@sslports].flatten.compact.each do |port| -%> <%= port %><% end -%>>
+  ServerName <%= @name %>
+
+<% [@aliases].flatten.compact.each do |serveralias| -%>
+  ServerAlias <%= serveralias %>
+<% end -%>
+
+  DocumentRoot <%= @documentroot %>
+
+  LogLevel warn
+
+  ErrorLog <%= @wwwroot %>/<%= @name %>/logs/error.log
+  CustomLog <%= @wwwroot %>/<%= @name %>/logs/access.log combined
+
+  Include <%= @wwwroot %>/<%= @name%>/conf/*.conf
+
+  SSLEngine On
+  SSLCertificateFile <%= @certfile %>
+  SSLCertificateKeyFile <%= @certkeyfile %>
+  SSLCACertificateFile <%= @cacertfile %>
+<% if @cacrlfile -%>
+  SSLCARevocationFile <%= @cacrlfile %>
+<% end -%>
+<% if @certchainfile -%>
+  SSLCertificateChainFile <%= @certchainfile %>
+<% end -%>
+<% if @verifyclient -%>
+  SSLVerifyClient <%= @verifyclient %>
+<% end -%>
+<% unless @options.empty? -%>
+  SSLOptions <%= @options.join(' ') %>
+<% end -%>
+
+<% if @cgipath -%>
+  ScriptAlias /cgi-bin/ <%= @cgipath %>
+  <Directory <%= @cgipath %>>
+    Options +ExecCGI
+    AddHandler cgi-script .cgi
+  </Directory>
+<% end -%>
+
+  ServerSignature Off
+
+</VirtualHost>

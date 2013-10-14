@@ -1,0 +1,1 @@
+LoadModule proxy_balancer_module modules/mod_proxy_balancer.so

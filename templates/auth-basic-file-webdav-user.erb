@@ -1,0 +1,25 @@
+# file managed by puppet
+<Location /<%= name %>>
+  AuthName <%= _authname %>
+  AuthType Basic
+  AuthBasicProvider file
+  AuthUserFile <%= _authUserFile %>
+  require <%= _users %>
+<% if ro_users != '' -%>
+  <Limit <%= limits %>>
+    require user <%= ro_users %>
+  </Limit>
+<% end -%>
+<% if allow_anonymous -%>
+  <Limit GET OPTIONS PROPFIND>
+<% unless restricted_access.empty? -%>
+    Order deny,allow
+    Deny from all
+<% restricted_access.each do |access| -%>
+    Allow from <%= access %>
+<% end -%>
+<% end -%>
+    Satisfy Any
+  </Limit>
+<% end -%>
+</Location>

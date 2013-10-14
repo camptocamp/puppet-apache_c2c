@@ -1,0 +1,61 @@
+#!/bin/bash
+# file managed by puppet
+
+ROOT="/etc/httpd"
+SCRIPT=$(basename $0)
+
+if [ $# -ne 1 ]; then
+  echo "usage: $0 site|module"
+  exit 1
+fi
+
+if $(echo $SCRIPT | egrep -q  ".*mod$"); then
+  BASE='mods'
+  EXT='.load'
+else
+  BASE='sites'
+  EXT=''
+fi
+
+NAME=$1
+if [ $BASE == 'sites' ] && [ $NAME == 'default' ]; then
+  SYMLINK="000-${NAME}"
+else
+  SYMLINK=$NAME
+fi
+
+case $SCRIPT in
+
+  a2ensite|a2enmod)
+    if [ ! -f ${ROOT}/${BASE}-available/${NAME}${EXT} ]; then
+      echo "$1 doesn't exist, can't enable."
+      exit 1
+    elif [ -L ${ROOT}/${BASE}-enabled/${SYMLINK}${EXT} ] \
+      && [ ${ROOT}/${BASE}-enabled/${SYMLINK}${EXT} -ef ${ROOT}/${BASE}-available/${NAME}${EXT} ]; then
+      echo "$1 already enabled."
+      exit 0
+    else
+      ln -sf ${ROOT}/${BASE}-available/${NAME}${EXT} ${ROOT}/${BASE}-enabled/${SYMLINK}${EXT} || (echo "problem enabling $1" && exit 1)
+      echo "enabled $1. Please run 'apachectl graceful'."
+      exit 0
+    fi
+
+  ;;
+
+  a2dissite|a2dismod)
+    if [ ! -L ${ROOT}/${BASE}-enabled/${SYMLINK}${EXT} ]; then
+      echo "$1 doesn't exist, won't disable."
+      exit 0
+    else
+      rm -f ${ROOT}/${BASE}-enabled/${SYMLINK}${EXT} || (echo "problem disabling $1" && exit 1)
+      echo "disabled $1. Please run 'apachectl graceful'."
+      exit 0
+    fi
+  ;;
+
+  *)
+    echo "usage: a2ensite|a2dissite|a2enmod|a2dismod site|module"
+    exit 1
+  ;;
+
+esac

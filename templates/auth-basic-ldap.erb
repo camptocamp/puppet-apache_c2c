@@ -1,0 +1,41 @@
+# file managed by puppet
+
+<Location <%= @location %>>
+  AuthName "<%= @_authname %>"
+  AuthType Basic
+  AuthBasicProvider ldap
+<% if @authLDAPBindDN -%>
+  AuthLDAPBindDN <%= @authLDAPBindDN %>
+<% end -%>
+<% if @authLDAPBindPassword -%>
+  AuthLDAPBindPassword <%= @authLDAPBindPassword %>
+<% end -%>
+<% if @authLDAPCharsetConfig -%>
+  AuthLDAPCharsetConfig <%= @authLDAPCharsetConfig %>
+<% end -%>
+<% if @authLDAPCompareDNOnServer -%>
+  AuthLDAPCompareDNOnServer <%= @authLDAPCompareDNOnServer %>
+<% end -%>
+<% if @authLDAPDereferenceAliases -%>
+  AuthLDAPGroupAttribute <%= @authLDAPGroupAttribute %>
+<% end -%>
+<% if @authLDAPGroupAttribute -%>
+  AuthLDAPGroupAttribute <%= @authLDAPGroupAttribute %>
+<% end -%>
+<% if @authLDAPGroupAttributeIsDN -%>
+  AuthLDAPGroupAttributeIsDN <%= @authLDAPGroupAttributeIsDN %>
+<% end -%>
+<% if @authLDAPRemoteUserAttribute -%>
+  AuthLDAPRemoteUserAttribute <%= @authLDAPRemoteUserAttribute %>
+<% end -%>
+<% if @authLDAPRemoteUserIsDN -%>
+  AuthLDAPRemoteUserIsDN <%= @authLDAPRemoteUserIsDN %>
+<% end -%>
+<% if @authzLDAPAuthoritative -%>
+  AuthzLDAPAuthoritative <%= @authzLDAPAuthoritative %>
+<% end -%>
+  AuthLDAPUrl "<%= @authLDAPUrl %>"
+<% [@authzRequire].flatten.compact.each do |require| -%>
+  Require <%= require %>
+<% end -%>
+</Location>

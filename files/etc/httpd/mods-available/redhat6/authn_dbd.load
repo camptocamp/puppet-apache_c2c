@@ -1,0 +1,1 @@
+LoadModule authn_dbd_module modules/mod_authn_dbd.so
