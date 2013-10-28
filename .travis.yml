@@ -8,7 +8,7 @@ env:
 install:
 #  - gem install bundler
 #  - bundle update
-   - /bin/echo "TESTS DEACTIVATED"
+   - /bin/echo "TESTS DEACTIVATED - MODULE TO BE OBSOLETED"
 matrix:
   exclude:
     - rvm: 1.9.2
