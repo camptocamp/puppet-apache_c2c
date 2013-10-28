@@ -6,8 +6,9 @@ env:
   - PUPPET_VERSION=2.6.17
   - PUPPET_VERSION=2.7.18
 install:
-  - gem install bundler
-  - bundle update
+#  - gem install bundler
+#  - bundle update
+   - /bin/echo "TESTS DEACTIVATED"
 matrix:
   exclude:
     - rvm: 1.9.2
