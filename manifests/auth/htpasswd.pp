@@ -36,7 +36,7 @@ define apache_c2c::auth::htpasswd (
 
       if $cryptPassword {
         exec {"test -f ${_authUserFile} || OPT='-c'; htpasswd -bp \${OPT} ${_authUserFile} ${username} '${cryptPassword}'":
-          unless  => "grep -q ${username}:${cryptPassword} ${_authUserFile}",
+          unless  => "grep -q '${username}:${cryptPassword}' ${_authUserFile}",
           require => File[$_userFileLocation],
         }
       }
