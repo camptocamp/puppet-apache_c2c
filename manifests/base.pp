@@ -10,8 +10,6 @@ class apache_c2c::base {
   $wwwroot = $apache_c2c::root
   validate_absolute_path($wwwroot)
 
-  include concat::setup
-
   $access_log = $apache_c2c::params::access_log
   $error_log  = $apache_c2c::params::error_log
 
