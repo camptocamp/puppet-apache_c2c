@@ -22,7 +22,7 @@ class apache_c2c::administration (
   $sudo_user_alias = flatten([$sudo_group, $sudo_user])
   $sudo_cmnd = "/etc/init.d/${wwwpkgname}, /bin/su ${wwwuser}, /bin/su - ${wwwuser}, ${distro_specific_apache_sudo}"
 
-  sudo::directive { 'apache-administration':
+  sudo::conf { 'apache-administration':
     ensure  => present,
     content => template("${module_name}/sudoers.apache.erb"),
     require => Group['apache-admin'],

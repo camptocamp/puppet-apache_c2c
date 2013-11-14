@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'apache::administration' do
-  let(:pre_condition) { "define sudo::directive($ensure, $content) {}" }
+  let(:pre_condition) { "define sudo::conf($ensure, $content) {}" }
 
   OSES.each do |os|
     describe "When on #{os}" do
