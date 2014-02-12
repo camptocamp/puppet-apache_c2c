@@ -45,10 +45,6 @@
 #   This is the file passed to the SSLCARevocationFile directive.
 # - *$certchain*: optional source URL of the CA certificate chain, if needed.
 #   This the certificate passed to the SSLCertificateChainFile directive.
-# - *$certcn*: set a custom CN field in your SSL certificate. Note that
-#   the CN field must match the FQDN of your virtualhost to avoid "certificate
-#   name mismatch" errors in the users browsers. Defaults to false, which means
-#   that $name will be used as the CN.
 # - *$verifyclient*: set the Certificate verification level for the Client
 #   Authentication. Must be one of 'none', 'optional', 'require' or
 #   'optional_no_ca'.
@@ -67,6 +63,17 @@
 # - *sslports*: array specifying the ports on which the SSL vhost will be
 #   reachable. Defaults to "*:443".
 # - *accesslog_format*: format string for access logs. Defaults to "combined".
+# - *$sslcert_commonname*: set a custom CN field in your SSL certificate. Note that
+#   the CN field must match the FQDN of your virtualhost to avoid "certificate
+#   name mismatch" errors in the users browsers. Defaults to $name.
+# - *$sslcert_country*: set the countryName field in your SSL certificate. Defaults
+#   to '??'.
+# - *$sslcert_state*: set the stateOrProvinceName field in your SSL certificate.
+# - *$sslcert_locality*: set the localityName field in your SSL certificate.
+# - *$sslcert_organization*: set the organizationName field in your SSL certificate.
+#    Defaults to 'undefined organisation'.
+# - *$sslcert_unit*: set the organizationalUnitName field in your SSL certificate.
+# - *$sslcert_email*: set the emailAddress field in your SSL certificate.
 #
 # Requires:
 # - Class["apache-ssl"]
@@ -119,7 +126,6 @@ define apache_c2c::vhost::ssl (
   $cacert=false,
   $cacrl=false,
   $certchain=false,
-  $certcn=false,
   $verifyclient=undef,
   $options=[],
   $days='3650',
@@ -127,7 +133,14 @@ define apache_c2c::vhost::ssl (
   $sslonly=true,
   $ports=['*:80'],
   $sslports=['*:443'],
-  $accesslog_format='combined'
+  $accesslog_format='combined',
+  $sslcert_commonname=$name,
+  $sslcert_country='??',
+  $sslcert_state=undef,
+  $sslcert_locality=undef,
+  $sslcert_organization='undefined organisation',
+  $sslcert_unit=undef,
+  $sslcert_email=undef,
 ) {
 
   # Validate parameters
@@ -139,13 +152,6 @@ define apache_c2c::vhost::ssl (
     )
   }
   validate_array($options)
-
-  # these 2 values are required to generate a valid SSL certificate.
-  if (!$sslcert_country) { $sslcert_country = '??' }
-  if (!$sslcert_organisation) {$sslcert_organisation = 'undefined organisation'}
-
-  if ($certcn != false ) { $sslcert_commonname = $certcn }
-  else { $sslcert_commonname = $name }
 
   include apache_c2c::params
 

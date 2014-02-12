@@ -11,28 +11,28 @@ default_md              = sha1
 default_keyfile         = privkey.pem
 distinguished_name      = req_distinguished_name
 prompt                  = no
-<% unless aliases.empty? -%>
+<% unless @aliases.empty? -%>
 req_extensions          = req_ext
 <% end -%>
 
 [ req_distinguished_name ]
-countryName                     = <%= sslcert_country %>
-<% if has_variable?("sslcert_state") -%>
-stateOrProvinceName             = <%= sslcert_state %>
+countryName                     = <%= @sslcert_country %>
+<% unless @sslcert_state.nil? -%>
+stateOrProvinceName             = <%= @sslcert_state %>
 <% end -%>
-<% if has_variable?("sslcert_locality") -%>
-localityName                    = <%= sslcert_locality %>
+<% unless @sslcert_locality.nil? -%>
+localityName                    = <%= @sslcert_locality %>
 <% end -%>
-organizationName                = <%= sslcert_organisation %>
-<% if has_variable?("sslcert_unit") -%>
-organizationalUnitName          = <%= sslcert_unit %>
+organizationName                = <%= @sslcert_organization %>
+<% unless @sslcert_unit.nil? -%>
+organizationalUnitName          = <%= @sslcert_unit %>
 <% end -%>
-commonName                      = <%= sslcert_commonname %>
-<% if has_variable?("sslcert_email") -%>
-emailAddress                    = <%= sslcert_email %>
+commonName                      = <%= @sslcert_commonname %>
+<% unless @sslcert_email.nil? -%>
+emailAddress                    = <%= @sslcert_email %>
 <% end -%>
 
-<% unless aliases.empty? -%>
+<% unless @aliases.empty? -%>
 [ req_ext ]
-subjectAltName = "<%= aliases.collect! {|i| "DNS: #{i}" }.join(', ') -%>"
+subjectAltName = "<%= [@aliases].flatten.collect {|i| "DNS: #{i}" }.join(', ') -%>"
 <% end %>
