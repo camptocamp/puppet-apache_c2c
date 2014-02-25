@@ -21,7 +21,7 @@
 # [*sslcert_locality*]
 #   Content of the "localityName" field in generated certificates.
 #
-# [*sslcert_organisation*]
+# [*sslcert_organization*]
 #   Content of the "organizationName" field in generated certificates. Setting
 #   this field is mandatory.
 #

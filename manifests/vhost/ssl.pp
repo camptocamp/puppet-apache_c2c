@@ -83,7 +83,7 @@
 #   $sslcert_country="US"
 #   $sslcert_state="CA"
 #   $sslcert_locality="San Francisco"
-#   $sslcert_organisation="Snake Oil, Ltd."
+#   $sslcert_organization="Snake Oil, Ltd."
 #
 #   include apache_c2c::ssl
 #
