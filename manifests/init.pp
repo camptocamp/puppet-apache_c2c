@@ -32,6 +32,7 @@ class apache_c2c (
   $service_ensure  = 'running',
   $service_enable  = true,
   $disable_port80  = false,
+  $default_vhost   = true,
 ) inherits ::apache_c2c::params {
 
   validate_absolute_path ($root)
