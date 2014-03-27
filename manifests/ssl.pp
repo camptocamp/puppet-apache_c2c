@@ -76,6 +76,7 @@ class apache_c2c::ssl (
     service_ensure => $service_ensure,
     service_enable => $service_enable,
     disable_port80 => $disable_port80,
+    default_vhost  => $default_vhost,
   }
 
   case $::operatingsystem {

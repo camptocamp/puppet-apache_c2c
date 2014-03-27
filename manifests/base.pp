@@ -119,7 +119,7 @@ class apache_c2c::base {
   }
 
   # TODO: remove unscopped variable $apache_disable_default_vhost
-  if $apache_disable_default_vhost or ! ($::apache_c2c::default_vhost and $::apache_c2c::ssl::default_vhost) {
+  if $apache_disable_default_vhost or ! ($::apache_c2c::default_vhost or $::apache_c2c::ssl::default_vhost) {
 
     file { "${apache_c2c::params::conf}/sites-enabled/000-default-vhost":
       ensure => absent,
