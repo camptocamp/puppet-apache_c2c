@@ -5,12 +5,9 @@ class apache_c2c::params {
     Debian => 'apache2',
   }
 
-  $root = $apache_root ? {
-    '' => $::osfamily ? {
-      RedHat => '/var/www/vhosts',
-      Debian => '/var/www',
-    },
-    default => $apache_root
+  $root = $::osfamily ? {
+    RedHat => '/var/www/vhosts',
+    Debian => '/var/www',
   }
 
   $user = $::osfamily ? {
