@@ -1,54 +1,51 @@
 class apache_c2c::params {
 
-  $pkg = $::operatingsystem ? {
-    /RedHat|CentOS/ => 'httpd',
-    /Debian|Ubuntu/ => 'apache2',
+  $pkg = $::osfamily ? {
+    RedHat => 'httpd',
+    Debian => 'apache2',
   }
 
   $root = $apache_root ? {
-    '' => $::operatingsystem ? {
-      /RedHat|CentOS/ => '/var/www/vhosts',
-      /Debian|Ubuntu/ => '/var/www',
+    '' => $::osfamily ? {
+      RedHat => '/var/www/vhosts',
+      Debian => '/var/www',
     },
     default => $apache_root
   }
 
-  $user = $::operatingsystem ? {
-    /RedHat|CentOS/ => 'apache',
-    /Debian|Ubuntu/ => 'www-data',
+  $user = $::osfamily ? {
+    RedHat => 'apache',
+    Debian => 'www-data',
   }
 
-  $group = $::operatingsystem ? {
-    /RedHat|CentOS/ => 'apache',
-    /Debian|Ubuntu/ => 'www-data',
+  $group = $::osfamily ? {
+    RedHat => 'apache',
+    Debian => 'www-data',
   }
 
-  $conf = $::operatingsystem ? {
-    /RedHat|CentOS/ => '/etc/httpd',
-    /Debian|Ubuntu/ => '/etc/apache2',
+  $conf = $::osfamily ? {
+    RedHat => '/etc/httpd',
+    Debian => '/etc/apache2',
   }
 
-  $log = $::operatingsystem ? {
-    /RedHat|CentOS/ => '/var/log/httpd',
-    /Debian|Ubuntu/ => '/var/log/apache2',
+  $log = $::osfamily ? {
+    RedHat => '/var/log/httpd',
+    Debian => '/var/log/apache2',
   }
 
-  $access_log = $::operatingsystem ? {
-    /RedHat|CentOS/ => "${log}/access_log",
-    /Debian|Ubuntu/ => "${log}/access.log",
+  $access_log = $::osfamily ? {
+    RedHat => "${log}/access_log",
+    Debian => "${log}/access.log",
   }
 
-  $a2ensite = $::operatingsystem ? {
-    /RedHat|CentOS/ => '/usr/local/sbin/a2ensite',
-    /Debian|Ubuntu/ => '/usr/sbin/a2ensite',
+  $a2ensite = $::osfamily ? {
+    RedHat => '/usr/local/sbin/a2ensite',
+    Debian => '/usr/sbin/a2ensite',
   }
 
-
-
-
-  $error_log = $::operatingsystem ? {
-    /RedHat|CentOS/ => "${log}/error_log",
-    /Debian|Ubuntu/ => "${log}/error.log",
+  $error_log = $::osfamily ? {
+    RedHat => "${log}/error_log",
+    Debian => "${log}/error.log",
   }
 
 }
