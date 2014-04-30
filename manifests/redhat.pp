@@ -56,12 +56,7 @@ class apache_c2c::redhat inherits apache_c2c::base {
     source => "puppet:///modules/${module_name}/usr/local/sbin/a2X.redhat",
   }
 
-  $httpd_mpm = $apache_mpm_type ? {
-    ''         => 'httpd', # default MPM
-    'pre-fork' => 'httpd',
-    'prefork'  => 'httpd',
-    default    => "httpd.${apache_mpm_type}",
-  }
+  $httpd_mpm = 'httpd'
 
   augeas { "select httpd mpm ${httpd_mpm}":
     changes => "set /files/etc/sysconfig/httpd/HTTPD /usr/sbin/${httpd_mpm}",

@@ -27,10 +27,7 @@ class apache_c2c::debian inherits apache_c2c::base {
   }
   # END inheritance from apache::base
 
-  $mpm_package = $apache_mpm_type ? {
-    ''      => 'apache2-mpm-prefork',
-    default => "apache2-mpm-${apache_mpm_type}",
-  }
+  $mpm_package = 'apache2-mpm-prefork'
 
   package { $mpm_package:
     ensure  => installed,
