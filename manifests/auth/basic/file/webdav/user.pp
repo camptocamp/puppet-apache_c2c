@@ -2,7 +2,7 @@ define apache_c2c::auth::basic::file::webdav::user (
   $vhost,
   $ensure=present,
   $authname=false,
-  $location='/',
+  $location="/${name}",
   $authUserFile=false,
   $rw_users='valid-user',
   $limits='GET HEAD OPTIONS PROPFIND',
