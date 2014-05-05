@@ -116,7 +116,7 @@ define apache_c2c::vhost::ssl (
   $docroot=false,
   $cgibin=true,
   $user='',
-  $admin=$admin,
+  $admin=undef,
   $group='',
   $mode=2570,
   $aliases=[],
