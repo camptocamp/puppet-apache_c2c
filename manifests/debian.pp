@@ -7,7 +7,6 @@ class apache_c2c::debian inherits apache_c2c::base {
   # BEGIN inheritance from apache::base
   Exec['apache-graceful'] {
     command => 'apache2ctl graceful',
-    onlyif => 'apache2ctl configtest',
   }
 
   # the following variables are used in template logrotate-httpd.erb

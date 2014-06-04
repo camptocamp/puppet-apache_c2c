@@ -7,7 +7,6 @@ class apache_c2c::redhat inherits apache_c2c::base {
   # BEGIN inheritance from apache::base
   Exec['apache-graceful'] {
     command => 'apachectl graceful',
-    onlyif  => 'apachectl configtest',
   }
 
   Package['apache'] {
