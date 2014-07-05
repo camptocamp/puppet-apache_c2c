@@ -1,15 +1,16 @@
 require 'spec_helper'
 
-describe 'apache::deflate' do
+describe 'apache_c2c::deflate' do
   OSES.each do |os|
     describe "When on #{os}" do
       let(:facts) { {
         :operatingsystem => os,
+        :osfamily        => os,
       } }
 
-      it { should include_class('apache::params') }
+      it { should contain_class('apache_c2c::params') }
 
-      it { should contain_apache__module('deflate').with_ensure('present') }
+      it { should contain_apache_c2c__module('deflate').with_ensure('present') }
 
       it do should contain_file('deflate.conf').with(
         'ensure'  => 'present',

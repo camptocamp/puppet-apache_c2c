@@ -1,36 +1,20 @@
 require 'spec_helper'
 
-describe 'apache::ssl' do
-  let(:pre_condition) { "
-class concat::setup {}
-define concat() {}
-define concat::fragment($ensure='present', $target, $content) {}
-  " }
-
+describe 'apache_c2c::ssl' do
   OSES.each do |os|
     describe "When on #{os}" do
       let(:facts) { {
-        :operatingsystem   => os,
+        :concat_basedir    => '/foo',
         :lsbmajdistrelease => '5',
+        :operatingsystem   => os,
+        :osfamily          => os,
       } }
 
       if ['Debian', 'Ubuntu'].include? os
-        it { should include_class('apache::ssl::debian') }
+        it { should contain_class('apache_c2c::ssl::debian') }
       elsif ['RedHat', 'CentOS'].include? os
-        it { should include_class('apache::ssl::redhat') }
+        it { should contain_class('apache_c2c::ssl::redhat') }
       end
-    end
-  end
-
-  describe 'When on unknown OS' do
-    let(:facts) { {
-      :operatingsystem => 'Fedora',
-    } }
-
-    it do
-      expect {
-        should include_class('apache::ssl::debian')
-      }.to raise_error(Puppet::Error, /Unsupported operatingsystem Fedora/)
     end
   end
 end

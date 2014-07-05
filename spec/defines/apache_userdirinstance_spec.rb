@@ -1,11 +1,15 @@
 require 'spec_helper'
 
-describe 'apache::userdirinstance' do
+describe 'apache_c2c::userdirinstance' do
   let(:title) { 'foo' }
+  let(:pre_condition) { 'include ::apache_c2c' }
   OSES.each do |os|
     describe "When on #{os}" do
       let(:facts) { {
-        :operatingsystem => os,
+        :concat_basedir    => '/foo',
+        :lsbmajdistrelease => '6',
+        :operatingsystem   => os,
+        :osfamily          => os,
       } }
 
       describe 'using example vhost' do
@@ -15,7 +19,7 @@ describe 'apache::userdirinstance' do
 
         it { should contain_file("#{VARS[os]['root']}/www.example.com/conf/userdir.conf").with(
           :ensure  => 'present',
-          :source  => 'puppet:///modules/apache/userdir.conf',
+          :source  => 'puppet:///modules/apache_c2c/userdir.conf',
           :seltype => VARS[os]['conf_seltype']
         ) }
       end

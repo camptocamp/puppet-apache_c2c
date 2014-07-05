@@ -1,20 +1,17 @@
 require 'spec_helper'
 
-describe 'apache::namevhost' do
-  let(:pre_condition) { "
-class concat::setup {}
-define concat() {}
-define concat::fragment($ensure='present', $target, $content) {}
-  " }
+describe 'apache_c2c::namevhost' do
   let(:title) { '*:80' }
 
   OSES.each do |os|
     describe "When on #{os}" do
       let(:facts) { {
+        :concat_basedir  => '/foo',
         :operatingsystem => os,
+        :osfamily        => os,
       } }
 
-      it { should include_class('apache::params') }
+      it { should contain_class('apache_c2c::params') }
 
       ['present', 'absent'].each do |e|
         describe "ensuring #{e}" do

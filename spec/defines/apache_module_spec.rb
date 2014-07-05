@@ -1,11 +1,12 @@
 require 'spec_helper'
 
-describe 'apache::module' do
+describe 'apache_c2c::module' do
   let(:title) { 'deflate' }
   OSES.each do |os|
     describe "When on #{os}" do
       let (:facts) { {
         :operatingsystem => os,
+        :osfamily        => os,
       } }
 
       describe 'ensuring presence' do
@@ -13,15 +14,16 @@ describe 'apache::module' do
           :ensure => 'present',
         } }
 
-        it { should include_class('apache::params') }
+        it { should contain_class('apache_c2c::params') }
 
         describe "using selinux" do
           let (:facts) { {
             :operatingsystem => os,
+            :osfamily        => os,
             :selinux         => 'true',
           } }
 
-          it { should contain_apache__redhat__selinux('deflate') }
+          it { should contain_apache_c2c__redhat__selinux('deflate') }
 
           it do should contain_exec('a2enmod deflate').with(
             'command' => "#{VARS[os]['a2enmod']} deflate"
@@ -34,9 +36,9 @@ describe 'apache::module' do
           :ensure => 'absent',
         } }
 
-        it { should include_class('apache::params') }
+        it { should contain_class('apache_c2c::params') }
 
-        it { should_not contain_apache__redhat__selinux('deflate') }
+        it { should_not contain_apache_c2c__redhat__selinux('deflate') }
 
         it do should contain_exec('a2dismod deflate').with(
           'command' => "#{VARS[os]['a2dismod']} deflate"

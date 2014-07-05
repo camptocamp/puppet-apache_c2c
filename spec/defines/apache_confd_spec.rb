@@ -1,12 +1,14 @@
 require 'spec_helper'
 
-describe 'apache::confd' do
+describe 'apache_c2c::confd' do
   let(:title) { 'example 1' }
 
   OSES.each do |os|
     describe "When on #{os}" do
       let(:facts) { {
-        :operatingsystem => os
+        :concat_basedir  => '/foo',
+        :operatingsystem => os,
+        :osfamily        => os,
       } }
 
       describe 'using example usage' do
@@ -15,9 +17,9 @@ describe 'apache::confd' do
           :configuration => 'WSGIPythonEggs /var/cache/python-eggs'
         } }
 
-        it { should include_class('apache::params') }
+        it { should contain_class('apache_c2c::params') }
 
-        it do should contain_apache__conf('example 1').with(
+        it do should contain_apache_c2c__conf('example 1').with(
           'ensure'        => 'present',
           'path'          => "#{VARS[os]['conf']}/conf.d",
           'filename'      => '',
@@ -31,9 +33,9 @@ describe 'apache::confd' do
           :configuration => 'WSGIPythonEggs /var/cache/python-eggs'
         } }
 
-        it { should include_class('apache::params') }
+        it { should contain_class('apache_c2c::params') }
 
-        it do should contain_apache__conf('example 1').with(
+        it do should contain_apache_c2c__conf('example 1').with(
           'ensure'        => 'absent',
           'path'          => "#{VARS[os]['conf']}/conf.d",
           'filename'      => '',

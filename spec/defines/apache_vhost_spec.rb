@@ -1,15 +1,19 @@
 require 'spec_helper'
 
-describe 'apache::vhost' do
+describe 'apache_c2c::vhost' do
   vhost = 'www.example.com'
   let(:title) { vhost }
   OSES.each do |os|
     describe "When on #{os}" do
+      let(:pre_condition) { 'include ::apache_c2c' }
       let(:facts) { {
-        :operatingsystem => os,
+        :concat_basedir    => '/foo',
+        :lsbmajdistrelease => '6',
+        :operatingsystem   => os,
+        :osfamily          => os,
       } }
 
-      it { should include_class('apache::params') }
+      it { should contain_class('apache_c2c::params') }
 
       describe 'ensuring present with defaults' do
         it { should contain_file("#{VARS[os]['conf']}/sites-available/#{vhost}").with(
