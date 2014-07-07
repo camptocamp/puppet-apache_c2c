@@ -1,21 +1,19 @@
 require 'spec_helper'
 
-describe 'apache::debian' do
-  let(:pre_condition) { "
-class concat::setup {}
-define concat() {}
-define concat::fragment($ensure='present', $target, $content) {}
-  " }
+describe 'apache_c2c::debian' do
+  let(:pre_condition) { "include ::apache_c2c" }
 
   let(:node) { "myhost.com" }
 
-  ['Debian', 'Ubuntu'].each do |os|
+  ['Debian'].each do |os|
     describe "When on #{os}" do
       let (:facts) { {
+        :concat_basedir  => '/foo',
         :operatingsystem => os,
+        :osfamily        => os,
       } }
 
-      it { should include_class('apache::params') }
+      it { should contain_class('apache_c2c::params') }
 
       describe 'using default values' do
         it { should contain_package('apache2-mpm-prefork').with_ensure('installed') }

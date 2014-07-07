@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'apache::dev' do
+describe 'apache_c2c::dev' do
   OSES.each do |os|
     describe "When on #{os}" do
       let(:facts) { {

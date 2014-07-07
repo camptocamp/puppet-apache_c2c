@@ -1,11 +1,15 @@
 require 'spec_helper'
 
-describe 'apache::proxypass' do
+describe 'apache_c2c::proxypass' do
   let(:title) { 'proxy legacy dir to legacy server' }
+  let(:pre_condition) { 'include ::apache_c2c' }
   OSES.each do |os|
     describe "When on #{os}" do
       let(:facts) { {
-        :operatingsystem => os,
+        :concat_basedir    => '/foo',
+        :lsbmajdistrelease => '6',
+        :operatingsystem   => os,
+        :osfamily          => os,
       } }
 
       describe 'using example usage' do
@@ -17,10 +21,10 @@ describe 'apache::proxypass' do
           :vhost    => 'www.example.com',
         } }
 
-        it { should include_class('apache::params') }
+        it { should contain_class('apache_c2c::params') }
 
-        it { should contain_apache__module('proxy').with_ensure('present') }
-        it { should contain_apache__module('proxy_http').with_ensure('present') }
+        it { should contain_apache_c2c__module('proxy').with_ensure('present') }
+        it { should contain_apache_c2c__module('proxy_http').with_ensure('present') }
 
         it { should contain_file('proxy legacy dir to legacy server proxypass on www.example.com').with(
           'ensure'  => 'present',
@@ -35,10 +39,10 @@ describe 'apache::proxypass' do
           :vhost  => 'www.example.com',
         } }
 
-        it { should include_class('apache::params') }
+        it { should contain_class('apache_c2c::params') }
 
-        it { should contain_apache__module('proxy').with_ensure('absent') }
-        it { should contain_apache__module('proxy_http').with_ensure('absent') }
+        it { should contain_apache_c2c__module('proxy') }
+        it { should contain_apache_c2c__module('proxy_http') }
         it { should contain_file('proxy legacy dir to legacy server proxypass on www.example.com').with_ensure('absent') }
       end
 
@@ -49,8 +53,8 @@ describe 'apache::proxypass' do
 
         it do
           expect {
-            should include_class('apache::params')
-          }.to raise_error(Puppet::Error, /Must pass vhost to Apache::Proxypass\[proxy legacy dir to legacy server\]/)
+            should contain_class('apache_c2c::params')
+          }.to raise_error(Puppet::Error, /Must pass vhost to Apache_c2c::Proxypass\[proxy legacy dir to legacy server\]/)
         end
       end
     end

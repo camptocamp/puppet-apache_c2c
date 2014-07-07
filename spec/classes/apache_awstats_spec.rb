@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'apache::awstats' do
+describe 'apache_c2c::awstats' do
   OSES.each do |os|
     describe "When on #{os}" do
       let(:facts) { {
@@ -11,7 +11,7 @@ describe 'apache::awstats' do
 
       it do should contain_file('/etc/awstats').with(
         'ensure'  => 'directory',
-        'source'  => 'puppet:///modules/apache/etc/awstats',
+        'source'  => 'puppet:///modules/apache_c2c/etc/awstats',
         'mode'    => '0755',
         'purge'   => 'true',
         'recurse' => 'true',

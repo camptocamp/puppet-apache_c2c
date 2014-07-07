@@ -1,20 +1,17 @@
 require 'spec_helper'
 
-describe 'apache::listen' do
+describe 'apache_c2c::listen' do
   let(:title) { '80' }
-  let(:pre_condition) { "
-class concat::setup {}
-define concat() {}
-define concat::fragment($ensure='present', $target, $content) {}
-  " }
 
   OSES.each do |os|
     describe "When on #{os}" do
       let(:facts) { {
+        :concat_basedir  => '/foo',
         :operatingsystem => os,
+        :osfamily        => os,
       } }
 
-      it { should include_class('apache::params') }
+      it { should contain_class('apache_c2c::params') }
 
       it do should contain_concat__fragment('apache-ports.conf-80').with(
         'ensure'  => 'present',

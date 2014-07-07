@@ -1,23 +1,27 @@
 require 'spec_helper'
 
-describe 'apache::balancer' do
+describe 'apache_c2c::balancer' do
   let(:title) { 'my balanced service' }
+  let(:pre_condition) { 'include ::apache_c2c' }
 
   OSES.each do |os|
     describe "When on #{os}" do
       let(:facts) { {
-        :operatingsystem => os,
+        :concat_basedir    => '/foo',
+        :lsbmajdistrelease => '6',
+        :operatingsystem   => os,
+        :osfamily          => os,
       } }
 
       let(:params) { {
         :vhost => 'default.org',
       } }
 
-      it { should contain_apache__module('proxy') }
-      it { should contain_apache__module('proxy_balancer') }
+      it { should contain_apache_c2c__module('proxy') }
+      it { should contain_apache_c2c__module('proxy_balancer') }
       describe 'using defaults' do
 
-        it { should contain_apache__module('proxy_http') }
+        it { should contain_apache_c2c__module('proxy_http') }
         it do should contain_file('my balanced service balancer on default.org').with(
           :ensure => 'present',
           :path   => "#{VARS[os]['root']}/default.org/conf/balancer-my_balanced_service.conf"
@@ -40,7 +44,7 @@ describe 'apache::balancer' do
           :filename   => 'balancer1.conf'
         } }
 
-        it { should contain_apache__module('proxy_ajp') }
+        it { should contain_apache_c2c__module('proxy_ajp') }
         it do should contain_file('my balanced service balancer on www.example.com').with(
           :ensure => 'present',
           :path   => "#{VARS[os]['root']}/www.example.com/conf/balancer1.conf"
@@ -53,11 +57,11 @@ describe 'apache::balancer' do
           :vhost  => 'www.example.com',
         } }
 
-        it { should include_class('apache::params') }
+        it { should contain_class('apache_c2c::params') }
 
-        it { should contain_apache__module('proxy').with_ensure('absent') }
-        it { should contain_apache__module('proxy_balancer').with_ensure('absent') }
-        it { should contain_apache__module('proxy_http').with_ensure('absent') }
+        it { should contain_apache_c2c__module('proxy').with_ensure('absent') }
+        it { should contain_apache_c2c__module('proxy_balancer').with_ensure('absent') }
+        it { should contain_apache_c2c__module('proxy_http').with_ensure('absent') }
         it { should contain_file('my balanced service balancer on www.example.com').with_ensure('absent') }
       end
 
@@ -70,7 +74,7 @@ describe 'apache::balancer' do
 
         it do
           expect {
-            should include_class('apache::params')
+            should contain_class('apache_c2c::params')
           }.to raise_error(Puppet::Error, /foo/)
         end
       end

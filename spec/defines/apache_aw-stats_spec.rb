@@ -1,15 +1,19 @@
 require 'spec_helper'
 
-describe 'apache::aw-stats' do
+describe 'apache_c2c::aw-stats' do
   let(:title) { 'foo' }
 
   OSES.each do |os|
     describe "When on #{os}" do
+      let(:pre_condition) { 'include ::apache_c2c' }
       let(:facts) { {
-        :operatingsystem => os,
+        :concat_basedir    => '/foo',
+        :lsbmajdistrelease => '6',
+        :operatingsystem   => os,
+        :osfamily          => os,
       } }
 
-      it { should include_class('apache::params') }
+      it { should contain_class('apache_c2c::params') }
 
       it { should contain_file('/etc/awstats/awstats.foo.conf').with_ensure('present') }
 

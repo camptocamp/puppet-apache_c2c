@@ -1,7 +1,7 @@
 module SpecParams
 end
 
-OSES = ['Debian', 'RedHat', 'Ubuntu', 'CentOS']
+OSES = ['Debian', 'RedHat']
 
 require 'puppet'
 PUPPETVERSION = Puppet::PUPPETVERSION.to_s
@@ -19,14 +19,14 @@ VARS = {
     'a2dissite'      => '/usr/sbin/a2dissite',
     'error_log'      => '/var/log/apache2/error.log',
     'sudo'           => '/usr/sbin/apache2ctl',
-    'awstats_tmpl'   => 'puppet:///modules/apache/awstats.deb.conf',
+    'awstats_tmpl'   => 'puppet:///modules/apache_c2c/awstats.deb.conf',
     'conf_seltype'   => nil,
     'cont_seltype'   => nil,
     'script_seltype' => nil,
     'log_seltype'    => nil,
     'apache_devel'   => 'apache2-threaded-dev',
-    'a2enmod'        => '/usr/sbin/a2enmod',
-    'a2dismod'       => '/usr/sbin/a2dismod',
+    'a2enmod'        => '/usr/sbin//a2enmod',
+    'a2dismod'       => '/usr/sbin//a2dismod',
     'mod_security'   => 'libapache-mod-security',
     'mod_svn'        => 'libapache2-svn',
   },
@@ -43,14 +43,14 @@ VARS = {
     'a2dissite'      => '/usr/local/sbin/a2dissite',
     'error_log'      => '/var/log/httpd/error.log',
     'sudo'           => '/usr/sbin/apachectl, /sbin/service apache2',
-    'awstats_tmpl'   => 'puppet:///modules/apache/awstats.rh.conf',
+    'awstats_tmpl'   => 'puppet:///modules/apache_c2c/awstats.rh.conf',
     'conf_seltype'   => 'httpd_config_t',
     'cont_seltype'   => 'httpd_sys_content_t',
     'script_seltype' => 'httpd_sys_script_exec_t',
     'log_seltype'    => 'httpd_log_t',
     'apache_devel'   => 'httpd-devel',
-    'a2enmod'        => '/usr/local/sbin/a2enmod',
-    'a2dismod'       => '/usr/local/sbin/a2dismod',
+    'a2enmod'        => '/usr/local/sbin//a2enmod',
+    'a2dismod'       => '/usr/local/sbin//a2dismod',
     'mod_security'   => 'mod_security',
     'mod_svn'        => 'mod_dav_svn',
   },

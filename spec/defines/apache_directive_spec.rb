@@ -1,10 +1,14 @@
 require 'spec_helper'
 
-describe 'apache::directive' do
+describe 'apache_c2c::directive' do
+  let(:pre_condition) { 'include ::apache_c2c' }
   OSES.each do |os|
     describe "When on #{os}" do
       let(:facts) { {
-        :operatingsystem => os,
+        :concat_basedir    => '/foo',
+        :lsbmajdistrelease => '6',
+        :operatingsystem   => os,
+        :osfamily          => os,
       } }
 
       describe 'using example usage 1' do
@@ -15,9 +19,9 @@ describe 'apache::directive' do
           :vhost     => 'www.example.com',
         } }
 
-        it { should include_class('apache::params') }
+        it { should contain_class('apache_c2c::params') }
 
-        it do should contain_apache__conf('example 1').with(
+        it do should contain_apache_c2c__conf('example 1').with(
           'ensure'        => 'present',
           'path'          => "#{VARS[os]['root']}/www.example.com/conf",
           'prefix'        => 'directive',
@@ -34,9 +38,9 @@ describe 'apache::directive' do
           :vhost     => 'www.example.com',
         } }
 
-        it { should include_class('apache::params') }
+        it { should contain_class('apache_c2c::params') }
 
-        it { should contain_apache__conf('example 1').with_ensure('absent') }
+        it { should contain_apache_c2c__conf('example 1').with_ensure('absent') }
       end
     end
   end

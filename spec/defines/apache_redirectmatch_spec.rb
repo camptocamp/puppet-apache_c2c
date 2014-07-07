@@ -1,11 +1,15 @@
 require 'spec_helper'
 
-describe 'apache::redirectmatch' do
+describe 'apache_c2c::redirectmatch' do
   let(:title) { 'example' }
+  let(:pre_condition) { 'include ::apache_c2c' }
   OSES.each do |os|
     describe "When on #{os}" do 
       let(:facts) { {
-        :operatingsystem => os,
+        :concat_basedir    => '/foo',
+        :lsbmajdistrelease => '6',
+        :operatingsystem   => os,
+        :osfamily          => os,
       } }
 
       describe 'using example usage' do
@@ -15,7 +19,7 @@ describe 'apache::redirectmatch' do
           :url    => 'http://foobar.example.com/',
           :vhost  => 'www.example.com',
         } }
-        it { should include_class('apache::params') }
+        it { should contain_class('apache_c2c::params') }
 
         it { should contain_file('example redirect on www.example.com').with(
           :ensure  => 'present',
@@ -33,7 +37,7 @@ describe 'apache::redirectmatch' do
           :vhost  => 'www.example.com',
         } }
 
-        it { should include_class('apache::params') }
+        it { should contain_class('apache_c2c::params') }
 
         it { should contain_file('example redirect on www.example.com').with_ensure('absent') }
       end
@@ -47,8 +51,8 @@ describe 'apache::redirectmatch' do
 
         it do
           expect {
-            should include_class('apache::params')
-          }.to raise_error(Puppet::Error, /Must pass regex to Apache::Redirectmatch\[example\]/)
+            should contain_class('apache_c2c::params')
+          }.to raise_error(Puppet::Error, /Must pass regex to Apache_c2c::Redirectmatch\[example\]/)
         end
       end
     end

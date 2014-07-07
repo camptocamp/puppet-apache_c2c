@@ -1,18 +1,16 @@
 require 'spec_helper'
 
-describe 'apache::redhat' do
-  let(:pre_condition) { "
-class concat::setup {}
-define concat() {}
-define concat::fragment($ensure='present', $target, $content) {}
-  " }
-  ['RedHat', 'CentOS'].each do |os|
+describe 'apache_c2c::redhat' do
+  let(:pre_condition) { "include ::apache_c2c" }
+  ['RedHat'].each do |os|
     let(:facts) { {
+      :concat_basedir    => '/foo',
       :operatingsystem   => os,
+      :osfamily          => os,
       :lsbmajdistrelease => '5',
     } }
 
-    it { should include_class('apache::params') }
+    it { should contain_class('apache_c2c::params') }
 
     ['a2ensite', 'a2dissite', 'a2enmod', 'a2dismod'].each do |script|
       it { should contain_file("/usr/local/sbin/#{script}").with(
@@ -20,7 +18,7 @@ define concat::fragment($ensure='present', $target, $content) {}
         'mode'   => '0755',
         'owner'  => 'root',
         'group'  => 'root',
-        'source' => 'puppet:///modules/apache/usr/local/sbin/a2X.redhat'
+        'source' => 'puppet:///modules/apache_c2c/usr/local/sbin/a2X.redhat'
       ) }
     end
 
@@ -44,13 +42,15 @@ define concat::fragment($ensure='present', $target, $content) {}
     ['5', '6'].each do |release|
       describe "with lsbmajdistrelease #{release}" do
         let(:facts) { {
+          :concat_basedir    => '/foo',
           :operatingsystem   => os,
+          :osfamily          => os,
           :lsbmajdistrelease => release,
         } }
 
         it { should contain_file("#{VARS[os]['conf']}/mods-available").with(
           'ensure'  => 'directory',
-          'source'  => "puppet:///modules/apache/etc/httpd/mods-available/redhat#{release}/",
+          'source'  => "puppet:///modules/apache_c2c/etc/httpd/mods-available/redhat#{release}/",
           'recurse' => 'true',
           'mode'    => '0755',
           'owner'   => 'root',
@@ -60,10 +60,10 @@ define concat::fragment($ensure='present', $target, $content) {}
       end
     end
 
-    it { should contain_apache__module('log_config').with_ensure('present') }
+    it { should contain_apache_c2c__module('log_config').with_ensure('present') }
 
     it { should contain_file('/var/www/cgi-bin').with_ensure('absent') }
 
-    it { should contain_file("#{VARS[os]['conf']}/conf.d/proxy_ajp.conf").with_ensure('absent') }
+    it { should contain_file("#{VARS[os]['conf']}/conf.d/proxy_ajp.conf").with_ensure('present').with_content(/# File managed by puppet/) }
   end
 end
