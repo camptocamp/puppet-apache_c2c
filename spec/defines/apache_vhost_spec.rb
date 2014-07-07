@@ -16,7 +16,7 @@ describe 'apache_c2c::vhost' do
       it { should contain_class('apache_c2c::params') }
 
       describe 'ensuring present with defaults' do
-        it { should contain_file("#{VARS[os]['conf']}/sites-available/#{vhost}").with(
+        it { should contain_file("#{VARS[os]['conf']}/sites-available/25-#{vhost}.conf").with(
           :ensure  => 'present',
           :owner   => 'root',
           :group   => 'root',
@@ -95,7 +95,7 @@ describe 'apache_c2c::vhost' do
         ) }
 
         it { should contain_exec("enable vhost #{vhost}").with(
-          :command => "#{VARS[os]['a2ensite']} #{vhost}"
+          :command => "#{VARS[os]['a2ensite']} 25-#{vhost}.conf"
         ) }
       end
 
@@ -104,8 +104,8 @@ describe 'apache_c2c::vhost' do
           :ensure => 'absent',
         } }
 
-        it { should contain_file("#{VARS[os]['conf']}/sites-enabled/#{vhost}").with_ensure('absent') }
-        it { should contain_file("#{VARS[os]['conf']}/sites-available/#{vhost}").with_ensure('absent') }
+        it { should contain_file("#{VARS[os]['conf']}/sites-enabled/25-#{vhost}.conf").with_ensure('absent') }
+        it { should contain_file("#{VARS[os]['conf']}/sites-available/25-#{vhost}.conf").with_ensure('absent') }
 
         it { should contain_exec("remove #{VARS[os]['root']}/#{vhost}").with(
           :command => "rm -rf #{VARS[os]['root']}/#{vhost}",
@@ -113,7 +113,7 @@ describe 'apache_c2c::vhost' do
         ) }
 
         it { should contain_exec("disable vhost #{vhost}").with(
-          :command => "#{VARS[os]['a2dissite']} #{vhost}"
+          :command => "#{VARS[os]['a2dissite']} 25-#{vhost}.conf"
         ) }
       end
 
@@ -123,10 +123,10 @@ describe 'apache_c2c::vhost' do
         } }
 
         it { should contain_exec("disable vhost #{vhost}").with(
-          :command => "#{VARS[os]['a2dissite']} #{vhost}"
+          :command => "#{VARS[os]['a2dissite']} 25-#{vhost}.conf"
         ) }
 
-        it { should contain_file("#{VARS[os]['conf']}/sites-enabled/#{vhost}").with(
+        it { should contain_file("#{VARS[os]['conf']}/sites-enabled/25-#{vhost}.conf").with(
           :ensure => 'absent'
         ) }
       end
