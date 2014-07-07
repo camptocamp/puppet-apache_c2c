@@ -16,6 +16,7 @@ define apache_c2c::vhost (
   $aliases=[],
   $ports=['*:80'],
   $accesslog_format='combined',
+  $priority='25',
 ) {
 
   include ::apache_c2c::params
@@ -45,10 +46,9 @@ define apache_c2c::vhost (
     default => $cgibin,
   }
 
-  $disable_vhost_command = $::operatingsystem ? {
-    RedHat  => "/usr/local/sbin/a2dissite ${name}",
-    CentOS  => "/usr/local/sbin/a2dissite ${name}",
-    default => "/usr/sbin/a2dissite ${name}"
+  $disable_vhost_command = $::osfamily ? {
+    RedHat  => "/usr/local/sbin/a2dissite ${priority}-${name}.conf",
+    default => "/usr/sbin/a2dissite ${priority}-${name}.conf",
   }
 
   case $ensure {
@@ -58,7 +58,10 @@ define apache_c2c::vhost (
         CentOS  => 'httpd_config_t',
         default => undef,
       }
-      file { "${apache_c2c::params::conf}/sites-available/${name}":
+      file { "${apache_c2c::params::conf}/sites-enabled/${name}":
+        ensure  => absent,
+      }
+      file { "${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf":
         ensure  => present,
         owner   => root,
         group   => root,
@@ -193,19 +196,19 @@ define apache_c2c::vhost (
       case $config_file {
 
         default: {
-          File["${apache_c2c::params::conf}/sites-available/${name}"] {
+          File["${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf"] {
             source => $config_file,
           }
         }
         '': {
 
           if $config_content {
-            File["${apache_c2c::params::conf}/sites-available/${name}"] {
+            File["${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf"] {
               content => $config_content,
             }
           } else {
             # default vhost template
-            File["${apache_c2c::params::conf}/sites-available/${name}"] {
+            File["${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf"] {
               content => template("${module_name}/vhost.erb"),
             }
           }
@@ -258,10 +261,9 @@ define apache_c2c::vhost (
         require => File["${wwwroot}/${name}"],
       }
 
-      $enable_vhost_command = $::operatingsystem ? {
-        RedHat  => "${apache_c2c::params::a2ensite} ${name}",
-        CentOS  => "${apache_c2c::params::a2ensite} ${name}",
-        default => "${apache_c2c::params::a2ensite} ${name}"
+      $enable_vhost_command = $::osfamily ? {
+        RedHat  => "${apache_c2c::params::a2ensite} ${priority}-${name}.conf",
+        default => "${apache_c2c::params::a2ensite} ${priority}-${name}.conf"
       }
       exec {"enable vhost ${name}":
         command => $enable_vhost_command,
@@ -272,23 +274,23 @@ define apache_c2c::vhost (
             CentOS  => File[$apache_c2c::params::a2ensite],
             default => Package[$apache_c2c::params::pkg]
           },
-          File["${apache_c2c::params::conf}/sites-available/${name}"],
+          File["${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf"],
           File["${wwwroot}/${name}/htdocs"],
           File["${wwwroot}/${name}/logs"],
           File["${wwwroot}/${name}/conf"]
         ],
-        unless  => "/bin/sh -c '[ -L ${apache_c2c::params::conf}/sites-enabled/${name} ] \\
-          && [ ${apache_c2c::params::conf}/sites-enabled/${name} -ef ${apache_c2c::params::conf}/sites-available/${name} ]'",
+        unless  => "/bin/sh -c '[ -L ${apache_c2c::params::conf}/sites-enabled/${priority}-${name}.conf ] \\
+          && [ ${apache_c2c::params::conf}/sites-enabled/${priority}-${name}.conf -ef ${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf ]'",
       }
     }
 
     absent: {
-      file { "${apache_c2c::params::conf}/sites-enabled/${name}":
+      file { "${apache_c2c::params::conf}/sites-enabled/${priority}-${name}.conf":
         ensure  => absent,
         require => Exec["disable vhost ${name}"]
       }
 
-      file { "${apache_c2c::params::conf}/sites-available/${name}":
+      file { "${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf":
         ensure  => absent,
         require => Exec["disable vhost ${name}"]
       }
@@ -307,8 +309,8 @@ define apache_c2c::vhost (
           CentOS  => File[$apache_c2c::params::a2ensite],
           default => Package[$apache_c2c::params::pkg]
           }],
-        onlyif  => "/bin/sh -c '[ -L ${apache_c2c::params::conf}/sites-enabled/${name} ] \\
-          && [ ${apache_c2c::params::conf}/sites-enabled/${name} -ef ${apache_c2c::params::conf}/sites-available/${name} ]'",
+        onlyif  => "/bin/sh -c '[ -L ${apache_c2c::params::conf}/sites-enabled/${priority}-${name}.conf ] \\
+          && [ ${apache_c2c::params::conf}/sites-enabled/${priority}-${name}.conf -ef ${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf ]'",
       }
     }
 
@@ -317,11 +319,11 @@ define apache_c2c::vhost (
         command => $disable_vhost_command,
         notify  => Exec['apache-graceful'],
         require => Package[$apache_c2c::params::pkg],
-        onlyif  => "/bin/sh -c '[ -L ${apache_c2c::params::conf}/sites-enabled/${name} ] \\
-          && [ ${apache_c2c::params::conf}/sites-enabled/${name} -ef ${apache_c2c::params::conf}/sites-available/${name} ]'",
+        onlyif  => "/bin/sh -c '[ -L ${apache_c2c::params::conf}/sites-enabled/${priority}-${name}.conf ] \\
+          && [ ${apache_c2c::params::conf}/sites-enabled/${priority}-${name}.conf -ef ${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf ]'",
       }
 
-      file { "${apache_c2c::params::conf}/sites-enabled/${name}":
+      file { "${apache_c2c::params::conf}/sites-enabled/${priority}-${name}.conf":
         ensure  => absent,
         require => Exec["disable vhost ${name}"]
       }
