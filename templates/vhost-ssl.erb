@@ -1,45 +1,65 @@
-# file managed by puppet
+# ************************************
+# Vhost template in module camptocamp-apache_c2c
+# Managed by Puppet
+# ************************************
+
 <VirtualHost<% [@sslports].flatten.compact.each do |port| -%> <%= port %><% end -%>>
   ServerName <%= @name %>
 
-<% [@aliases].flatten.compact.each do |serveralias| -%>
-  ServerAlias <%= serveralias %>
-<% end -%>
+  ## Vhost docroot
+  DocumentRoot "<%= @documentroot %>"
 
-  DocumentRoot <%= @documentroot %>
 
-  LogLevel warn
 
-  ErrorLog <%= @wwwroot %>/<%= @name %>/logs/error.log
-  CustomLog <%= @wwwroot %>/<%= @name %>/logs/access.log combined
-
-  Include <%= @wwwroot %>/<%= @name%>/conf/*.conf
-
-  SSLEngine On
-  SSLCertificateFile <%= @certfile %>
-  SSLCertificateKeyFile <%= @certkeyfile %>
-  SSLCACertificateFile <%= @cacertfile %>
-<% if @cacrlfile -%>
-  SSLCARevocationFile <%= @cacrlfile %>
-<% end -%>
-<% if @certchainfile -%>
-  SSLCertificateChainFile <%= @certchainfile %>
-<% end -%>
-<% if @verifyclient -%>
-  SSLVerifyClient <%= @verifyclient %>
-<% end -%>
-<% unless @options.empty? -%>
-  SSLOptions <%= @options.join(' ') %>
-<% end -%>
+  ## Directories, there should at least be a declaration for <%= @documentroot %>
 
 <% if @cgipath -%>
-  ScriptAlias /cgi-bin/ <%= @cgipath %>
-  <Directory <%= @cgipath %>>
+  <Directory "<%= @cgipath %>">
     Options +ExecCGI
     AddHandler cgi-script .cgi
   </Directory>
 <% end -%>
 
-  ServerSignature Off
+  ## Load additional static includes
 
+  Include "<%= @wwwroot %>/<%= @name%>/conf/*.conf"
+
+
+  ## Logging
+  ErrorLog "<%= @wwwroot %>/<%= @name %>/logs/error.log"
+  LogLevel warn
+  ServerSignature Off
+  CustomLog "<%= @wwwroot %>/<%= @name %>/logs/access.log" combined
+
+
+
+  ## Script alias directives
+<% if @cgipath -%>
+  ScriptAlias /cgi-bin/ "<%= @cgipath %>"
+<% end -%>
+<%if !@aliases.empty? -%>
+
+  ## Server aliases
+<% [@aliases].flatten.compact.each do |serveralias| -%>
+  ServerAlias <%= serveralias %>
+<% end -%>
+<% end -%>
+
+  ## SSL directives
+  SSLEngine on
+  SSLCertificateFile      "<%= @certfile %>"
+  SSLCertificateKeyFile   "<%= @certkeyfile %>"
+<% if @certchainfile -%>
+  SSLCertificateChainFile "<%= @certchainfile %>"
+<% end -%>
+  SSLCACertificateFile    "<%= @cacertfile %>"
+<% if @cacrlfile -%>
+  SSLCARevocationFile     "<%= @cacrlfile %>"
+<% end -%>
+<% if @verifyclient -%>
+  SSLVerifyClient         <%= @verifyclient %>
+<% end -%>
+<% unless @options.empty? -%>
+  SSLOptions              <%= @options.join(' ') %>
+<% end -%>
 </VirtualHost>
