@@ -51,7 +51,7 @@ describe 'apache_c2c::vhost' do
           :source  => nil
         ) }
 
-        it { should contain_file("#{vhost} cgi-bin directory").with(
+        it { should contain_file("#{VARS[os]['root']}/#{vhost} cgi-bin directory").with(
           :ensure  => 'directory',
           :path    => "#{VARS[os]['root']}/#{vhost}/cgi-bin/",
           :owner   => VARS[os]['user'],

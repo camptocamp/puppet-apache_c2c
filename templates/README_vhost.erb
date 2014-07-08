@@ -1,18 +1,18 @@
 
-Your website is hosted in <%= wwwroot %>/<%= name %>/
+Your website is hosted in <%= @vhostroot %>/
 
 Information about the sub-directories you have access to:
 
  - htdocs/
    is where you put the files you are publishing on your website. The first
-   file presented to the visitors (eg: when they visit "http://<%= name %>/")
+   file presented to the visitors (eg: when they visit "http://<%= @servername %>/")
    must be named "index.html". "index.php" also works for PHP websites.
 <% if cgipath -%>
 
  - cgi-bin/
    is where you put perl or shell scripts that will be executed when they are
    accessed by visitors. The content of this directory is available at this
-   address: http://<%= name %>/cgi-bin/
+   address: http://<%= @servername %>/cgi-bin/
 <% end -%>
 
  - private/

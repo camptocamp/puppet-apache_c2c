@@ -17,6 +17,8 @@ define apache_c2c::vhost (
   $ports=['*:80'],
   $accesslog_format='combined',
   $priority='25',
+  $vhostroot="${::apache_c2c::root}/${name}",
+  $servername=$name,
 ) {
 
   include ::apache_c2c::params
@@ -36,12 +38,12 @@ define apache_c2c::vhost (
   validate_absolute_path($wwwroot)
 
   $documentroot = $docroot ? {
-    false   => "${wwwroot}/${name}/htdocs",
+    false   => "${vhostroot}/htdocs",
     default => $docroot,
   }
 
   $cgipath = $cgibin ? {
-    true    => "${wwwroot}/${name}/cgi-bin/",
+    true    => "${vhostroot}/cgi-bin/",
     false   => false,
     default => $cgibin,
   }
@@ -58,7 +60,7 @@ define apache_c2c::vhost (
         default => undef,
       }
       file { "${apache_c2c::params::conf}/sites-enabled/${name}":
-        ensure  => absent,
+        ensure => absent,
       }
       file { "${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf":
         ensure  => present,
@@ -74,14 +76,18 @@ define apache_c2c::vhost (
         RedHat  => 'httpd_sys_content_t',
         default => undef,
       }
-      file { "${wwwroot}/${name}":
-        ensure  => directory,
-        owner   => root,
-        group   => root,
-        mode    => '0755',
-        seltype => $docroot_seltype,
-        require => File['root directory'],
-      }
+      ensure_resource(
+        'file',
+        $vhostroot,
+        {
+          ensure  => directory,
+          owner   => root,
+          group   => root,
+          mode    => '0755',
+          seltype => $docroot_seltype,
+          require => File['root directory'],
+        }
+      )
 
       $confdir_owner = $admin ? {
         ''      => $wwwuser,
@@ -91,68 +97,80 @@ define apache_c2c::vhost (
         RedHat  => 'httpd_config_t',
         default => undef,
       }
-      file { "${wwwroot}/${name}/conf":
-        ensure  => directory,
-        owner   => $confdir_owner,
-        group   => $wwwgroup,
-        mode    => $mode,
-        seltype => $confdir_seltype,
-        require => [File["${wwwroot}/${name}"]],
-      }
+      ensure_resource(
+        'file',
+        "${vhostroot}/conf",
+        {
+          ensure  => directory,
+          owner   => $confdir_owner,
+          group   => $wwwgroup,
+          mode    => $mode,
+          seltype => $confdir_seltype,
+        }
+      )
 
       $htdocs_seltype = $::osfamily ? {
         RedHat  => 'httpd_sys_content_t',
         default => undef,
       }
-      file { "${wwwroot}/${name}/htdocs":
-        ensure  => directory,
-        owner   => $wwwuser,
-        group   => $wwwgroup,
-        mode    => $mode,
-        seltype => $htdocs_seltype,
-        require => [File["${wwwroot}/${name}"]],
-      }
+      ensure_resource(
+        'file',
+        "${vhostroot}/htdocs",
+        {
+          ensure  => directory,
+          owner   => $wwwuser,
+          group   => $wwwgroup,
+          mode    => $mode,
+          seltype => $htdocs_seltype,
+        }
+      )
 
       # Private data
       $private_seltype = $::osfamily ? {
         RedHat  => 'httpd_sys_content_t',
         default => undef,
       }
-      file {"${wwwroot}/${name}/private":
-        ensure  => directory,
-        owner   => $wwwuser,
-        group   => $wwwgroup,
-        mode    => $mode,
-        seltype => $private_seltype,
-        require => File["${wwwroot}/${name}"],
-      }
+      ensure_resource(
+        'file',
+        "${vhostroot}/private",
+        {
+          ensure  => directory,
+          owner   => $wwwuser,
+          group   => $wwwgroup,
+          mode    => $mode,
+          seltype => $private_seltype,
+        }
+      )
 
       # cgi-bin
       # don't manage this directory unless under $root/$name
       $cgidir_ensure = $cgipath ? {
-        "${wwwroot}/${name}/cgi-bin/" => directory,
-        default                       => undef,
+        "${vhostroot}/cgi-bin/" => directory,
+        default                 => undef,
       }
       $cgidir_path = $cgipath ? {
-        false   => "${wwwroot}/${name}/cgi-bin/",
+        false   => "${vhostroot}/cgi-bin/",
         default => $cgipath,
       }
       $cgidir_seltype = $::osfamily ? {
         RedHat  => 'httpd_sys_script_exec_t',
         default => undef,
       }
-      file { "${name} cgi-bin directory":
-        ensure  => $cgidir_ensure,
-        path    => $cgidir_path,
-        owner   => $wwwuser,
-        group   => $wwwgroup,
-        mode    => $mode,
-        seltype => $cgidir_seltype,
-        require => [File["${wwwroot}/${name}"]],
-      }
+      ensure_resource(
+        'file',
+        "${vhostroot} cgi-bin directory",
+        {
+          ensure  => $cgidir_ensure,
+          path    => $cgidir_path,
+          owner   => $wwwuser,
+          group   => $wwwgroup,
+          mode    => $mode,
+          seltype => $cgidir_seltype,
+        }
+      )
 
       if $conf_source {
-        File["${wwwroot}/${name}/conf"] {
+        File["${vhostroot}/conf"] {
           source  => $conf_source,
           recurse => true,
           purge   => true,
@@ -161,7 +179,7 @@ define apache_c2c::vhost (
       }
 
       if $htdocs_source {
-        File["${wwwroot}/${name}/htdocs"] {
+        File["${vhostroot}/htdocs"] {
           source  => $htdocs_source,
           recurse => true,
           purge   => true,
@@ -170,7 +188,7 @@ define apache_c2c::vhost (
       }
 
       if $private_source {
-        File["${wwwroot}/${name}/private"] {
+        File["${vhostroot}/private"] {
           source  => $private_source,
           recurse => true,
           purge   => true,
@@ -179,7 +197,7 @@ define apache_c2c::vhost (
       }
 
       if $cgi_source {
-        File["${name} cgi-bin directory"] {
+        File["${vhostroot} cgi-bin directory"] {
           source  => $cgi_source,
           recurse => true,
           purge   => true,
@@ -214,14 +232,17 @@ define apache_c2c::vhost (
         RedHat  => 'httpd_log_t',
         default => undef,
       }
-      file {"${wwwroot}/${name}/logs":
-        ensure  => directory,
-        owner   => root,
-        group   => root,
-        mode    => '0755',
-        seltype => $logdir_seltype,
-        require => File["${wwwroot}/${name}"],
-      }
+      ensure_resource(
+        'file',
+        "${vhostroot}/logs",
+        {
+          ensure  => directory,
+          owner   => root,
+          group   => root,
+          mode    => '0755',
+          seltype => $logdir_seltype,
+        }
+      )
 
       # We have to give log files to right people with correct rights on them.
       # Those rights have to match those set by logrotate
@@ -229,29 +250,38 @@ define apache_c2c::vhost (
         RedHat  => 'httpd_log_t',
         default => undef,
       }
-      file { ["${wwwroot}/${name}/logs/access.log",
-              "${wwwroot}/${name}/logs/error.log"] :
-        ensure  => present,
-        owner   => root,
-        group   => adm,
-        mode    => '0644',
-        seltype => $logfiles_seltype,
-        require => File["${wwwroot}/${name}/logs"],
-      }
+      ensure_resource(
+        'file',
+        [
+          "${vhostroot}/logs/access.log",
+          "${vhostroot}/logs/error.log",
+        ],
+        {
+          ensure  => present,
+          owner   => root,
+          group   => adm,
+          mode    => '0644',
+          seltype => $logfiles_seltype,
+          require => File["${vhostroot}/logs"],
+        }
+      )
 
       # README file
       $readme_content = $readme ? {
         false   => template("${module_name}/README_vhost.erb"),
         default => $readme,
       }
-      file {"${wwwroot}/${name}/README":
-        ensure  => present,
-        owner   => root,
-        group   => root,
-        mode    => '0644',
-        content => $readme_content,
-        require => File["${wwwroot}/${name}"],
-      }
+      ensure_resource(
+        'file',
+        "${vhostroot}/README",
+        {
+          ensure  => present,
+          owner   => root,
+          group   => root,
+          mode    => '0644',
+          content => $readme_content,
+        }
+      )
 
       $enable_vhost_command = $::osfamily ? {
         RedHat  => "${apache_c2c::params::a2ensite} ${priority}-${name}.conf",
@@ -266,9 +296,9 @@ define apache_c2c::vhost (
             default => Package[$apache_c2c::params::pkg]
           },
           File["${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf"],
-          File["${wwwroot}/${name}/htdocs"],
-          File["${wwwroot}/${name}/logs"],
-          File["${wwwroot}/${name}/conf"]
+          File["${vhostroot}/htdocs"],
+          File["${vhostroot}/logs"],
+          File["${vhostroot}/conf"]
         ],
         unless  => "/bin/sh -c '[ -L ${apache_c2c::params::conf}/sites-enabled/${priority}-${name}.conf ] \\
           && [ ${apache_c2c::params::conf}/sites-enabled/${priority}-${name}.conf -ef ${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf ]'",
@@ -286,9 +316,9 @@ define apache_c2c::vhost (
         require => Exec["disable vhost ${name}"]
       }
 
-      exec { "remove ${wwwroot}/${name}":
-        command => "rm -rf ${wwwroot}/${name}",
-        onlyif  => "test -d ${wwwroot}/${name}",
+      exec { "remove ${vhostroot}":
+        command => "rm -rf ${vhostroot}",
+        onlyif  => "test -d ${vhostroot}",
         require => Exec["disable vhost ${name}"],
       }
 
