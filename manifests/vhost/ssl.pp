@@ -206,16 +206,14 @@ define apache_c2c::vhost::ssl (
 
   # call parent definition to actually do the virtualhost setup.
   $_sslonly = $sslonly ? {
-    false   => template(
-      "${module_name}/vhost.erb", "${module_name}/vhost-ssl.erb"),
-    default => template(
-      "${module_name}/vhost-redirect-ssl.erb","${module_name}/vhost-ssl.erb"),
+    false   => template('apache_c2c/vhost.erb'),
+    default => template('apache_c2c/vhost-redirect-ssl.erb'),
   }
   $_config_content = $config_content ? {
     false   => $_sslonly,
     default => $config_content,
   }
-  apache_c2c::vhost {$name:
+  apache_c2c::vhost { $name:
     ensure           => $ensure,
     config_file      => $config_file,
     config_content   => $_config_content,
@@ -232,6 +230,28 @@ define apache_c2c::vhost::ssl (
     mode             => $mode,
     ports            => $ports,
     accesslog_format => $accesslog_format,
+  }
+  if ! $config_content {
+    apache_c2c::vhost { "${name}-ssl":
+      ensure           => $ensure,
+      accesslog_format => $accesslog_format,
+      admin            => $admin,
+      aliases          => $aliases,
+      cgi_source       => $cgi_source,
+      conf_source      => $conf_source,
+      config_content   => template('apache_c2c/vhost-ssl.erb'),
+      config_file      => $config_file,
+      docroot          => $docroot,
+      group            => $wwwgroup,
+      htdocs_source    => $htdocs_source,
+      mode             => $mode,
+      ports            => $ports,
+      private_source   => $private_source,
+      readme           => $readme,
+      user             => $wwwuser,
+      vhostroot        => "${::apache_c2c::root}/${name}",
+      servername       => $name,
+    }
   }
 
   if $ensure == 'present' {
