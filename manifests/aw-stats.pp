@@ -8,13 +8,13 @@ define apache_c2c::aw-stats($ensure=present, $aliases=[], $allowfullyearview=2) 
 
   file { "/etc/awstats/awstats.${name}.conf":
     ensure  => $ensure,
-    content => template("${module_name}/awstats.erb"),
+    content => template('apache_c2c/awstats.erb'),
     require => [Package['apache'], Class['apache_c2c::awstats']],
   }
 
   $source = $::osfamily ? {
-    RedHat => "puppet:///modules/${module_name}/awstats.rh.conf",
-    Debian => "puppet:///modules/${module_name}/awstats.deb.conf",
+    RedHat => 'puppet:///modules/apache_c2c/awstats.rh.conf',
+    Debian => 'puppet:///modules/apache_c2c/awstats.deb.conf',
   }
   $seltype = $::osfamily ? {
     'RedHat' => 'httpd_config_t',

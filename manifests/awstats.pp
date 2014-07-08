@@ -7,7 +7,7 @@ class apache_c2c::awstats {
   # ensure non-managed files are purged from directory
   file {'/etc/awstats':
     ensure  => directory,
-    source  => "puppet:///modules/${module_name}/etc/awstats",
+    source  => 'puppet:///modules/apache_c2c/etc/awstats',
     mode    => '0755',
     purge   => true,
     recurse => true,

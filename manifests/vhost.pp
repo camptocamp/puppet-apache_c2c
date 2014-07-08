@@ -221,7 +221,7 @@ define apache_c2c::vhost (
           } else {
             # default vhost template
             File["${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf"] {
-              content => template("${module_name}/vhost.erb"),
+              content => template('apache_c2c/vhost.erb'),
             }
           }
         }
@@ -268,7 +268,7 @@ define apache_c2c::vhost (
 
       # README file
       $readme_content = $readme ? {
-        false   => template("${module_name}/README_vhost.erb"),
+        false   => template('apache_c2c/README_vhost.erb'),
         default => $readme,
       }
       ensure_resource(

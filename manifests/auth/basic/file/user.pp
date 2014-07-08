@@ -42,7 +42,7 @@ define apache_c2c::auth::basic::file::user(
   }
   file {"${wwwroot}/${vhost}/conf/auth-basic-file-user-${fname}.conf":
     ensure  => $ensure,
-    content => template("${module_name}/auth-basic-file-user.erb"),
+    content => template('apache_c2c/auth-basic-file-user.erb'),
     seltype => $seltype,
     notify  => Exec['apache-graceful'],
   }

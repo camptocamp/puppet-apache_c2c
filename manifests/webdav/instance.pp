@@ -32,7 +32,7 @@ define apache_c2c::webdav::instance(
   }
   file { "${wwwroot}/${vhost}/conf/webdav-${name}.conf":
     ensure  => $ensure,
-    content => template("${module_name}/webdav-config.erb"),
+    content => template('apache_c2c/webdav-config.erb'),
     seltype => $conffile_seltype,
     require => File[$davdir],
     notify  => Exec['apache-graceful'],

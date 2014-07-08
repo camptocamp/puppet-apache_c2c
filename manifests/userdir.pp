@@ -27,7 +27,7 @@ class apache_c2c::userdir {
   file {'/etc/skel/public_html/README':
     ensure  => present,
     require => File['/etc/skel/public_html'],
-    source  => "puppet:///modules/${module_name}/README_userdir",
+    source  => 'puppet:///modules/apache_c2c/README_userdir',
   }
 
   apache_c2c::module { 'userdir':

@@ -66,7 +66,7 @@ define apache_c2c::proxypass (
   }
   file { "${name} proxypass on ${vhost}":
     ensure  => $ensure,
-    content => template("${module_name}/proxypass.erb"),
+    content => template('apache_c2c/proxypass.erb'),
     seltype => $seltype,
     path    => $path,
     notify  => Exec['apache-graceful'],

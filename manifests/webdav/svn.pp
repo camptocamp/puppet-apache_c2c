@@ -11,7 +11,7 @@ define apache_c2c::webdav::svn ($ensure, $vhost, $parentPath, $confname) {
   }
   file { "${wwwroot}/${vhost}/conf/${confname}.conf":
     ensure  => $ensure,
-    content => template("${module_name}/webdav-svn.erb"),
+    content => template('apache_c2c/webdav-svn.erb'),
     seltype => $seltype,
     notify  => Exec['apache-graceful'],
   }

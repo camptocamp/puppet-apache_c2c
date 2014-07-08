@@ -17,12 +17,12 @@ class apache_c2c::debian inherits apache_c2c::base {
   $awstats_command = '/usr/share/doc/awstats/examples/awstats_updateall.pl -awstatsprog=/usr/lib/cgi-bin/awstats.pl -confdir=/etc/awstats now > /dev/null'
   File['logrotate configuration'] {
     path    => '/etc/logrotate.d/apache2',
-    content => template("${module_name}/logrotate-httpd.erb"),
+    content => template('apache_c2c/logrotate-httpd.erb'),
   }
 
   File['default status module configuration'] {
     path   => "${apache_c2c::params::conf}/mods-available/status.conf",
-    source => "puppet:///modules/${module_name}/etc/apache2/mods-available/status.conf",
+    source => 'puppet:///modules/apache_c2c/etc/apache2/mods-available/status.conf',
   }
   # END inheritance from apache::base
 

@@ -12,7 +12,7 @@ define apache_c2c::userdirinstance(
   }
   file { "${wwwroot}/${vhost}/conf/userdir.conf":
     ensure  => $ensure,
-    source  => "puppet:///modules/${module_name}/userdir.conf",
+    source  => 'puppet:///modules/apache_c2c/userdir.conf',
     seltype => $seltype,
     notify  => Exec['apache-graceful'],
   }

@@ -111,7 +111,7 @@ class apache_c2c::base {
   file {'default virtualhost':
     ensure  => present,
     path    => "${apache_c2c::params::conf}/sites-available/default-vhost",
-    content => template("${module_name}/default-vhost.erb"),
+    content => template('apache_c2c/default-vhost.erb'),
     require => Package['apache'],
     notify  => Exec['apache-graceful'],
     before  => File["${apache_c2c::params::conf}/sites-enabled/000-default-vhost"],
@@ -150,7 +150,7 @@ class apache_c2c::base {
     owner  => root,
     group  => root,
     mode   => '0755',
-    source => "puppet:///modules/${module_name}/usr/local/bin/htgroup",
+    source => 'puppet:///modules/apache_c2c/usr/local/bin/htgroup',
   }
 
   file { ["${apache_c2c::params::conf}/sites-enabled/default",

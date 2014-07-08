@@ -29,12 +29,12 @@ class apache_c2c::redhat inherits apache_c2c::base {
   $awstats_command = '/etc/cron.hourly/awstats || true'
   File['logrotate configuration'] {
     path    => '/etc/logrotate.d/httpd',
-    content => template("${module_name}/logrotate-httpd.erb"),
+    content => template('apache_c2c/logrotate-httpd.erb'),
   }
 
   File['default status module configuration'] {
     path   => "${apache_c2c::params::conf}/conf.d/status.conf",
-    source => "puppet:///modules/${module_name}/etc/httpd/conf/status.conf",
+    source => 'puppet:///modules/apache_c2c/etc/httpd/conf/status.conf',
   }
 
   File['default virtualhost'] {
@@ -52,7 +52,7 @@ class apache_c2c::redhat inherits apache_c2c::base {
     mode   => '0755',
     owner  => 'root',
     group  => 'root',
-    source => "puppet:///modules/${module_name}/usr/local/sbin/a2X.redhat",
+    source => 'puppet:///modules/apache_c2c/usr/local/sbin/a2X.redhat',
   }
 
   $httpd_mpm = 'httpd'
@@ -78,7 +78,7 @@ class apache_c2c::redhat inherits apache_c2c::base {
 
   file { "${apache_c2c::params::conf}/conf/httpd.conf":
     ensure  => present,
-    content => template("${module_name}/httpd.conf.erb"),
+    content => template('apache_c2c/httpd.conf.erb'),
     seltype => 'httpd_config_t',
     notify  => Service['apache'],
     require => Package['apache'],
@@ -89,8 +89,8 @@ class apache_c2c::redhat inherits apache_c2c::base {
   # #?(.+ (.+)_module .+)|echo "\1" > mods-available/redhat5/\2.load|' | sh
   # ssl.load was then changed to a template (see apache-ssl-redhat.pp)
   $source = $::lsbmajdistrelease ? {
-    5 => "puppet:///modules/${module_name}/etc/httpd/mods-available/redhat5/",
-    6 => "puppet:///modules/${module_name}/etc/httpd/mods-available/redhat6/",
+    5 => 'puppet:///modules/apache_c2c/etc/httpd/mods-available/redhat5/',
+    6 => 'puppet:///modules/apache_c2c/etc/httpd/mods-available/redhat6/',
   }
   file { "${apache_c2c::params::conf}/mods-available":
     ensure  => directory,

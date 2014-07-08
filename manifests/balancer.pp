@@ -102,8 +102,8 @@ define apache_c2c::balancer (
   }
 
   $balancer_template = $use_slash_bug_workaround ? {
-    false => "${module_name}/balancer.erb",
-    true  => "${module_name}/balancer-slash-bug-workaround.erb",
+    false => 'apache_c2c/balancer.erb',
+    true  => 'apache_c2c/balancer-slash-bug-workaround.erb',
   }
 
   $seltype = $::osfamily ? {

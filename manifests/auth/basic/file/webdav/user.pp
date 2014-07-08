@@ -48,7 +48,7 @@ define apache_c2c::auth::basic::file::webdav::user (
   }
   file { "${wwwroot}/${vhost}/conf/auth-basic-file-webdav-${fname}.conf":
     ensure  => $ensure,
-    content => template("${module_name}/auth-basic-file-webdav-user.erb"),
+    content => template('apache_c2c/auth-basic-file-webdav-user.erb'),
     seltype => $seltype,
     notify  => Exec['apache-graceful'],
   }

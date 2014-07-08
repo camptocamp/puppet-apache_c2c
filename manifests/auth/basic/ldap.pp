@@ -42,7 +42,7 @@ define apache_c2c::auth::basic::ldap(
   }
   file { "${wwwroot}/${vhost}/conf/auth-basic-ldap-${fname}.conf":
     ensure  => $ensure,
-    content => template("${module_name}/auth-basic-ldap.erb"),
+    content => template('apache_c2c/auth-basic-ldap.erb'),
     seltype => $seltype,
     notify  => Exec['apache-graceful'],
   }

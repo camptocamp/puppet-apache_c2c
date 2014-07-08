@@ -269,7 +269,7 @@ define apache_c2c::vhost::ssl (
       ensure  => present,
       owner   => 'root',
       mode    => '0640',
-      content => template("${module_name}/ssleay.cnf.erb"),
+      content => template('apache_c2c/ssleay.cnf.erb'),
       require => File["${wwwroot}/${name}/ssl"],
     }
 

@@ -14,7 +14,7 @@ class apache_c2c::base::ssl {
   }
 
   file { '/usr/local/sbin/generate-ssl-cert.sh':
-    source => "puppet:///modules/${module_name}/generate-ssl-cert.sh",
+    source => 'puppet:///modules/apache_c2c/generate-ssl-cert.sh',
     mode   => '0755',
   }
 

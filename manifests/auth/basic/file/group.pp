@@ -45,7 +45,7 @@ define apache_c2c::auth::basic::file::group(
   }
   file { "${wwwroot}/${vhost}/conf/auth-basic-file-group-${fname}.conf":
     ensure  => $ensure,
-    content => template("${module_name}/auth-basic-file-group.erb"),
+    content => template('apache_c2c/auth-basic-file-group.erb'),
     seltype => $seltype,
     notify  => Exec['apache-graceful'],
   }
