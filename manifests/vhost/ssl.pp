@@ -245,7 +245,7 @@ define apache_c2c::vhost::ssl (
       group            => $wwwgroup,
       htdocs_source    => $htdocs_source,
       mode             => $mode,
-      ports            => $ports,
+      ports            => $sslports,
       private_source   => $private_source,
       readme           => $readme,
       user             => $wwwuser,
