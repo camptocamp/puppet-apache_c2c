@@ -37,9 +37,8 @@ define apache_c2c::redirectmatch (
   $wwwroot = $apache_c2c::root
   validate_absolute_path($wwwroot)
 
-  $seltype = $::operatingsystem ? {
+  $seltype = $::osfamily ? {
     'RedHat' => 'httpd_config_t',
-    'CentOS' => 'httpd_config_t',
     default  => undef,
   }
   $path = $filename ? {

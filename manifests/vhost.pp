@@ -53,9 +53,8 @@ define apache_c2c::vhost (
 
   case $ensure {
     present: {
-      $vhost_seltype = $::operatingsystem ? {
-        redhat  => 'httpd_config_t',
-        CentOS  => 'httpd_config_t',
+      $vhost_seltype = $::osfamily ? {
+        RedHat  => 'httpd_config_t',
         default => undef,
       }
       file { "${apache_c2c::params::conf}/sites-enabled/${name}":
@@ -71,9 +70,8 @@ define apache_c2c::vhost (
         notify  => Exec['apache-graceful'],
       }
 
-      $docroot_seltype = $::operatingsystem ? {
-        redhat  => 'httpd_sys_content_t',
-        CentOS  => 'httpd_sys_content_t',
+      $docroot_seltype = $::osfamily ? {
+        RedHat  => 'httpd_sys_content_t',
         default => undef,
       }
       file { "${wwwroot}/${name}":
@@ -89,9 +87,8 @@ define apache_c2c::vhost (
         ''      => $wwwuser,
         default => $admin,
       }
-      $confdir_seltype = $::operatingsystem ? {
-        redhat  => 'httpd_config_t',
-        CentOS  => 'httpd_config_t',
+      $confdir_seltype = $::osfamily ? {
+        RedHat  => 'httpd_config_t',
         default => undef,
       }
       file { "${wwwroot}/${name}/conf":
@@ -103,9 +100,8 @@ define apache_c2c::vhost (
         require => [File["${wwwroot}/${name}"]],
       }
 
-      $htdocs_seltype = $::operatingsystem ? {
-        redhat  => 'httpd_sys_content_t',
-        CentOS  => 'httpd_sys_content_t',
+      $htdocs_seltype = $::osfamily ? {
+        RedHat  => 'httpd_sys_content_t',
         default => undef,
       }
       file { "${wwwroot}/${name}/htdocs":
@@ -118,9 +114,8 @@ define apache_c2c::vhost (
       }
 
       # Private data
-      $private_seltype = $::operatingsystem ? {
-        redhat  => 'httpd_sys_content_t',
-        CentOS  => 'httpd_sys_content_t',
+      $private_seltype = $::osfamily ? {
+        RedHat  => 'httpd_sys_content_t',
         default => undef,
       }
       file {"${wwwroot}/${name}/private":
@@ -142,9 +137,8 @@ define apache_c2c::vhost (
         false   => "${wwwroot}/${name}/cgi-bin/",
         default => $cgipath,
       }
-      $cgidir_seltype = $::operatingsystem ? {
-        redhat  => 'httpd_sys_script_exec_t',
-        CentOS  => 'httpd_sys_script_exec_t',
+      $cgidir_seltype = $::osfamily ? {
+        RedHat  => 'httpd_sys_script_exec_t',
         default => undef,
       }
       file { "${name} cgi-bin directory":
@@ -216,9 +210,8 @@ define apache_c2c::vhost (
       }
 
       # Log files
-      $logdir_seltype = $::operatingsystem ? {
-        redhat  => 'httpd_log_t',
-        CentOS  => 'httpd_log_t',
+      $logdir_seltype = $::osfamily ? {
+        RedHat  => 'httpd_log_t',
         default => undef,
       }
       file {"${wwwroot}/${name}/logs":
@@ -232,9 +225,8 @@ define apache_c2c::vhost (
 
       # We have to give log files to right people with correct rights on them.
       # Those rights have to match those set by logrotate
-      $logfiles_seltype = $::operatingsystem ? {
-        redhat  => 'httpd_log_t',
-        CentOS  => 'httpd_log_t',
+      $logfiles_seltype = $::osfamily ? {
+        RedHat  => 'httpd_log_t',
         default => undef,
       }
       file { ["${wwwroot}/${name}/logs/access.log",
@@ -269,9 +261,8 @@ define apache_c2c::vhost (
         command => $enable_vhost_command,
         notify  => Exec['apache-graceful'],
         require => [
-          $::operatingsystem ? {
-            redhat  => File[$apache_c2c::params::a2ensite],
-            CentOS  => File[$apache_c2c::params::a2ensite],
+          $::osfamily ? {
+            RedHat  => File[$apache_c2c::params::a2ensite],
             default => Package[$apache_c2c::params::pkg]
           },
           File["${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf"],
@@ -304,9 +295,8 @@ define apache_c2c::vhost (
       exec { "disable vhost ${name}":
         command => $disable_vhost_command,
         notify  => Exec['apache-graceful'],
-        require => [$::operatingsystem ? {
-          redhat  => File[$apache_c2c::params::a2ensite],
-          CentOS  => File[$apache_c2c::params::a2ensite],
+        require => [$::osfamily ? {
+          RedHat  => File[$apache_c2c::params::a2ensite],
           default => Package[$apache_c2c::params::pkg]
           }],
         onlyif  => "/bin/sh -c '[ -L ${apache_c2c::params::conf}/sites-enabled/${priority}-${name}.conf ] \\

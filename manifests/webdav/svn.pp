@@ -5,9 +5,8 @@ define apache_c2c::webdav::svn ($ensure, $vhost, $parentPath, $confname) {
 
   $location = $name
 
-  $seltype = $::operatingsystem ? {
+  $seltype = $::osfamily ? {
     'RedHat' => 'httpd_config_t',
-    'CentOS' => 'httpd_config_t',
     default  => undef,
   }
   file { "${wwwroot}/${vhost}/conf/${confname}.conf":

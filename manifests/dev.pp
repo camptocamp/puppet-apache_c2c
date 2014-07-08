@@ -9,9 +9,9 @@
 #   include apache_c2c::dev
 #
 class apache_c2c::dev {
-  $pkg_name = $::operatingsystem ? {
-    /RedHat|CentOS/ => 'httpd-devel',
-    /Debian|Ubuntu/ => 'apache2-threaded-dev',
+  $pkg_name = $::osfamily ? {
+    RedHat => 'httpd-devel',
+    Debian => 'apache2-threaded-dev',
   }
   package { 'apache-devel':
     ensure  => present,

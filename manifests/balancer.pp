@@ -106,9 +106,8 @@ define apache_c2c::balancer (
     true  => "${module_name}/balancer-slash-bug-workaround.erb",
   }
 
-  $seltype = $::operatingsystem ? {
+  $seltype = $::osfamily ? {
     'RedHat' => 'httpd_config_t',
-    'CentOS' => 'httpd_config_t',
     default  => undef,
   }
   $path = $filename ? {

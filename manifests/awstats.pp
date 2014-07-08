@@ -15,9 +15,9 @@ class apache_c2c::awstats {
     require => Package['awstats'],
   }
 
-  case $::operatingsystem {
+  case $::osfamily {
 
-    Debian,Ubuntu: {
+    Debian: {
       cron { 'update all awstats virtual hosts':
         command => '/usr/share/doc/awstats/examples/awstats_updateall.pl -awstatsprog=/usr/lib/cgi-bin/awstats.pl -confdir=/etc/awstats now > /dev/null',
         user    => 'root',
@@ -30,7 +30,7 @@ class apache_c2c::awstats {
       }
     }
 
-    RedHat,CentOS: {
+    RedHat: {
 
       # awstats RPM installs its own cron in /etc/cron.hourly/awstats
 
@@ -54,7 +54,7 @@ class apache_c2c::awstats {
       }
     }
 
-    default: { fail "Unsupported operatingsystem ${::operatingsystem}" }
+    default: { fail "Unsupported osfamily ${::osfamily}" }
   }
 
 }

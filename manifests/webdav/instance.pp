@@ -26,9 +26,8 @@ define apache_c2c::webdav::instance(
   }
 
   # configuration
-  $conffile_seltype = $::operatingsystem ? {
+  $conffile_seltype = $::osfamily ? {
     'RedHat' => 'httpd_config_t',
-    'CentOS' => 'httpd_config_t',
     default  => undef,
   }
   file { "${wwwroot}/${vhost}/conf/webdav-${name}.conf":

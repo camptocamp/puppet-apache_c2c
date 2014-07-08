@@ -1,8 +1,8 @@
 class apache_c2c::webdav::base {
 
-  case $::operatingsystem {
+  case $::osfamily {
 
-    Debian,Ubuntu:  {
+    Debian:  {
 
       package {'libapache2-mod-encoding':
         ensure => present,

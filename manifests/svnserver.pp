@@ -1,17 +1,17 @@
 class apache_c2c::svnserver inherits apache_c2c::ssl {
 
-  case $::operatingsystem {
+  case $::osfamily {
 
-    Debian,Ubuntu:  {
+    Debian:  {
       $pkglist = [ 'libapache2-svn' ]
     }
 
-    RedHat,CentOS:  {
+    RedHat:  {
       $pkglist = [ 'mod_dav_svn' ]
     }
 
     default: {
-      fail "Unsupported operatingsystem ${::operatingsystem}"
+      fail "Unsupported osfamily ${::osfamily}"
     }
 
   }

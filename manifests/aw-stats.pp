@@ -12,13 +12,12 @@ define apache_c2c::aw-stats($ensure=present, $aliases=[], $allowfullyearview=2) 
     require => [Package['apache'], Class['apache_c2c::awstats']],
   }
 
-  $source = $::operatingsystem ? {
-    /RedHat|CentOS/ => "puppet:///modules/${module_name}/awstats.rh.conf",
-    /Debian|Ubuntu/ => "puppet:///modules/${module_name}/awstats.deb.conf",
+  $source = $::osfamily ? {
+    RedHat => "puppet:///modules/${module_name}/awstats.rh.conf",
+    Debian => "puppet:///modules/${module_name}/awstats.deb.conf",
   }
-  $seltype = $::operatingsystem ? {
+  $seltype = $::osfamily ? {
     'RedHat' => 'httpd_config_t',
-    'CentOS' => 'httpd_config_t',
     default  => undef,
   }
   file { "${wwwroot}/${name}/conf/awstats.conf":

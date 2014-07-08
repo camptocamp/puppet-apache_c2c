@@ -36,9 +36,8 @@ define apache_c2c::auth::basic::ldap(
     $_authname = $name
   }
 
-  $seltype = $::operatingsystem ? {
+  $seltype = $::osfamily ? {
     'RedHat' => 'httpd_config_t',
-    'CentOS' => 'httpd_config_t',
     default  => undef,
   }
   file { "${wwwroot}/${vhost}/conf/auth-basic-ldap-${fname}.conf":

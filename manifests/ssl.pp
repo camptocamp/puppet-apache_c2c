@@ -79,9 +79,9 @@ class apache_c2c::ssl (
     default_vhost  => $default_vhost,
   }
 
-  case $::operatingsystem {
-    Debian,Ubuntu:  { include apache_c2c::ssl::debian}
-    RedHat,CentOS:  { include apache_c2c::ssl::redhat}
-    default: { fail "Unsupported operatingsystem ${::operatingsystem}" }
+  case $::osfamily {
+    Debian:  { include apache_c2c::ssl::debian}
+    RedHat:  { include apache_c2c::ssl::redhat}
+    default: { fail "Unsupported osfamily ${::osfamily}" }
   }
 }

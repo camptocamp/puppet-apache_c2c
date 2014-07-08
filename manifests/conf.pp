@@ -42,9 +42,8 @@ define apache_c2c::conf(
     fail('empty "configuration" parameter')
   }
 
-  $seltype = $::operatingsystem ? {
+  $seltype = $::osfamily ? {
     'RedHat' => 'httpd_config_t',
-    'CentOS' => 'httpd_config_t',
     default  => undef,
   }
   $file_path = $filename ? {

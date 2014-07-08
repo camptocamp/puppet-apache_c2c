@@ -42,9 +42,8 @@ define apache_c2c::auth::basic::file::webdav::user (
     $_users = $rw_users
   }
 
-  $seltype = $::operatingsystem ? {
+  $seltype = $::osfamily ? {
     'RedHat' => 'httpd_config_t',
-    'CentOS' => 'httpd_config_t',
     default  => undef,
   }
   file { "${wwwroot}/${vhost}/conf/auth-basic-file-webdav-${fname}.conf":

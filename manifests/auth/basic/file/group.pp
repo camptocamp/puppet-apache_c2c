@@ -39,9 +39,8 @@ define apache_c2c::auth::basic::file::group(
     $_authname = $name
   }
 
-  $seltype = $::operatingsystem ? {
+  $seltype = $::osfamily ? {
     'RedHat' => 'httpd_config_t',
-    'CentOS' => 'httpd_config_t',
     default  => undef,
   }
   file { "${wwwroot}/${vhost}/conf/auth-basic-file-group-${fname}.conf":

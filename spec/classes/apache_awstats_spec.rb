@@ -4,7 +4,7 @@ describe 'apache_c2c::awstats' do
   OSES.each do |os|
     describe "When on #{os}" do
       let(:facts) { {
-        :operatingsystem => os,
+        :osfamily => os,
       } }
 
       it { should contain_package('awstats').with_ensure('installed') }
