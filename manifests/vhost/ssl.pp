@@ -231,7 +231,7 @@ define apache_c2c::vhost::ssl (
     ports            => $ports,
     accesslog_format => $accesslog_format,
   }
-  if ! $config_content {
+  if ! ( $config_content or $config_file) {
     apache_c2c::vhost { "${name}-ssl":
       ensure           => $ensure,
       accesslog_format => $accesslog_format,
