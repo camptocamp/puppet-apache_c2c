@@ -31,6 +31,6 @@ define apache_c2c::confd(
     path          => "${apache_c2c::params::conf}/conf.d",
     filename      => $filename,
     configuration => $configuration,
-    notify        => Service['apache'],
+    notify        => Service['httpd'],
   }
 }

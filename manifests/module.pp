@@ -4,13 +4,13 @@ define apache_c2c::module ($ensure='present') {
 
   $a2enmod_deps = $::osfamily ? {
     RedHat => [
-      Package['apache'],
+      Package['httpd'],
       File['/etc/httpd/mods-available'],
       File['/etc/httpd/mods-enabled'],
       File['/usr/local/sbin/a2enmod'],
       File['/usr/local/sbin/a2dismod']
     ],
-    Debian => Package['apache'],
+    Debian => Package['httpd'],
   }
 
   if $::selinux == 'true' and $ensure == 'present' {
@@ -29,7 +29,7 @@ define apache_c2c::module ($ensure='present') {
         unless  => "/bin/sh -c '[ -L ${apache_c2c::params::conf}/mods-enabled/${name}.load ] \\
           && [ ${apache_c2c::params::conf}/mods-enabled/${name}.load -ef ${apache_c2c::params::conf}/mods-available/${name}.load ]'",
         require => $a2enmod_deps,
-        notify  => Service['apache'],
+        notify  => Service['httpd'],
       }
     }
 
@@ -39,7 +39,7 @@ define apache_c2c::module ($ensure='present') {
         onlyif  => "/bin/sh -c '[ -L ${apache_c2c::params::conf}/mods-enabled/${name}.load ] \\
           || [ -e ${apache_c2c::params::conf}/mods-enabled/${name}.load ]'",
         require => $a2enmod_deps,
-        notify  => Service['apache'],
+        notify  => Service['httpd'],
       }
     }
 

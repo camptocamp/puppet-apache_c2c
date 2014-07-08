@@ -30,7 +30,7 @@ class apache_c2c::debian inherits apache_c2c::base {
 
   package { $mpm_package:
     ensure  => installed,
-    require => Package['apache'],
+    require => Package['httpd'],
   }
 
   # directory not present in lenny
@@ -53,8 +53,8 @@ class apache_c2c::debian inherits apache_c2c::base {
 
   file { "${apache_c2c::params::conf}/conf.d/servername.conf":
     content => "ServerName ${::fqdn}\n",
-    notify  => Service['apache'],
-    require => Package['apache'],
+    notify  => Service['httpd'],
+    require => Package['httpd'],
   }
 
 }

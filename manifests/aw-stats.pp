@@ -9,7 +9,7 @@ define apache_c2c::aw-stats($ensure=present, $aliases=[], $allowfullyearview=2) 
   file { "/etc/awstats/awstats.${name}.conf":
     ensure  => $ensure,
     content => template('apache_c2c/awstats.erb'),
-    require => [Package['apache'], Class['apache_c2c::awstats']],
+    require => [Package['httpd'], Class['apache_c2c::awstats']],
   }
 
   $source = $::osfamily ? {

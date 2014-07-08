@@ -17,7 +17,7 @@ class apache_c2c::reverseproxy {
 </IfModule>
 ',
     notify  => Exec['apache-graceful'],
-    require => Package['apache'],
+    require => Package['httpd'],
   }
 
 }

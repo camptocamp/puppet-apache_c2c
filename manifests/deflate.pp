@@ -16,7 +16,7 @@ class apache_c2c::deflate {
 </IfModule>
 ',
     notify  => Exec['apache-graceful'],
-    require => Package['apache'],
+    require => Package['httpd'],
   }
 
 }

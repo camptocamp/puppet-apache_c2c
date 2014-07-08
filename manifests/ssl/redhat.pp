@@ -13,14 +13,14 @@ class apache_c2c::ssl::redhat inherits apache_c2c::base::ssl {
 # here to avoid it being recreated on package upgrade.
 ",
     require => Package['mod_ssl'],
-    notify  => Service['apache'],
+    notify  => Service['httpd'],
     before  => Exec['apache-graceful'],
   }
 
   apache_c2c::module { 'ssl':
     ensure  => present,
     require => File['/etc/httpd/conf.d/ssl.conf'],
-    notify  => Service['apache'],
+    notify  => Service['httpd'],
     before  => Exec['apache-graceful'],
   }
 

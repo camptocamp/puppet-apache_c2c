@@ -14,8 +14,8 @@ class apache_c2c::base {
   $error_log  = $apache_c2c::params::error_log
 
   concat {"${apache_c2c::params::conf}/ports.conf":
-    notify  => Service['apache'],
-    require => Package['apache'],
+    notify  => Service['httpd'],
+    require => Package['httpd'],
   }
 
   # removed this folder originally created by common::concatfilepart
@@ -32,7 +32,7 @@ class apache_c2c::base {
     mode    => '0755',
     owner   => 'root',
     group   => 'root',
-    require => Package['apache'],
+    require => Package['httpd'],
   }
 
   file {'log directory':
@@ -41,20 +41,20 @@ class apache_c2c::base {
     mode    => '0755',
     owner   => 'root',
     group   => 'root',
-    require => Package['apache'],
+    require => Package['httpd'],
   }
 
   user { 'apache user':
     ensure  => present,
     name    => $apache_c2c::params::user,
-    require => Package['apache'],
+    require => Package['httpd'],
     shell   => '/bin/sh',
   }
 
   group { 'apache group':
     ensure  => present,
     name    => $apache_c2c::params::user,
-    require => Package['apache'],
+    require => Package['httpd'],
   }
 
   package { 'apache':
@@ -71,7 +71,7 @@ class apache_c2c::base {
     name       => $apache_c2c::params::pkg,
     enable     => $apache_c2c::service_enable,
     hasrestart => true,
-    require    => Package['apache'],
+    require    => Package['httpd'],
   }
 
   file {'logrotate configuration':
@@ -81,7 +81,7 @@ class apache_c2c::base {
     group   => root,
     mode    => '0644',
     source  => undef,
-    require => Package['apache'],
+    require => Package['httpd'],
   }
 
   if ! $apache_c2c::disable_port80 {
@@ -112,7 +112,7 @@ class apache_c2c::base {
     ensure  => present,
     path    => "${apache_c2c::params::conf}/sites-available/default-vhost",
     content => template('apache_c2c/default-vhost.erb'),
-    require => Package['apache'],
+    require => Package['httpd'],
     notify  => Exec['apache-graceful'],
     before  => File["${apache_c2c::params::conf}/sites-enabled/000-default-vhost"],
     mode    => '0644',
