@@ -57,7 +57,7 @@ class apache_c2c::base {
     require => Package['httpd'],
   }
 
-  package { 'apache':
+  package { 'httpd':
     ensure => installed,
     name   => $apache_c2c::params::pkg,
   }
@@ -66,7 +66,7 @@ class apache_c2c::base {
     'unmanaged' => undef,
     default     => $apache_c2c::service_ensure,
   }
-  service { 'apache':
+  service { 'httpd':
     ensure     => $service_ensure,
     name       => $apache_c2c::params::pkg,
     enable     => $apache_c2c::service_enable,
