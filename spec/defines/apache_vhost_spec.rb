@@ -22,7 +22,6 @@ describe 'apache_c2c::vhost' do
           :group   => 'root',
           :mode    => '0644',
           :seltype => VARS[os]['conf_seltype'],
-          :content => /^# file managed by puppet$/
         ) }
 
         it { should contain_file("#{VARS[os]['root']}/#{vhost}").with(

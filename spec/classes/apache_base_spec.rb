@@ -52,12 +52,12 @@ describe 'apache_c2c::base' do
           'ensure' => 'present'
         ) end
 
-        it do should contain_package('apache').with(
+        it do should contain_package('httpd').with(
           'name'   => VARS[os]['pkg'],
           'ensure' => 'installed'
         ) end
 
-        it do should contain_service('apache').with(
+        it do should contain_service('httpd').with(
           'name'       => VARS[os]['pkg'],
           'ensure'     => 'running',
           'enable'     => 'true',
