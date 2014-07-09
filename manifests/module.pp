@@ -50,6 +50,18 @@ define apache_c2c::module ($ensure='present') {
 
   if $::apache_c2c::backend == 'puppetlabs' {
     case $name {
+      dir: {
+        class { '::apache::mod::dir':
+          indexes => [
+            'index.html',
+            'index.cgi',
+            'index.pl',
+            'index.php',
+            'index.xhtml',
+            'index.htm',
+          ],
+        }
+      }
       ssl: {
         class { '::apache::mod::ssl':
           ssl_options => false,
