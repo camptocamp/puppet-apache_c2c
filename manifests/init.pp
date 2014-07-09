@@ -33,6 +33,7 @@ class apache_c2c (
   $service_enable  = true,
   $disable_port80  = false,
   $default_vhost   = true,
+  $backend         = 'camptocamp',
 ) inherits ::apache_c2c::params {
 
   validate_absolute_path ($root)
@@ -44,5 +45,16 @@ class apache_c2c (
     Debian:  { include apache_c2c::debian}
     RedHat:  { include apache_c2c::redhat}
     default: { fail "Unsupported osfamily ${::osfamily}" }
+  }
+
+  if $backend == 'puppetlabs' {
+    class { '::apache':
+      default_mods      => false,
+      keepalive         => 'On',
+      keepalive_timeout => '5',
+      mpm_module        => 'prefork',
+      timeout           => '300',
+      trace_enable      => 'Off',
+    }
   }
 }

@@ -32,9 +32,11 @@ class apache_c2c::redhat inherits apache_c2c::base {
     content => template('apache_c2c/logrotate-httpd.erb'),
   }
 
-  File['default status module configuration'] {
-    path   => "${apache_c2c::params::conf}/conf.d/status.conf",
-    source => 'puppet:///modules/apache_c2c/etc/httpd/conf/status.conf',
+  if $::apache_c2c::backend != 'puppetlabs' {
+    File['default status module configuration'] {
+      path   => "${apache_c2c::params::conf}/conf.d/status.conf",
+      source => 'puppet:///modules/apache_c2c/etc/httpd/conf/status.conf',
+    }
   }
 
   File['default virtualhost'] {

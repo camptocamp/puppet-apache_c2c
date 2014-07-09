@@ -18,7 +18,21 @@ define apache_c2c::vhost (
   $accesslog_format='combined',
   $priority='25',
   $vhostroot="${::apache_c2c::root}/${name}",
-  $servername=$name,
+
+  $access_log          = undef,
+  $additional_includes = undef,
+  $directories         = undef,
+  $error_log           = undef,
+  $log_level           = 'warn',
+  $rewrites            = undef,
+  $scriptaliases       = undef,
+  $servername          = $name,
+  $ssl                 = undef,
+  $ssl_ca              = undef,
+  $ssl_cert            = undef,
+  $ssl_certs_dir       = undef,
+  $ssl_chain           = undef,
+  $ssl_key             = undef,
 ) {
 
   include ::apache_c2c::params
@@ -62,14 +76,37 @@ define apache_c2c::vhost (
       file { "${apache_c2c::params::conf}/sites-enabled/${name}":
         ensure => absent,
       }
-      file { "${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf":
-        ensure  => present,
-        owner   => root,
-        group   => root,
-        mode    => '0644',
-        seltype => $vhost_seltype,
-        require => Package[$apache_c2c::params::pkg],
-        notify  => Exec['apache-graceful'],
+      if $::apache_c2c::backend != 'puppetlabs' {
+        file { "${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf":
+          ensure  => present,
+          owner   => root,
+          group   => root,
+          mode    => '0644',
+          seltype => $vhost_seltype,
+          require => Package[$apache_c2c::params::pkg],
+          notify  => Exec['apache-graceful'],
+        }
+        case $config_file {
+
+          default: {
+            File["${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf"] {
+              source => $config_file,
+            }
+          }
+          '': {
+
+            if $config_content {
+              File["${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf"] {
+                content => $config_content,
+              }
+              } else {
+                # default vhost template
+                File["${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf"] {
+                  content => template('apache_c2c/vhost.erb'),
+                }
+              }
+          }
+        }
       }
 
       $docroot_seltype = $::osfamily ? {
@@ -205,28 +242,6 @@ define apache_c2c::vhost (
         }
       }
 
-      case $config_file {
-
-        default: {
-          File["${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf"] {
-            source => $config_file,
-          }
-        }
-        '': {
-
-          if $config_content {
-            File["${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf"] {
-              content => $config_content,
-            }
-          } else {
-            # default vhost template
-            File["${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf"] {
-              content => template('apache_c2c/vhost.erb'),
-            }
-          }
-        }
-      }
-
       # Log files
       $logdir_seltype = $::osfamily ? {
         RedHat  => 'httpd_log_t',
@@ -350,4 +365,66 @@ define apache_c2c::vhost (
     }
     default: { fail ( "Unknown ensure value: '${ensure}'" ) }
   }
+
+  if $::apache_c2c::backend == 'puppetlabs' {
+    $_additional_includes = $additional_includes ? {
+      undef   => "${::apache_c2c::root}/${servername}/conf/*.conf",
+      default => $additional_includes,
+    }
+
+    $_directories = $directories ? {
+      undef   => [
+        {
+          path        => "${::apache_c2c::root}/${servername}/cgi-bin/",
+          options     => ['+ExecCGI',],
+          addhandlers => [
+            {
+              handler    => 'cgi-script',
+              extensions => ['.cgi'],
+            }
+            ],
+        },
+        ],
+        default => $directories,
+    }
+
+    $_scriptaliases = $scriptaliases ? {
+      undef   => [
+        {
+          alias => '/cgi-bin/',
+          path  => "${::apache_c2c::root}/${servername}/cgi-bin/",
+        },
+        ],
+        default => $scriptaliases,
+    }
+
+    $port = split($ports[0], ':')
+
+    apache::vhost { $name:
+      ensure              => $ensure,
+      access_log          => $access_log,
+      access_log_file     => 'access.log',
+      additional_includes => $_additional_includes,
+      directories         => $_directories,
+      docroot             => $documentroot,
+      docroot_group       => $wwwgroup,
+      docroot_owner       => $wwwuser,
+      error_log           => $error_log,
+      error_log_file      => 'error.log',
+      log_level           => $log_level,
+      logroot             => "${vhostroot}/logs",
+      port                => $port[1],
+      rewrites            => $rewrites,
+      scriptaliases       => $_scriptaliases,
+      serveraliases       => $aliases,
+      servername          => $servername,
+      ssl                 => $ssl,
+      ssl_ca              => $ssl_ca,
+      ssl_cert            => $ssl_cert,
+      ssl_certs_dir       => $ssl_certs_dir,
+      ssl_chain           => $ssl_chain,
+      ssl_key             => $ssl_key,
+    }
+  }
+
 }

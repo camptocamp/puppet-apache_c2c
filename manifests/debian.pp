@@ -20,17 +20,19 @@ class apache_c2c::debian inherits apache_c2c::base {
     content => template('apache_c2c/logrotate-httpd.erb'),
   }
 
-  File['default status module configuration'] {
-    path   => "${apache_c2c::params::conf}/mods-available/status.conf",
-    source => 'puppet:///modules/apache_c2c/etc/apache2/mods-available/status.conf',
-  }
+  if $::apache_c2c::backend != 'puppetlabs' {
+    File['default status module configuration'] {
+      path   => "${apache_c2c::params::conf}/mods-available/status.conf",
+      source => 'puppet:///modules/apache_c2c/etc/apache2/mods-available/status.conf',
+    }
   # END inheritance from apache::base
 
-  $mpm_package = 'apache2-mpm-prefork'
+    $mpm_package = 'apache2-mpm-prefork'
 
-  package { $mpm_package:
-    ensure  => installed,
-    require => Package['httpd'],
+    package { $mpm_package:
+      ensure  => installed,
+      require => Package['httpd'],
+    }
   }
 
   # directory not present in lenny

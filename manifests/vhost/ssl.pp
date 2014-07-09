@@ -202,34 +202,73 @@ define apache_c2c::vhost::ssl (
 
   if $certchain != false {
     $certchainfile = "${wwwroot}/${name}/ssl/certchain.crt"
+  } else {
+    $certchainfile = undef
   }
 
   # call parent definition to actually do the virtualhost setup.
-  $_sslonly = $sslonly ? {
-    false   => template('apache_c2c/vhost.erb'),
-    default => template('apache_c2c/vhost-redirect-ssl.erb'),
-  }
-  $_config_content = $config_content ? {
-    false   => $_sslonly,
-    default => $config_content,
+  if $config_content {
+    $_config_content     = $config_content
+
+    $access_log          = undef
+    $additional_includes = undef
+    $directories         = undef
+    $error_log           = undef
+    $log_level           = undef
+    $scriptaliases       = undef
+  } else {
+    if $sslonly {
+      $sslport = split($sslports[0], ':')
+      $_config_content     = template('apache_c2c/vhost-redirect-ssl.erb')
+
+      $access_log          = false
+      $additional_includes = []
+      $directories         = [{}]
+      $error_log           = false
+      $log_level           = false
+      $rewrites            = [
+        {
+          rewrite_rule => "/(.*) https://%{HTTP_HOST}:${sslport[1]}/\$1 [R=302,NE]",
+        },
+      ]
+      $scriptaliases       = []
+    } else {
+      $_config_content     = template('apache_c2c/vhost.erb')
+
+      $access_log          = undef
+      $additional_includes = undef
+      $directories         = undef
+      $error_log           = undef
+      $log_level           = undef
+      $rewrites            = undef
+      $scriptaliases       = undef
+    }
   }
   apache_c2c::vhost { $name:
-    ensure           => $ensure,
-    config_file      => $config_file,
-    config_content   => $_config_content,
-    aliases          => $aliases,
-    htdocs_source    => $htdocs_source,
-    conf_source      => $conf_source,
-    cgi_source       => $cgi_source,
-    private_source   => $private_source,
-    readme           => $readme,
-    docroot          => $docroot,
-    user             => $wwwuser,
-    admin            => $admin,
-    group            => $wwwgroup,
-    mode             => $mode,
-    ports            => $ports,
-    accesslog_format => $accesslog_format,
+    ensure              => $ensure,
+    config_file         => $config_file,
+    config_content      => $_config_content,
+    aliases             => $aliases,
+    htdocs_source       => $htdocs_source,
+    conf_source         => $conf_source,
+    cgi_source          => $cgi_source,
+    private_source      => $private_source,
+    readme              => $readme,
+    docroot             => $docroot,
+    user                => $wwwuser,
+    admin               => $admin,
+    group               => $wwwgroup,
+    mode                => $mode,
+    ports               => $ports,
+    accesslog_format    => $accesslog_format,
+
+    access_log          => $access_log,
+    additional_includes => $additional_includes,
+    directories         => $directories,
+    error_log           => $error_log,
+    log_level           => $log_level,
+    rewrites            => $rewrites,
+    scriptaliases       => $scriptaliases,
   }
   if ! ( $config_content or $config_file) {
     apache_c2c::vhost { "${name}-ssl":
@@ -251,6 +290,13 @@ define apache_c2c::vhost::ssl (
       user             => $wwwuser,
       vhostroot        => "${::apache_c2c::root}/${name}",
       servername       => $name,
+
+      ssl              => true,
+      ssl_ca           => $cacertfile,
+      ssl_cert         => $certfile,
+      ssl_certs_dir    => false,
+      ssl_chain        => $certchainfile,
+      ssl_key          => $certkeyfile,
     }
   }
 
