@@ -17,7 +17,6 @@ define apache_c2c::vhost (
   $ports=['*:80'],
   $accesslog_format='combined',
   $priority='25',
-  $vhostroot="${::apache_c2c::root}/${name}",
 
   $access_log          = undef,
   $additional_includes = undef,
@@ -52,12 +51,12 @@ define apache_c2c::vhost (
   validate_absolute_path($wwwroot)
 
   $documentroot = $docroot ? {
-    false   => "${vhostroot}/htdocs",
+    false   => "${::apache_c2c::root}/${servername}/htdocs",
     default => $docroot,
   }
 
   $cgipath = $cgibin ? {
-    true    => "${vhostroot}/cgi-bin/",
+    true    => "${::apache_c2c::root}/${servername}/cgi-bin/",
     false   => false,
     default => $cgibin,
   }
@@ -115,7 +114,7 @@ define apache_c2c::vhost (
       }
       ensure_resource(
         'file',
-        $vhostroot,
+        "${::apache_c2c::root}/${servername}",
         {
           ensure  => directory,
           owner   => root,
@@ -136,7 +135,7 @@ define apache_c2c::vhost (
       }
       ensure_resource(
         'file',
-        "${vhostroot}/conf",
+        "${::apache_c2c::root}/${servername}/conf",
         {
           ensure  => directory,
           owner   => $confdir_owner,
@@ -152,7 +151,7 @@ define apache_c2c::vhost (
       }
       ensure_resource(
         'file',
-        "${vhostroot}/htdocs",
+        "${::apache_c2c::root}/${servername}/htdocs",
         {
           ensure  => directory,
           owner   => $wwwuser,
@@ -169,7 +168,7 @@ define apache_c2c::vhost (
       }
       ensure_resource(
         'file',
-        "${vhostroot}/private",
+        "${::apache_c2c::root}/${servername}/private",
         {
           ensure  => directory,
           owner   => $wwwuser,
@@ -182,11 +181,11 @@ define apache_c2c::vhost (
       # cgi-bin
       # don't manage this directory unless under $root/$name
       $cgidir_ensure = $cgipath ? {
-        "${vhostroot}/cgi-bin/" => directory,
-        default                 => undef,
+        "${::apache_c2c::root}/${servername}/cgi-bin/" => directory,
+        default                                        => undef,
       }
       $cgidir_path = $cgipath ? {
-        false   => "${vhostroot}/cgi-bin/",
+        false   => "${::apache_c2c::root}/${servername}/cgi-bin/",
         default => $cgipath,
       }
       $cgidir_seltype = $::osfamily ? {
@@ -195,7 +194,7 @@ define apache_c2c::vhost (
       }
       ensure_resource(
         'file',
-        "${vhostroot} cgi-bin directory",
+        "${::apache_c2c::root}/${servername} cgi-bin directory",
         {
           ensure  => $cgidir_ensure,
           path    => $cgidir_path,
@@ -207,7 +206,7 @@ define apache_c2c::vhost (
       )
 
       if $conf_source {
-        File["${vhostroot}/conf"] {
+        File["${::apache_c2c::root}/${servername}/conf"] {
           source  => $conf_source,
           recurse => true,
           purge   => true,
@@ -216,7 +215,7 @@ define apache_c2c::vhost (
       }
 
       if $htdocs_source {
-        File["${vhostroot}/htdocs"] {
+        File["${::apache_c2c::root}/${servername}/htdocs"] {
           source  => $htdocs_source,
           recurse => true,
           purge   => true,
@@ -225,7 +224,7 @@ define apache_c2c::vhost (
       }
 
       if $private_source {
-        File["${vhostroot}/private"] {
+        File["${::apache_c2c::root}/${servername}/private"] {
           source  => $private_source,
           recurse => true,
           purge   => true,
@@ -234,7 +233,7 @@ define apache_c2c::vhost (
       }
 
       if $cgi_source {
-        File["${vhostroot} cgi-bin directory"] {
+        File["${::apache_c2c::root}/${servername} cgi-bin directory"] {
           source  => $cgi_source,
           recurse => true,
           purge   => true,
@@ -249,7 +248,7 @@ define apache_c2c::vhost (
       }
       ensure_resource(
         'file',
-        "${vhostroot}/logs",
+        "${::apache_c2c::root}/${servername}/logs",
         {
           ensure  => directory,
           owner   => root,
@@ -268,8 +267,8 @@ define apache_c2c::vhost (
       ensure_resource(
         'file',
         [
-          "${vhostroot}/logs/access.log",
-          "${vhostroot}/logs/error.log",
+          "${::apache_c2c::root}/${servername}/logs/access.log",
+          "${::apache_c2c::root}/${servername}/logs/error.log",
         ],
         {
           ensure  => present,
@@ -277,7 +276,7 @@ define apache_c2c::vhost (
           group   => adm,
           mode    => '0644',
           seltype => $logfiles_seltype,
-          require => File["${vhostroot}/logs"],
+          require => File["${::apache_c2c::root}/${servername}/logs"],
         }
       )
 
@@ -288,7 +287,7 @@ define apache_c2c::vhost (
       }
       ensure_resource(
         'file',
-        "${vhostroot}/README",
+        "${::apache_c2c::root}/${servername}/README",
         {
           ensure  => present,
           owner   => root,
@@ -311,9 +310,9 @@ define apache_c2c::vhost (
             default => Package[$apache_c2c::params::pkg]
           },
           File["${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf"],
-          File["${vhostroot}/htdocs"],
-          File["${vhostroot}/logs"],
-          File["${vhostroot}/conf"]
+          File["${::apache_c2c::root}/${servername}/htdocs"],
+          File["${::apache_c2c::root}/${servername}/logs"],
+          File["${::apache_c2c::root}/${servername}/conf"]
         ],
         unless  => "/bin/sh -c '[ -L ${apache_c2c::params::conf}/sites-enabled/${priority}-${name}.conf ] \\
           && [ ${apache_c2c::params::conf}/sites-enabled/${priority}-${name}.conf -ef ${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf ]'",
@@ -331,9 +330,9 @@ define apache_c2c::vhost (
         require => Exec["disable vhost ${name}"]
       }
 
-      exec { "remove ${vhostroot}":
-        command => "rm -rf ${vhostroot}",
-        onlyif  => "test -d ${vhostroot}",
+      exec { "remove ${::apache_c2c::root}/${servername}":
+        command => "rm -rf ${::apache_c2c::root}/${servername}",
+        onlyif  => "test -d ${::apache_c2c::root}/${servername}",
         require => Exec["disable vhost ${name}"],
       }
 
@@ -412,7 +411,7 @@ define apache_c2c::vhost (
       error_log           => $error_log,
       error_log_file      => 'error.log',
       log_level           => $log_level,
-      logroot             => "${vhostroot}/logs",
+      logroot             => "${::apache_c2c::root}/${servername}/logs",
       port                => $port[1],
       rewrites            => $rewrites,
       scriptaliases       => $_scriptaliases,

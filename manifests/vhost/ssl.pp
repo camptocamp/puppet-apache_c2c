@@ -288,7 +288,6 @@ define apache_c2c::vhost::ssl (
       private_source   => $private_source,
       readme           => $readme,
       user             => $wwwuser,
-      vhostroot        => "${::apache_c2c::root}/${name}",
       servername       => $name,
 
       ssl              => true,
