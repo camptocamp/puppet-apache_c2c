@@ -205,13 +205,14 @@ define apache_c2c::vhost::ssl (
   }
 
   # call parent definition to actually do the virtualhost setup.
-  $_sslonly = $sslonly ? {
-    false   => template('apache_c2c/vhost.erb'),
-    default => template('apache_c2c/vhost-redirect-ssl.erb'),
-  }
-  $_config_content = $config_content ? {
-    false   => $_sslonly,
-    default => $config_content,
+  if $config_content {
+    $_config_content     = $config_content
+  } else {
+    if $sslonly {
+      $_config_content     = template('apache_c2c/vhost-redirect-ssl.erb')
+    } else {
+      $_config_content     = template('apache_c2c/vhost.erb')
+    }
   }
   apache_c2c::vhost { $name:
     ensure           => $ensure,
