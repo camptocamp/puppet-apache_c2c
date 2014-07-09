@@ -19,12 +19,16 @@
 #
 define apache_c2c::namevhost ($ensure='present') {
 
-  include apache_c2c::params
+  if $::apache_c2c::backend == 'puppetlabs' {
+    apache::namevirtualhost { $name: }
+  } else {
+    include apache_c2c::params
 
-  concat::fragment { "apache-namevhost.conf-${name}":
-    ensure  => $ensure,
-    target  => "${apache_c2c::params::conf}/ports.conf",
-    content => "NameVirtualHost ${name}\n",
+    concat::fragment { "apache-namevhost.conf-${name}":
+      ensure  => $ensure,
+      target  => "${apache_c2c::params::conf}/ports.conf",
+      content => "NameVirtualHost ${name}\n",
+    }
   }
 
 }
