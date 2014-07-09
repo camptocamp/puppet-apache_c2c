@@ -13,11 +13,6 @@ class apache_c2c::base {
   $access_log = $apache_c2c::params::access_log
   $error_log  = $apache_c2c::params::error_log
 
-  concat {"${apache_c2c::params::conf}/ports.conf":
-    notify  => Service['httpd'],
-    require => Package['httpd'],
-  }
-
   # removed this folder originally created by common::concatfilepart
   file {"${apache_c2c::params::conf}/ports.conf.d":
     ensure  => absent,
@@ -35,43 +30,65 @@ class apache_c2c::base {
     require => Package['httpd'],
   }
 
-  file {'log directory':
-    ensure  => directory,
-    path    => $apache_c2c::params::log,
-    mode    => '0755',
-    owner   => 'root',
-    group   => 'root',
-    require => Package['httpd'],
-  }
+  if $::apache_c2c::backend != 'puppetlabs' {
+    concat {"${apache_c2c::params::conf}/ports.conf":
+      notify  => Service['httpd'],
+      require => Package['httpd'],
+    }
 
-  user { 'apache user':
-    ensure  => present,
-    name    => $apache_c2c::params::user,
-    require => Package['httpd'],
-    shell   => '/bin/sh',
-  }
+    file {'log directory':
+      ensure  => directory,
+      path    => $apache_c2c::params::log,
+      mode    => '0755',
+      owner   => 'root',
+      group   => 'root',
+      require => Package['httpd'],
+    }
 
-  group { 'apache group':
-    ensure  => present,
-    name    => $apache_c2c::params::user,
-    require => Package['httpd'],
-  }
+    user { 'apache user':
+      ensure  => present,
+      name    => $apache_c2c::params::user,
+      require => Package['httpd'],
+      shell   => '/bin/sh',
+    }
 
-  package { 'httpd':
-    ensure => installed,
-    name   => $apache_c2c::params::pkg,
-  }
+    group { 'apache group':
+      ensure  => present,
+      name    => $apache_c2c::params::user,
+      require => Package['httpd'],
+    }
 
-  $service_ensure = $apache_c2c::service_ensure ? {
-    'unmanaged' => undef,
-    default     => $apache_c2c::service_ensure,
-  }
-  service { 'httpd':
-    ensure     => $service_ensure,
-    name       => $apache_c2c::params::pkg,
-    enable     => $apache_c2c::service_enable,
-    hasrestart => true,
-    require    => Package['httpd'],
+    package { 'httpd':
+      ensure => installed,
+      name   => $apache_c2c::params::pkg,
+    }
+
+    $service_ensure = $apache_c2c::service_ensure ? {
+      'unmanaged' => undef,
+      default     => $apache_c2c::service_ensure,
+    }
+    service { 'httpd':
+      ensure     => $service_ensure,
+      name       => $apache_c2c::params::pkg,
+      enable     => $apache_c2c::service_enable,
+      hasrestart => true,
+      require    => Package['httpd'],
+    }
+
+    apache_c2c::module { 'authz_host':
+      ensure => present,
+      notify => Exec['apache-graceful'],
+    }
+
+    file {'default status module configuration':
+      ensure  => present,
+      path    => undef,
+      owner   => root,
+      group   => root,
+      source  => undef,
+      require => Module['status'],
+      notify  => Exec['apache-graceful'],
+    }
   }
 
   file {'logrotate configuration':
@@ -92,20 +109,10 @@ class apache_c2c::base {
   }
 
   apache_c2c::module {['alias', 'auth_basic', 'authn_file', 'authz_default',
-  'authz_groupfile', 'authz_host', 'authz_user', 'autoindex', 'dir', 'env',
+  'authz_groupfile', 'authz_user', 'autoindex', 'dir', 'env',
   'mime', 'negotiation', 'rewrite', 'setenvif', 'status', 'cgi']:
     ensure => present,
     notify => Exec['apache-graceful'],
-  }
-
-  file {'default status module configuration':
-    ensure  => present,
-    path    => undef,
-    owner   => root,
-    group   => root,
-    source  => undef,
-    require => Module['status'],
-    notify  => Exec['apache-graceful'],
   }
 
   file {'default virtualhost':
