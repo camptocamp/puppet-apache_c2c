@@ -21,7 +21,7 @@ describe 'apache_c2c::vhost' do
           :owner   => 'root',
           :group   => 'root',
           :mode    => '0644',
-          :seltype => VARS[os]['conf_seltype'],
+          :seltype => VARS[os]['conf_seltype']
         ) }
 
         it { should contain_file("#{VARS[os]['root']}/#{vhost}").with(
