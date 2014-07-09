@@ -18,7 +18,21 @@ define apache_c2c::vhost (
   $accesslog_format='combined',
   $priority='25',
   $vhostroot="${::apache_c2c::root}/${name}",
-  $servername=$name,
+
+  $access_log          = undef,
+  $additional_includes = undef,
+  $directories         = undef,
+  $error_log           = undef,
+  $log_level           = 'warn',
+  $rewrites            = undef,
+  $scriptaliases       = undef,
+  $servername          = $name,
+  $ssl                 = undef,
+  $ssl_ca              = undef,
+  $ssl_cert            = undef,
+  $ssl_certs_dir       = undef,
+  $ssl_chain           = undef,
+  $ssl_key             = undef,
 ) {
 
   include ::apache_c2c::params
