@@ -103,8 +103,10 @@ class apache_c2c::base {
 
   if ! $apache_c2c::disable_port80 {
 
-    apache_c2c::listen { '80': ensure => present }
-    apache_c2c::namevhost { '*:80': ensure => present }
+    if $::apache_c2c::backend != 'puppetlabs' {
+      apache_c2c::listen { '80': ensure => present }
+      apache_c2c::namevhost { '*:80': ensure => present }
+    }
 
   }
 

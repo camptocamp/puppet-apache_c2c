@@ -48,13 +48,15 @@ class apache_c2c (
   }
 
   if $backend == 'puppetlabs' {
-    class { '::apache':
-      default_mods      => false,
-      keepalive         => 'On',
-      keepalive_timeout => '5',
-      mpm_module        => 'prefork',
-      timeout           => '300',
-      trace_enable      => 'Off',
+    if !defined(Class['apache']) {
+      class { '::apache':
+        default_mods      => false,
+        keepalive         => 'On',
+        keepalive_timeout => '5',
+        mpm_module        => 'prefork',
+        timeout           => '300',
+        trace_enable      => 'Off',
+      }
     }
   }
 }
