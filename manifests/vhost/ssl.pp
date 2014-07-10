@@ -215,6 +215,7 @@ define apache_c2c::vhost::ssl (
     $directories         = undef
     $error_log           = undef
     $log_level           = undef
+    $rewrites            = undef
     $scriptaliases       = undef
   } else {
     if $sslonly {
