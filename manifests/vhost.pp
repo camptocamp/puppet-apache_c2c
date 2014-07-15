@@ -332,11 +332,15 @@ define apache_c2c::vhost (
         require => Exec["disable vhost ${name}"]
       }
 
-      exec { "remove ${::apache_c2c::root}/${servername}":
-        command => "rm -rf ${::apache_c2c::root}/${servername}",
-        onlyif  => "test -d ${::apache_c2c::root}/${servername}",
-        require => Exec["disable vhost ${name}"],
-      }
+      ensure_resource(
+        'exec',
+        "remove ${::apache_c2c::root}/${servername}",
+        {
+          command => "rm -rf ${::apache_c2c::root}/${servername}",
+          onlyif  => "test -d ${::apache_c2c::root}/${servername}",
+          require => Exec["disable vhost ${name}"],
+        }
+      )
 
       exec { "disable vhost ${name}":
         command => $disable_vhost_command,
