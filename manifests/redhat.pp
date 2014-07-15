@@ -9,15 +9,6 @@ class apache_c2c::redhat inherits apache_c2c::base {
     command => 'apachectl graceful',
   }
 
-  Package['httpd'] {
-    require => [
-      File['/usr/local/sbin/a2ensite'],
-      File['/usr/local/sbin/a2dissite'],
-      File['/usr/local/sbin/a2enmod'],
-      File['/usr/local/sbin/a2dismod']
-      ],
-  }
-
   # the following variables are used in template logrotate-httpd.erb
   $logrotate_paths = "${wwwroot}/*/logs/*.log ${apache_c2c::params::log}/*log"
   $httpd_pid_file = $::lsbmajdistrelease ? {
@@ -33,6 +24,15 @@ class apache_c2c::redhat inherits apache_c2c::base {
   }
 
   if $::apache_c2c::backend != 'puppetlabs' {
+    Package['httpd'] {
+      require => [
+        File['/usr/local/sbin/a2ensite'],
+        File['/usr/local/sbin/a2dissite'],
+        File['/usr/local/sbin/a2enmod'],
+        File['/usr/local/sbin/a2dismod']
+        ],
+    }
+
     File['default status module configuration'] {
       path   => "${apache_c2c::params::conf}/conf.d/status.conf",
       source => 'puppet:///modules/apache_c2c/etc/httpd/conf/status.conf',
@@ -78,12 +78,14 @@ class apache_c2c::redhat inherits apache_c2c::base {
     require => Package['httpd'],
   }
 
-  file { "${apache_c2c::params::conf}/conf/httpd.conf":
-    ensure  => present,
-    content => template('apache_c2c/httpd.conf.erb'),
-    seltype => 'httpd_config_t',
-    notify  => Service['httpd'],
-    require => Package['httpd'],
+  if $::apache_c2c::backend != 'puppetlabs' {
+    file { "${apache_c2c::params::conf}/conf/httpd.conf":
+      ensure  => present,
+      content => template('apache_c2c/httpd.conf.erb'),
+      seltype => 'httpd_config_t',
+      notify  => Service['httpd'],
+      require => Package['httpd'],
+    }
   }
 
   # the following command was used to generate the content of the directory:
@@ -105,10 +107,12 @@ class apache_c2c::redhat inherits apache_c2c::base {
     require => Package['httpd'],
   }
 
-  # this module is statically compiled on debian and must be enabled here
-  apache_c2c::module {'log_config':
-    ensure => present,
-    notify => Exec['apache-graceful'],
+  if $::apache_c2c::backend != 'puppetlabs' {
+    # this module is statically compiled on debian and must be enabled here
+    apache_c2c::module {'log_config':
+      ensure => present,
+      notify => Exec['apache-graceful'],
+    }
   }
 
   # it makes no sens to put CGI here, deleted from the default vhost config

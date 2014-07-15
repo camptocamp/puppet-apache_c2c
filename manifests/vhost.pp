@@ -297,25 +297,27 @@ define apache_c2c::vhost (
         }
       )
 
-      $enable_vhost_command = $::osfamily ? {
-        RedHat  => "${apache_c2c::params::a2ensite} ${priority}-${name}.conf",
-        default => "${apache_c2c::params::a2ensite} ${priority}-${name}.conf"
-      }
-      exec {"enable vhost ${name}":
-        command => $enable_vhost_command,
-        notify  => Exec['apache-graceful'],
-        require => [
-          $::osfamily ? {
-            RedHat  => File[$apache_c2c::params::a2ensite],
-            default => Package[$apache_c2c::params::pkg]
-          },
-          File["${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf"],
-          File["${::apache_c2c::root}/${servername}/htdocs"],
-          File["${::apache_c2c::root}/${servername}/logs"],
-          File["${::apache_c2c::root}/${servername}/conf"]
-        ],
-        unless  => "/bin/sh -c '[ -L ${apache_c2c::params::conf}/sites-enabled/${priority}-${name}.conf ] \\
-          && [ ${apache_c2c::params::conf}/sites-enabled/${priority}-${name}.conf -ef ${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf ]'",
+      if $::apache_c2c::backend != 'puppetlabs' {
+        $enable_vhost_command = $::osfamily ? {
+          RedHat  => "${apache_c2c::params::a2ensite} ${priority}-${name}.conf",
+          default => "${apache_c2c::params::a2ensite} ${priority}-${name}.conf"
+        }
+        exec {"enable vhost ${name}":
+          command => $enable_vhost_command,
+          notify  => Exec['apache-graceful'],
+          require => [
+            $::osfamily ? {
+              RedHat  => File[$apache_c2c::params::a2ensite],
+              default => Package[$apache_c2c::params::pkg]
+            },
+            File["${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf"],
+            File["${::apache_c2c::root}/${servername}/htdocs"],
+            File["${::apache_c2c::root}/${servername}/logs"],
+            File["${::apache_c2c::root}/${servername}/conf"]
+            ],
+            unless  => "/bin/sh -c '[ -L ${apache_c2c::params::conf}/sites-enabled/${priority}-${name}.conf ] \\
+            && [ ${apache_c2c::params::conf}/sites-enabled/${priority}-${name}.conf -ef ${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf ]'",
+        }
       }
     }
 
