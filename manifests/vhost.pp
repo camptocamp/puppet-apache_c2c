@@ -338,13 +338,13 @@ define apache_c2c::vhost (
         {
           command => "rm -rf ${::apache_c2c::root}/${servername}",
           onlyif  => "test -d ${::apache_c2c::root}/${servername}",
-          require => Exec["disable vhost ${name}"],
         }
       )
 
       exec { "disable vhost ${name}":
         command => $disable_vhost_command,
         notify  => Exec['apache-graceful'],
+        before  => Exec["remove ${::apache_c2c::root}/${servername}"],
         require => [$::osfamily ? {
           RedHat  => File[$apache_c2c::params::a2ensite],
           default => Package[$apache_c2c::params::pkg]
