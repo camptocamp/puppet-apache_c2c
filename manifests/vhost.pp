@@ -15,11 +15,11 @@ define apache_c2c::vhost (
   $mode='2570',
   $aliases=[],
   $ports=['*:80'],
-  $accesslog_format='combined',
   $priority='25',
 
   $access_log          = undef,
   $additional_includes = undef,
+  $accesslog_format    = undef,
   $directories         = undef,
   $error_log           = undef,
   $log_level           = 'warn',
@@ -64,6 +64,13 @@ define apache_c2c::vhost (
   $disable_vhost_command = $::osfamily ? {
     RedHat  => "/usr/local/sbin/a2dissite ${priority}-${name}.conf",
     default => "/usr/sbin/a2dissite ${priority}-${name}.conf",
+  }
+
+  # Set access log format
+  if $accesslog_format {
+    $_accesslog_format = "\"${accesslog_format}\""
+  } else {
+    $_accesslog_format = 'combined'
   }
 
   case $ensure {

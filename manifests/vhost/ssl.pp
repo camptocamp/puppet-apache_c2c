@@ -133,7 +133,7 @@ define apache_c2c::vhost::ssl (
   $sslonly=true,
   $ports=['*:80'],
   $sslports=['*:443'],
-  $accesslog_format='combined',
+  $accesslog_format=undef,
   $sslcert_commonname=$name,
   $sslcert_country='??',
   $sslcert_state=undef,
@@ -178,6 +178,13 @@ define apache_c2c::vhost::ssl (
     true    => "${wwwroot}/${name}/cgi-bin/",
     false   => false,
     default => $cgibin,
+  }
+
+  # Set access log format
+  if $accesslog_format {
+    $_accesslog_format = "\"${accesslog_format}\""
+  } else {
+    $_accesslog_format = 'combined'
   }
 
   # define variable names used in vhost-ssl.erb template
