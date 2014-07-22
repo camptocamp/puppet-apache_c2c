@@ -1,5 +1,5 @@
 # file managed by puppet
-<%= logrotate_paths %> {
+<%= @logrotate_paths %> {
     weekly
     missingok
     rotate 52
@@ -9,13 +9,13 @@
     create 644 root adm
     sharedscripts
     prerotate
-        if [ <%= awstats_condition %> ]; then
-            <%= awstats_command %>
+        if [ <%= @awstats_condition %> ]; then
+            <%= @awstats_command %>
         fi
     endscript
     postrotate
-        if [ -f <%= httpd_pid_file %> ]; then
-            <%= httpd_reload_cmd %>
+        if [ -f <%= @httpd_pid_file %> ]; then
+            <%= @httpd_reload_cmd %>
         fi
     endscript
 }

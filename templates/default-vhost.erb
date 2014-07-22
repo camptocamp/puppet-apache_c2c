@@ -15,8 +15,8 @@
     allow from all
   </Directory>
 
-  ErrorLog <%= error_log %>
+  ErrorLog <%= @error_log %>
   LogLevel warn
-  CustomLog <%= access_log %> combined
+  CustomLog <%= @access_log %> combined
   ServerSignature Off
 </VirtualHost>
