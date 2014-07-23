@@ -51,7 +51,7 @@
 # If there is several log files from load balancing servers :
 # Example: "/pathtotools/logresolvemerge.pl *.log |"
 #
-LogFile="<%= wwwroot %>/<%= name %>/logs/access.log"
+LogFile="<%= @wwwroot %>/<%= @name %>/logs/access.log"
 
 
 # Enter the log file type you want to analyze.
@@ -153,7 +153,7 @@ LogSeparator=" "
 # Example: "ftp.domain.com"
 # Example: "domain.com"
 #
-SiteDomain="<%= name %>"
+SiteDomain="<%= @name %>"
 
 
 # Enter here all other possible domain names, addresses or virtual host
@@ -168,7 +168,7 @@ SiteDomain="<%= name %>"
 # Note: You can also use @/mypath/myfile if list of aliases are in a file.
 # Example: "www.myserver.com localhost 127.0.0.1 REGEX[mydomain\.(net|org)$]"
 #
-HostAliases="<%=aliases.collect! {|i| "#{i}" }.join(' ') -%>"
+HostAliases="<%= @aliases.collect! {|i| "#{i}" }.join(' ') -%>"
 
 
 # If you want to have hosts reported by name instead of ip address, AWStats
@@ -258,7 +258,7 @@ AllowToUpdateStatsFromBrowser=0
 #  3 - Possible on CLI and CGI
 # Default: 2
 #
-AllowFullYearView=<%= allowfullyearview -%>
+AllowFullYearView=<%= @allowfullyearview -%>
 
 
 
