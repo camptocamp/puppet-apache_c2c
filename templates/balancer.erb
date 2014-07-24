@@ -1,19 +1,19 @@
 # file managed by puppet
 
-<Proxy <%= balancer %>*>
+<Proxy <%= @balancer %>*>
     Order deny,allow
     Allow from all
 </Proxy>
 
-ProxyPass <%= location %> <%= balancer %>/
-ProxyPassReverse <%= location %> <%= balancer %>/
+ProxyPass <%= @location %> <%= @balancer %>/
+ProxyPassReverse <%= @location %> <%= @balancer %>/
 
-<Proxy <%= balancer %>>
-<% members.each do |member| -%>
-    BalancerMember <%= proto %>://<%= member %><% params.each do |param| -%> <%= param %><% end %>
+<Proxy <%= @balancer %>>
+<% @members.each do |member| -%>
+    BalancerMember <%= @proto %>://<%= member %><% @params.each do |param| -%> <%= param %><% end %>
 <% end -%>
-<% if standbyurl != "" -%>
+<% if @standbyurl != "" -%>
     # this is our hot standby:
-    BalancerMember <%= standbyurl %> status=+H
+    BalancerMember <%= @standbyurl %> status=+H
 <% end -%>
 </Proxy>
