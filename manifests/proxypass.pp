@@ -55,6 +55,11 @@ define apache_c2c::proxypass (
     apache_c2c::module {'proxy_http':
     }
   }
+  $require = $::apache_c2c::backend ? {
+    'puppetlabs' => Apache::Vhost[$vhost],
+    default      => Apache_c2c::Vhost[$vhost],
+  }
+
 
   $seltype = $::osfamily ? {
     'RedHat' => 'httpd_config_t',
@@ -70,6 +75,6 @@ define apache_c2c::proxypass (
     seltype => $seltype,
     path    => $path,
     notify  => Exec['apache-graceful'],
-    require => Apache_c2c::Vhost[$vhost],
+    require => $require,
   }
 }
