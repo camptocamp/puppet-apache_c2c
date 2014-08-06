@@ -47,12 +47,18 @@ define apache_c2c::directive(
     fail 'empty "directive" parameter'
   }
 
+  $require = $::apache_c2c::backend ? {
+    'puppetlabs' => Apache::Vhost[$vhost],
+    default      => Apache_c2c::Vhost[$vhost],
+  }
+
+
   apache_c2c::conf {$name:
     ensure        => $ensure,
     path          => "${wwwroot}/${vhost}/conf",
     prefix        => 'directive',
     filename      => $filename,
     configuration => $directive,
-    require       => Apache_c2c::Vhost[$vhost],
+    require       => $require,
   }
 }
