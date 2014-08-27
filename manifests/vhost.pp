@@ -128,7 +128,7 @@ define apache_c2c::vhost (
           group   => root,
           mode    => '0755',
           seltype => $docroot_seltype,
-          require => File['root directory'],
+          require => File[$wwwroot],
         }
       )
 

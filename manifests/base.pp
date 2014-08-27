@@ -21,13 +21,15 @@ class apache_c2c::base {
     force   => true,
   }
 
-  file {'root directory':
-    ensure  => directory,
-    path    => $wwwroot,
-    mode    => '0755',
-    owner   => 'root',
-    group   => 'root',
-    require => Package['httpd'],
+  if ! defined(File[$wwwroot]) {
+    file { $wwwroot:
+      ensure  => directory,
+      path    => $wwwroot,
+      mode    => '0755',
+      owner   => 'root',
+      group   => 'root',
+      require => Package['httpd'],
+    }
   }
 
   if $::apache_c2c::backend != 'puppetlabs' {
