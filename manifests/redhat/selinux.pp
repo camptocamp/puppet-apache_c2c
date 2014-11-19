@@ -41,7 +41,7 @@ define apache_c2c::redhat::selinux {
     }
 
     suexec: {
-      if versioncmp($::lsbmajdistrelease, 6) < 0 {
+      if versioncmp($::operatingsystemmajrelease, 6) < 0 {
         selboolean { 'httpd_suexec_disable_trans':
           value      => 'off',
           persistent => true,

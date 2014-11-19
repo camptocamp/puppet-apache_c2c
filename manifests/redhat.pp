@@ -11,7 +11,7 @@ class apache_c2c::redhat inherits apache_c2c::base {
 
   # the following variables are used in template logrotate-httpd.erb
   $logrotate_paths = "${wwwroot}/*/logs/*.log ${apache_c2c::params::log}/*log"
-  $httpd_pid_file = $::lsbmajdistrelease ? {
+  $httpd_pid_file = $::operatingsystemmajrelease ? {
     /4|5/   => '/var/run/httpd.pid',
     default => '/var/run/httpd/httpd.pid',
   }
@@ -92,7 +92,7 @@ class apache_c2c::redhat inherits apache_c2c::base {
   # egrep '(^|#)LoadModule' /etc/httpd/conf/httpd.conf | sed -r 's|\
   # #?(.+ (.+)_module .+)|echo "\1" > mods-available/redhat5/\2.load|' | sh
   # ssl.load was then changed to a template (see apache-ssl-redhat.pp)
-  $source = $::lsbmajdistrelease ? {
+  $source = $::operatingsystemmajrelease ? {
     5 => 'puppet:///modules/apache_c2c/etc/httpd/mods-available/redhat5/',
     6 => 'puppet:///modules/apache_c2c/etc/httpd/mods-available/redhat6/',
   }
