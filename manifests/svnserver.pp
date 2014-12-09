@@ -2,11 +2,11 @@ class apache_c2c::svnserver inherits apache_c2c::ssl {
 
   case $::osfamily {
 
-    Debian:  {
+    'Debian':  {
       $pkglist = [ 'libapache2-svn' ]
     }
 
-    RedHat:  {
+    'RedHat':  {
       $pkglist = [ 'mod_dav_svn' ]
     }
 

@@ -62,8 +62,8 @@ define apache_c2c::vhost (
   }
 
   $disable_vhost_command = $::osfamily ? {
-    RedHat  => "/usr/local/sbin/a2dissite ${priority}-${name}.conf",
-    default => "/usr/sbin/a2dissite ${priority}-${name}.conf",
+    'RedHat' => "/usr/local/sbin/a2dissite ${priority}-${name}.conf",
+    default  => "/usr/sbin/a2dissite ${priority}-${name}.conf",
   }
 
   # Set access log format
@@ -76,8 +76,8 @@ define apache_c2c::vhost (
   case $ensure {
     present: {
       $vhost_seltype = $::osfamily ? {
-        RedHat  => 'httpd_config_t',
-        default => undef,
+        'RedHat' => 'httpd_config_t',
+        default  => undef,
       }
       file { "${apache_c2c::params::conf}/sites-enabled/${name}":
         ensure => absent,
@@ -116,8 +116,8 @@ define apache_c2c::vhost (
       }
 
       $docroot_seltype = $::osfamily ? {
-        RedHat  => 'httpd_sys_content_t',
-        default => undef,
+        'RedHat' => 'httpd_sys_content_t',
+        default  => undef,
       }
       ensure_resource(
         'file',
@@ -137,8 +137,8 @@ define apache_c2c::vhost (
         default => $admin,
       }
       $confdir_seltype = $::osfamily ? {
-        RedHat  => 'httpd_config_t',
-        default => undef,
+        'RedHat' => 'httpd_config_t',
+        default  => undef,
       }
       ensure_resource(
         'file',
@@ -153,8 +153,8 @@ define apache_c2c::vhost (
       )
 
       $htdocs_seltype = $::osfamily ? {
-        RedHat  => 'httpd_sys_content_t',
-        default => undef,
+        'RedHat' => 'httpd_sys_content_t',
+        default  => undef,
       }
       ensure_resource(
         'file',
@@ -170,8 +170,8 @@ define apache_c2c::vhost (
 
       # Private data
       $private_seltype = $::osfamily ? {
-        RedHat  => 'httpd_sys_content_t',
-        default => undef,
+        'RedHat' => 'httpd_sys_content_t',
+        default  => undef,
       }
       ensure_resource(
         'file',
@@ -196,8 +196,8 @@ define apache_c2c::vhost (
         default => $cgipath,
       }
       $cgidir_seltype = $::osfamily ? {
-        RedHat  => 'httpd_sys_script_exec_t',
-        default => undef,
+        'RedHat' => 'httpd_sys_script_exec_t',
+        default  => undef,
       }
       ensure_resource(
         'file',
@@ -250,8 +250,8 @@ define apache_c2c::vhost (
 
       # Log files
       $logdir_seltype = $::osfamily ? {
-        RedHat  => 'httpd_log_t',
-        default => undef,
+        'RedHat' => 'httpd_log_t',
+        default  => undef,
       }
       ensure_resource(
         'file',
@@ -268,8 +268,8 @@ define apache_c2c::vhost (
       # We have to give log files to right people with correct rights on them.
       # Those rights have to match those set by logrotate
       $logfiles_seltype = $::osfamily ? {
-        RedHat  => 'httpd_log_t',
-        default => undef,
+        'RedHat' => 'httpd_log_t',
+        default  => undef,
       }
       ensure_resource(
         'file',
@@ -306,16 +306,16 @@ define apache_c2c::vhost (
 
       if $::apache_c2c::backend != 'puppetlabs' {
         $enable_vhost_command = $::osfamily ? {
-          RedHat  => "${apache_c2c::params::a2ensite} ${priority}-${name}.conf",
-          default => "${apache_c2c::params::a2ensite} ${priority}-${name}.conf"
+          'RedHat' => "${apache_c2c::params::a2ensite} ${priority}-${name}.conf",
+          default  => "${apache_c2c::params::a2ensite} ${priority}-${name}.conf"
         }
         exec {"enable vhost ${name}":
           command => $enable_vhost_command,
           notify  => Exec['apache-graceful'],
           require => [
             $::osfamily ? {
-              RedHat  => File[$apache_c2c::params::a2ensite],
-              default => Package[$apache_c2c::params::pkg]
+              'RedHat' => File[$apache_c2c::params::a2ensite],
+              default  => Package[$apache_c2c::params::pkg]
             },
             File["${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf"],
             File["${::apache_c2c::root}/${servername}/htdocs"],
@@ -353,8 +353,8 @@ define apache_c2c::vhost (
         notify  => Exec['apache-graceful'],
         before  => Exec["remove ${::apache_c2c::root}/${servername}"],
         require => [$::osfamily ? {
-          RedHat  => File[$apache_c2c::params::a2ensite],
-          default => Package[$apache_c2c::params::pkg]
+          'RedHat' => File[$apache_c2c::params::a2ensite],
+          default  => Package[$apache_c2c::params::pkg]
           }],
         onlyif  => "/bin/sh -c '[ -L ${apache_c2c::params::conf}/sites-enabled/${priority}-${name}.conf ] \\
           && [ ${apache_c2c::params::conf}/sites-enabled/${priority}-${name}.conf -ef ${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf ]'",

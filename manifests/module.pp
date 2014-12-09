@@ -3,14 +3,14 @@ define apache_c2c::module ($ensure='present') {
   include apache_c2c::params
 
   $a2enmod_deps = $::osfamily ? {
-    RedHat => [
+    'RedHat' => [
       Package['httpd'],
       File['/etc/httpd/mods-available'],
       File['/etc/httpd/mods-enabled'],
       File['/usr/local/sbin/a2enmod'],
       File['/usr/local/sbin/a2dismod']
     ],
-    Debian => Package['httpd'],
+    'Debian' => Package['httpd'],
   }
 
   if $::selinux == 'true' and $ensure == 'present' {

@@ -197,8 +197,8 @@ define apache_c2c::vhost::ssl (
     $cacertfile = "${wwwroot}/${name}/ssl/cacert.crt"
   } else {
     $cacertfile = $::osfamily ? {
-      RedHat => '/etc/pki/tls/certs/ca-bundle.crt',
-      Debian => '/etc/ssl/certs/ca-certificates.crt',
+      'RedHat' => '/etc/pki/tls/certs/ca-bundle.crt',
+      'Debian' => '/etc/ssl/certs/ca-certificates.crt',
     }
   }
 

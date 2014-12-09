@@ -10,8 +10,8 @@
 #
 class apache_c2c::dev {
   $pkg_name = $::osfamily ? {
-    RedHat => 'httpd-devel',
-    Debian => 'apache2-threaded-dev',
+    'RedHat' => 'httpd-devel',
+    'Debian' => 'apache2-threaded-dev',
   }
   package { 'apache-devel':
     ensure  => present,

@@ -17,7 +17,7 @@ class apache_c2c::awstats {
 
   case $::osfamily {
 
-    Debian: {
+    'Debian': {
       cron { 'update all awstats virtual hosts':
         command => '/usr/share/doc/awstats/examples/awstats_updateall.pl -awstatsprog=/usr/lib/cgi-bin/awstats.pl -confdir=/etc/awstats now > /dev/null',
         user    => 'root',
@@ -30,7 +30,7 @@ class apache_c2c::awstats {
       }
     }
 
-    RedHat: {
+    'RedHat': {
 
       # awstats RPM installs its own cron in /etc/cron.hourly/awstats
 

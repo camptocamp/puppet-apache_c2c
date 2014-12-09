@@ -13,8 +13,8 @@ define apache_c2c::aw-stats($ensure=present, $aliases=[], $allowfullyearview=2) 
   }
 
   $source = $::osfamily ? {
-    RedHat => 'puppet:///modules/apache_c2c/awstats.rh.conf',
-    Debian => 'puppet:///modules/apache_c2c/awstats.deb.conf',
+    'RedHat' => 'puppet:///modules/apache_c2c/awstats.rh.conf',
+    'Debian' => 'puppet:///modules/apache_c2c/awstats.deb.conf',
   }
   $seltype = $::osfamily ? {
     'RedHat' => 'httpd_config_t',

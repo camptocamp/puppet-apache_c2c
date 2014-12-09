@@ -2,7 +2,7 @@ class apache_c2c::security {
 
   case $::osfamily {
 
-    RedHat: {
+    'RedHat': {
       package { 'mod_security':
         ensure => present,
         alias  => 'apache-mod_security',
@@ -21,7 +21,7 @@ class apache_c2c::security {
       }
     }
 
-    Debian: {
+    'Debian': {
       package { 'libapache-mod-security':
         ensure => present,
         alias  => 'apache-mod_security',
