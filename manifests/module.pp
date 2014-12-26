@@ -13,7 +13,7 @@ define apache_c2c::module ($ensure='present') {
     'Debian' => Package['httpd'],
   }
 
-  if $::selinux == 'true' and $ensure == 'present' {
+  if str2bool($::selinux) == true and $ensure == 'present' {
     apache_c2c::redhat::selinux {$name: }
   }
 
