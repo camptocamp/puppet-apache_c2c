@@ -1,17 +1,33 @@
 ---
 language: ruby
-bundler_args: --without development
-script: "bundle exec rake validate && bundle exec rake lint && bundle exec rake spec SPEC_OPTS='--format documentation'"
+sudo: false
+cache:
+  directories:
+    - vendor/bundle
+    - spec/fixtures/modules
+bundler_args: --without system_tests --path vendor/bundle
+script: ["bundle exec rake validate", "bundle exec rake lint", "bundle exec rake spec_prep", "bundle exec fakeroot rake spec_standalone SPEC_OPTS='--format documentation'", "bundle exec rake metadata"]
 matrix:
   fast_finish: true
   include:
   - rvm: 1.8.7
-    env: PUPPET_GEM_VERSION="~> 2.7.0" FACTER_GEM_VERSION="~> 1.6.0"
-  - rvm: 1.8.7
-    env: PUPPET_GEM_VERSION="~> 2.7.0" FACTER_GEM_VERSION="~> 1.7.0"
+    env: PUPPET_GEM_VERSION="~> 3.0" FACTER_GEM_VERSION="~> 1.7.0"
   - rvm: 1.9.3
     env: PUPPET_GEM_VERSION="~> 3.0"
   - rvm: 2.0.0
     env: PUPPET_GEM_VERSION="~> 3.0"
+  - rvm: 2.0.0
+    env: PUPPET_GEM_VERSION="~> 3.0" FUTURE_PARSER="yes"
 notifications:
   email: false
+deploy:
+  provider: puppetforge
+  user: camptocamp
+  password:
+    secure: ""
+  on:
+    tags: true
+    # all_branches is required to use tags
+    all_branches: true
+    # Only publish if our main Ruby target builds
+    rvm: 1.9.3
