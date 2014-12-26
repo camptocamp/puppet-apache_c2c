@@ -1,0 +1,57 @@
+{
+  "name": "camptocamp-apache_c2c",
+  "version": "1.0.0",
+  "author": "Camptocamp",
+  "summary": "Puppet Apache module",
+  "license": "Apache 2.0",
+  "source": "https://github.com/camptocamp/puppet-apache_c2c",
+  "project_page": "https://github.com/camptocamp/puppet-apache_c2c",
+  "issues_url": "https://github.com/camptocamp/puppet-apache_c2c/issues",
+  "dependencies": [
+    {
+      "name": "camptocamp/collectd"
+    },
+    {
+      "name": "puppetlabs/concat",
+      "version_requirement": ">=1.0.0 <2.0.0"
+    },
+    {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": ">=3.2.0 <5.0.0"
+    }
+  ],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": "3.x"
+    }
+  ],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "6",
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": [
+        "10.04",
+        "12.04",
+        "14.04"
+      ]
+    },
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "5",
+        "6",
+        "7"
+      ]
+    }
+  ],
+  "puppet_version": [
+    "3.7"
+  ]
+}
