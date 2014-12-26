@@ -3,13 +3,11 @@ require 'spec_helper'
 describe 'apache_c2c::confd' do
   let(:title) { 'example 1' }
 
-  OSES.each do |os|
-    describe "When on #{os}" do
-      let(:facts) { {
-        :concat_basedir  => '/foo',
-        :operatingsystem => os,
-        :osfamily        => os,
-      } }
+  on_supported_os.each do |os, facts|
+    context "on #{os}" do
+      let(:facts) do
+        facts
+      end
 
       describe 'using example usage' do
         let(:params) { {

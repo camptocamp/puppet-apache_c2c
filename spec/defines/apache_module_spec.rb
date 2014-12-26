@@ -2,12 +2,12 @@ require 'spec_helper'
 
 describe 'apache_c2c::module' do
   let(:title) { 'deflate' }
-  OSES.each do |os|
-    describe "When on #{os}" do
-      let (:facts) { {
-        :operatingsystem => os,
-        :osfamily        => os,
-      } }
+
+  on_supported_os.each do |os, facts|
+    context "on #{os}" do
+      let(:facts) do
+        facts
+      end
 
       describe 'ensuring presence' do
         let(:params) { {

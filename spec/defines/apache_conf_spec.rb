@@ -3,12 +3,12 @@ require 'spec_helper'
 describe 'apache_c2c::conf' do
   let(:title) { 'example 1' }
 
-  OSES.each do |os|
-    describe "When on #{os}" do
-      let(:facts) {{
-        :operatingsystem => os,
-        :osfamily        => os,
-      }}
+  on_supported_os.each do |os, facts|
+    context "on #{os}" do
+      let(:facts) do
+        facts
+      end
+
       describe 'using example usage' do
         let(:params) { {
           :ensure        => 'present',

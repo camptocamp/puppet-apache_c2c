@@ -4,14 +4,11 @@ describe 'apache_c2c::balancer' do
   let(:title) { 'my balanced service' }
   let(:pre_condition) { 'include ::apache_c2c' }
 
-  OSES.each do |os|
-    describe "When on #{os}" do
-      let(:facts) { {
-        :concat_basedir    => '/foo',
-        :lsbmajdistrelease => '6',
-        :operatingsystem   => os,
-        :osfamily          => os,
-      } }
+  on_supported_os.each do |os, facts|
+    context "on #{os}" do
+      let(:facts) do
+        facts
+      end
 
       let(:params) { {
         :vhost => 'default.org',

@@ -1,14 +1,12 @@
 require 'spec_helper'
 
 describe 'apache_c2c::svnserver' do
-  OSES.each do |os|
-    describe "When on #{os}" do
-      let(:facts) { {
-        :concat_basedir    => '/foo',
-        :lsbmajdistrelease => '5',
-        :operatingsystem   => os,
-        :osfamily          => os,
-      } }
+
+  on_supported_os.each do |os, facts|
+    context "on #{os}" do
+      let(:facts) do
+        facts
+      end
 
       it { should contain_package(VARS[os]['mod_svn']).with_ensure('present') }
 

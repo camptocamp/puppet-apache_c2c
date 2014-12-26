@@ -1,16 +1,16 @@
 require 'spec_helper'
 
 describe 'apache_c2c::reverseproxy' do
-  OSES.each do |os|
-    describe "When on #{os}" do
-      let(:facts) { {
-        :operatingsystem => os,
-        :osfamily        => os,
-      } }
+
+  on_supported_os.each do |os, facts|
+    context "on #{os}" do
+      let(:facts) do
+        facts
+      end
 
       it { should contain_class('apache_c2c::params') }
 
-      REVERSEPROXY_MODULES.each do |m|
+      ['proxy', 'proxy_http', 'proxy_ajp', 'proxy_connect'].each do |m|
         it { should contain_apache_c2c__module(m).with_ensure('present') }
       end
 

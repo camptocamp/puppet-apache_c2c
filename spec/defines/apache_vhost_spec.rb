@@ -3,15 +3,13 @@ require 'spec_helper'
 describe 'apache_c2c::vhost' do
   vhost = 'www.example.com'
   let(:title) { vhost }
-  OSES.each do |os|
-    describe "When on #{os}" do
-      let(:pre_condition) { 'include ::apache_c2c' }
-      let(:facts) { {
-        :concat_basedir    => '/foo',
-        :lsbmajdistrelease => '6',
-        :operatingsystem   => os,
-        :osfamily          => os,
-      } }
+  let(:pre_condition) { 'include ::apache_c2c' }
+
+  on_supported_os.each do |os, facts|
+    context "on #{os}" do
+      let(:facts) do
+        facts
+      end
 
       it { should contain_class('apache_c2c::params') }
 

@@ -3,13 +3,11 @@ require 'spec_helper'
 describe 'apache_c2c::namevhost' do
   let(:title) { '*:80' }
 
-  OSES.each do |os|
-    describe "When on #{os}" do
-      let(:facts) { {
-        :concat_basedir  => '/foo',
-        :operatingsystem => os,
-        :osfamily        => os,
-      } }
+  on_supported_os.each do |os, facts|
+    context "on #{os}" do
+      let(:facts) do
+        facts
+      end
 
       it { should contain_class('apache_c2c::params') }
 
