@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "author": "Camptocamp",
   "summary": "Puppet Apache module",
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
   "source": "https://github.com/camptocamp/puppet-apache_c2c",
   "project_page": "https://github.com/camptocamp/puppet-apache_c2c",
   "issues_url": "https://github.com/camptocamp/puppet-apache_c2c/issues",
