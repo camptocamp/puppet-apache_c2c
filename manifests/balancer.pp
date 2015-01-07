@@ -80,7 +80,7 @@ define apache_c2c::balancer (
 
   # ensure proxy modules are enabled
   case $proto {
-    http: {
+    'http': {
       if !defined(Apache_c2c::Module['proxy_http']) {
         apache_c2c::module {'proxy_http':
           ensure => $ensure,
@@ -88,7 +88,7 @@ define apache_c2c::balancer (
       }
     }
 
-    ajp: {
+    'ajp': {
       if !defined(Apache_c2c::Module['proxy_ajp']) {
         apache_c2c::module {'proxy_ajp':
           ensure => $ensure,

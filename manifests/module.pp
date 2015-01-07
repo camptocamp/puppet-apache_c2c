@@ -50,12 +50,12 @@ define apache_c2c::module ($ensure='present') {
 
   if $::apache_c2c::backend == 'puppetlabs' {
     case $name {
-      ssl: {
+      'ssl': {
         class { '::apache::mod::ssl':
           ssl_options => false,
         }
       }
-      status: {
+      'status': {
         class { '::apache::mod::status':
           allow_from => ['localhost', 'ip6-localhost', '127.0.0.0/255.0.0.0',],
         }

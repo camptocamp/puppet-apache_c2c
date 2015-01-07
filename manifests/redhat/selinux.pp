@@ -2,21 +2,21 @@ define apache_c2c::redhat::selinux {
 
   case $name {
 
-    cgi: {
+    'cgi': {
       selboolean { 'httpd_enable_cgi':
         value      => 'on',
         persistent => true,
       }
     }
 
-    userdir: {
+    'userdir': {
       selboolean { 'httpd_enable_homedirs':
         value      => 'on',
         persistent => true,
       }
     }
 
-    proxy, rewrite, ldap, shib: {
+    'proxy', 'rewrite', 'ldap', 'shib': {
       if defined(Selboolean['httpd_can_network_connect']) { }
       else {
         # or httpd_can_network_relay ??
@@ -27,7 +27,7 @@ define apache_c2c::redhat::selinux {
       }
     }
 
-    php, php4, php5, perl, wsgi, python: {
+    'php', 'php4', 'php5', 'perl', 'wsgi', 'python': {
       if defined(Selboolean['httpd_builtin_scripting']) { }
       else {
         selboolean { [
@@ -40,7 +40,7 @@ define apache_c2c::redhat::selinux {
       }
     }
 
-    suexec: {
+    'suexec': {
       if versioncmp($::operatingsystemmajrelease, 6) < 0 {
         selboolean { 'httpd_suexec_disable_trans':
           value      => 'off',
@@ -49,7 +49,7 @@ define apache_c2c::redhat::selinux {
       }
     }
 
-    include: {
+    'include': {
       selboolean { 'httpd_ssi_exec':
         value      => 'on',
         persistent => true,

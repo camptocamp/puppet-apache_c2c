@@ -15,8 +15,8 @@ define apache_c2c::webdav::instance(
   }
 
   $davdir_ensure = $ensure ? {
-    present => directory,
-    absent  => absent,
+    'present' => directory,
+    'absent'  => absent,
   }
   file {$davdir:
     ensure => $davdir_ensure,

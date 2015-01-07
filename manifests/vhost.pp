@@ -74,7 +74,7 @@ define apache_c2c::vhost (
   }
 
   case $ensure {
-    present: {
+    'present': {
       $vhost_seltype = $::osfamily ? {
         'RedHat' => 'httpd_config_t',
         default  => undef,
@@ -328,7 +328,7 @@ define apache_c2c::vhost (
       }
     }
 
-    absent: {
+    'absent': {
       file { "${apache_c2c::params::conf}/sites-enabled/${priority}-${name}.conf":
         ensure  => absent,
         require => Exec["disable vhost ${name}"]
@@ -361,7 +361,7 @@ define apache_c2c::vhost (
       }
     }
 
-    disabled: {
+    'disabled': {
       exec { "disable vhost ${name}":
         command => $disable_vhost_command,
         notify  => Exec['apache-graceful'],
@@ -387,12 +387,12 @@ define apache_c2c::vhost (
     $_directories = $directories ? {
       undef   => [
         {
-          path        => "${::apache_c2c::root}/${servername}/cgi-bin/",
-          options     => ['+ExecCGI',],
-          addhandlers => [
+          'path'        => "${::apache_c2c::root}/${servername}/cgi-bin/",
+          'options'     => ['+ExecCGI',],
+          'addhandlers' => [
             {
-              handler    => 'cgi-script',
-              extensions => ['.cgi'],
+              'handler'    => 'cgi-script',
+              'extensions' => ['.cgi'],
             }
             ],
         },
@@ -403,8 +403,8 @@ define apache_c2c::vhost (
     $_scriptaliases = $scriptaliases ? {
       undef   => [
         {
-          alias => '/cgi-bin/',
-          path  => "${::apache_c2c::root}/${servername}/cgi-bin/",
+          'alias' => '/cgi-bin/',
+          'path'  => "${::apache_c2c::root}/${servername}/cgi-bin/",
         },
         ],
         default => $scriptaliases,
