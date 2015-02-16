@@ -93,14 +93,16 @@ class apache_c2c::base {
     }
   }
 
-  file {'logrotate configuration':
-    ensure  => present,
-    path    => undef,
-    owner   => root,
-    group   => root,
-    mode    => '0644',
-    source  => undef,
-    require => Package['httpd'],
+  if $::apache_c2c::manage_logrotate_conf {
+    file {'logrotate configuration':
+      ensure  => present,
+      path    => undef,
+      owner   => root,
+      group   => root,
+      mode    => '0644',
+      source  => undef,
+      require => Package['httpd'],
+    }
   }
 
   if ! $apache_c2c::disable_port80 {
