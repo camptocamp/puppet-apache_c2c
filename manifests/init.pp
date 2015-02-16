@@ -28,18 +28,20 @@
 #   include apache
 #
 class apache_c2c (
-  $root            = $apache_c2c::params::root,
-  $service_ensure  = 'running',
-  $service_enable  = true,
-  $disable_port80  = false,
-  $default_vhost   = true,
-  $backend         = 'camptocamp',
+  $root                  = $apache_c2c::params::root,
+  $service_ensure        = 'running',
+  $service_enable        = true,
+  $disable_port80        = false,
+  $default_vhost         = true,
+  $backend               = 'camptocamp',
+  $manage_logrotate_conf = true,
 ) inherits ::apache_c2c::params {
 
   validate_absolute_path ($root)
   validate_re ($service_ensure, 'running|stopped|unmanaged')
   validate_bool ($service_enable)
   validate_bool ($disable_port80)
+  validate_bool ($manage_logrotate_conf)
 
   case $::osfamily {
     'Debian': { include apache_c2c::debian}

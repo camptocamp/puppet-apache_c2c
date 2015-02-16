@@ -9,15 +9,17 @@ class apache_c2c::debian inherits apache_c2c::base {
     command => 'apache2ctl graceful',
   }
 
-  # the following variables are used in template logrotate-httpd.erb
-  $logrotate_paths = "${wwwroot}/*/logs/*.log ${apache_c2c::params::log}/*log"
-  $httpd_pid_file = '/var/run/apache2.pid'
-  $httpd_reload_cmd = '/etc/init.d/apache2 restart > /dev/null'
-  $awstats_condition = '-f /usr/share/doc/awstats/examples/awstats_updateall.pl -a -f /usr/lib/cgi-bin/awstats.pl'
-  $awstats_command = '/usr/share/doc/awstats/examples/awstats_updateall.pl -awstatsprog=/usr/lib/cgi-bin/awstats.pl -confdir=/etc/awstats now > /dev/null'
-  File['logrotate configuration'] {
-    path    => '/etc/logrotate.d/apache2',
-    content => template('apache_c2c/logrotate-httpd.erb'),
+  if $::apache_c2c::manage_logrotate_conf {
+    # the following variables are used in template logrotate-httpd.erb
+    $logrotate_paths = "${wwwroot}/*/logs/*.log ${apache_c2c::params::log}/*log"
+    $httpd_pid_file = '/var/run/apache2.pid'
+    $httpd_reload_cmd = '/etc/init.d/apache2 restart > /dev/null'
+    $awstats_condition = '-f /usr/share/doc/awstats/examples/awstats_updateall.pl -a -f /usr/lib/cgi-bin/awstats.pl'
+    $awstats_command = '/usr/share/doc/awstats/examples/awstats_updateall.pl -awstatsprog=/usr/lib/cgi-bin/awstats.pl -confdir=/etc/awstats now > /dev/null'
+    File['logrotate configuration'] {
+      path    => '/etc/logrotate.d/apache2',
+      content => template('apache_c2c/logrotate-httpd.erb'),
+    }
   }
 
   if $::apache_c2c::backend != 'puppetlabs' {

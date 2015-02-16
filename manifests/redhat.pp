@@ -9,18 +9,20 @@ class apache_c2c::redhat inherits apache_c2c::base {
     command => 'apachectl graceful',
   }
 
-  # the following variables are used in template logrotate-httpd.erb
-  $logrotate_paths = "${wwwroot}/*/logs/*.log ${apache_c2c::params::log}/*log"
-  $httpd_pid_file = $::operatingsystemmajrelease ? {
-    /4|5/   => '/var/run/httpd.pid',
-    default => '/var/run/httpd/httpd.pid',
-  }
-  $httpd_reload_cmd = '/sbin/service httpd reload > /dev/null 2> /dev/null || true'
-  $awstats_condition = '-x /etc/cron.hourly/awstats'
-  $awstats_command = '/etc/cron.hourly/awstats || true'
-  File['logrotate configuration'] {
-    path    => '/etc/logrotate.d/httpd',
-    content => template('apache_c2c/logrotate-httpd.erb'),
+  if $::apache_c2c::manage_logrotate_conf {
+    # the following variables are used in template logrotate-httpd.erb
+    $logrotate_paths = "${wwwroot}/*/logs/*.log ${apache_c2c::params::log}/*log"
+    $httpd_pid_file = $::operatingsystemmajrelease ? {
+      /4|5/   => '/var/run/httpd.pid',
+      default => '/var/run/httpd/httpd.pid',
+    }
+    $httpd_reload_cmd = '/sbin/service httpd reload > /dev/null 2> /dev/null || true'
+    $awstats_condition = '-x /etc/cron.hourly/awstats'
+    $awstats_command = '/etc/cron.hourly/awstats || true'
+    File['logrotate configuration'] {
+      path    => '/etc/logrotate.d/httpd',
+      content => template('apache_c2c/logrotate-httpd.erb'),
+    }
   }
 
   if $::apache_c2c::backend != 'puppetlabs' {
