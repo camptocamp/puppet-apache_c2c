@@ -88,7 +88,7 @@ class apache_c2c::base {
       owner   => root,
       group   => root,
       source  => undef,
-      require => Module['status'],
+      require => Apache_c2c::Module['status'],
       notify  => Exec['apache-graceful'],
     }
   }
