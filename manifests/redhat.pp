@@ -93,8 +93,8 @@ class apache_c2c::redhat inherits apache_c2c::base {
   # #?(.+ (.+)_module .+)|echo "\1" > mods-available/redhat5/\2.load|' | sh
   # ssl.load was then changed to a template (see apache-ssl-redhat.pp)
   $source = $::operatingsystemmajrelease ? {
-    5 => 'puppet:///modules/apache_c2c/etc/httpd/mods-available/redhat5/',
-    6 => 'puppet:///modules/apache_c2c/etc/httpd/mods-available/redhat6/',
+    '5' => 'puppet:///modules/apache_c2c/etc/httpd/mods-available/redhat5/',
+    '6' => 'puppet:///modules/apache_c2c/etc/httpd/mods-available/redhat6/',
   }
   file { "${apache_c2c::params::conf}/mods-available":
     ensure  => directory,
