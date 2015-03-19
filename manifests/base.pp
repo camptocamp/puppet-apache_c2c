@@ -154,6 +154,7 @@ class apache_c2c::base {
     command     => undef,
     refreshonly => true,
     onlyif      => undef,
+    path        => $::path,
   }
 
   file {'/usr/local/bin/htgroup':
