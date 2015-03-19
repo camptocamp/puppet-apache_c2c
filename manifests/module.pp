@@ -1,6 +1,6 @@
 define apache_c2c::module ($ensure='present') {
 
-  include apache_c2c::params
+  include ::apache_c2c::params
 
   $a2enmod_deps = $::osfamily ? {
     'RedHat' => [

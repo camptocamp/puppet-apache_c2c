@@ -1,6 +1,6 @@
 class apache_c2c::debian inherits apache_c2c::base {
 
-  include apache_c2c::params
+  include ::apache_c2c::params
   $wwwroot = $apache_c2c::root
   validate_absolute_path($wwwroot)
 
@@ -46,7 +46,7 @@ class apache_c2c::debian inherits apache_c2c::base {
   }
 
   file { "${wwwroot}/html/index.html":
-    ensure  => present,
+    ensure  => file,
     owner   => root,
     group   => root,
     mode    => '0644',

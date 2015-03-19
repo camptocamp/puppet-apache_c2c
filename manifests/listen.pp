@@ -19,7 +19,7 @@ define apache_c2c::listen ($ensure='present') {
   if $::apache_c2c::backend == 'puppetlabs' {
     apache::listen { $name: }
   } else {
-    include apache_c2c::params
+    include ::apache_c2c::params
 
     concat::fragment { "apache-ports.conf-${name}":
       ensure  => $ensure,

@@ -6,7 +6,7 @@
 #
 class apache_c2c::base {
 
-  include apache_c2c::params
+  include ::apache_c2c::params
   $wwwroot = $apache_c2c::root
   validate_absolute_path($wwwroot)
 
@@ -83,7 +83,7 @@ class apache_c2c::base {
     }
 
     file {'default status module configuration':
-      ensure  => present,
+      ensure  => file,
       path    => undef,
       owner   => root,
       group   => root,
@@ -94,7 +94,7 @@ class apache_c2c::base {
   }
 
   file {'logrotate configuration':
-    ensure  => present,
+    ensure  => file,
     path    => undef,
     owner   => root,
     group   => root,
@@ -120,7 +120,7 @@ class apache_c2c::base {
   }
 
   file {'default virtualhost':
-    ensure  => present,
+    ensure  => file,
     path    => "${apache_c2c::params::conf}/sites-available/default-vhost",
     content => template('apache_c2c/default-vhost.erb'),
     require => Package['httpd'],
@@ -158,7 +158,7 @@ class apache_c2c::base {
   }
 
   file {'/usr/local/bin/htgroup':
-    ensure => present,
+    ensure => file,
     owner  => root,
     group  => root,
     mode   => '0755',

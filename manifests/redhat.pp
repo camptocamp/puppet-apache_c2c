@@ -1,6 +1,6 @@
 class apache_c2c::redhat inherits apache_c2c::base {
 
-  include apache_c2c::params
+  include ::apache_c2c::params
   $wwwroot = $apache_c2c::root
   validate_absolute_path($wwwroot)
 
@@ -48,9 +48,9 @@ class apache_c2c::redhat inherits apache_c2c::base {
     '/usr/local/sbin/a2ensite',
     '/usr/local/sbin/a2dissite',
     '/usr/local/sbin/a2enmod',
-    '/usr/local/sbin/a2dismod'
+    '/usr/local/sbin/a2dismod',
   ]:
-    ensure => present,
+    ensure => file,
     mode   => '0755',
     owner  => 'root',
     group  => 'root',
@@ -68,7 +68,7 @@ class apache_c2c::redhat inherits apache_c2c::base {
   file { [
       "${apache_c2c::params::conf}/sites-available",
       "${apache_c2c::params::conf}/sites-enabled",
-      "${apache_c2c::params::conf}/mods-enabled"
+      "${apache_c2c::params::conf}/mods-enabled",
     ]:
     ensure  => directory,
     mode    => '0755',
@@ -80,7 +80,7 @@ class apache_c2c::redhat inherits apache_c2c::base {
 
   if $::apache_c2c::backend != 'puppetlabs' {
     file { "${apache_c2c::params::conf}/conf/httpd.conf":
-      ensure  => present,
+      ensure  => file,
       content => template('apache_c2c/httpd.conf.erb'),
       seltype => 'httpd_config_t',
       notify  => Service['httpd'],
@@ -125,7 +125,7 @@ class apache_c2c::redhat inherits apache_c2c::base {
   # no idea why redhat choose to put this file there. apache fails if it's
   # present and mod_proxy isn't...
   file { "${apache_c2c::params::conf}/conf.d/proxy_ajp.conf":
-    ensure  => present,
+    ensure  => file,
     content => "# File managed by puppet
 #
 # This file is installed by 'httpd' RedHat package but we're not using it. We

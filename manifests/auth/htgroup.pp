@@ -7,7 +7,7 @@ define apache_c2c::auth::htgroup(
   $groupFileName     = 'htgroup',
 ) {
 
-  include apache_c2c::params
+  include ::apache_c2c::params
 
   $wwwroot = $apache_c2c::root
   validate_absolute_path($wwwroot)

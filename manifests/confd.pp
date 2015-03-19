@@ -25,7 +25,7 @@ define apache_c2c::confd(
   $ensure        = present,
   $filename      = '',
 ) {
-  include apache_c2c::params
+  include ::apache_c2c::params
   apache_c2c::conf {$name:
     ensure        => $ensure,
     path          => "${apache_c2c::params::conf}/conf.d",

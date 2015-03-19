@@ -6,7 +6,7 @@ class apache_c2c::ssl::redhat inherits apache_c2c::base::ssl {
 
   if $::apache_c2c::backend != 'puppetlabs' {
     file {'/etc/httpd/conf.d/ssl.conf':
-      ensure  => present,
+      ensure  => file,
       content => "# File managed by puppet
       #
       # This file is installed by the 'mod_ssl' RedHat package but we put this
@@ -29,7 +29,7 @@ class apache_c2c::ssl::redhat inherits apache_c2c::base::ssl {
   case $::operatingsystemmajrelease {
     5,6: {
       file {'/etc/httpd/mods-available/ssl.load':
-        ensure  => present,
+        ensure  => file,
         content => template("apache_c2c/ssl.load.rhel${::operatingsystemmajrelease}.erb"),
         mode    => '0644',
         owner   => 'root',

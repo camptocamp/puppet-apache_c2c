@@ -84,7 +84,7 @@ define apache_c2c::vhost (
       }
       if $::apache_c2c::backend != 'puppetlabs' {
         file { "${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf":
-          ensure  => present,
+          ensure  => file,
           owner   => root,
           group   => root,
           mode    => '0644',
@@ -331,12 +331,12 @@ define apache_c2c::vhost (
     'absent': {
       file { "${apache_c2c::params::conf}/sites-enabled/${priority}-${name}.conf":
         ensure  => absent,
-        require => Exec["disable vhost ${name}"]
+        require => Exec["disable vhost ${name}"],
       }
 
       file { "${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf":
         ensure  => absent,
-        require => Exec["disable vhost ${name}"]
+        require => Exec["disable vhost ${name}"],
       }
 
       ensure_resource(
@@ -372,7 +372,7 @@ define apache_c2c::vhost (
 
       file { "${apache_c2c::params::conf}/sites-enabled/${priority}-${name}.conf":
         ensure  => absent,
-        require => Exec["disable vhost ${name}"]
+        require => Exec["disable vhost ${name}"],
       }
     }
     default: { fail ( "Unknown ensure value: '${ensure}'" ) }

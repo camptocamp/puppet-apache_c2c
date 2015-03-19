@@ -80,8 +80,8 @@ class apache_c2c::ssl (
   }
 
   case $::osfamily {
-    'Debian': { include apache_c2c::ssl::debian}
-    'RedHat': { include apache_c2c::ssl::redhat}
+    'Debian': { include ::apache_c2c::ssl::debian}
+    'RedHat': { include ::apache_c2c::ssl::redhat}
     default: { fail "Unsupported osfamily ${::osfamily}" }
   }
 }

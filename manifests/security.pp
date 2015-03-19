@@ -9,7 +9,7 @@ class apache_c2c::security {
       }
 
       file { '/etc/httpd/conf.d/mod_security.conf':
-        ensure  => present,
+        ensure  => file,
         content => '# file managed by puppet
 
 <IfModule mod_security2.c>

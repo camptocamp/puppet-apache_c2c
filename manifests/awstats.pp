@@ -1,7 +1,7 @@
 class apache_c2c::awstats {
 
   package { 'awstats':
-    ensure => installed
+    ensure => installed,
   }
 
   # ensure non-managed files are purged from directory
@@ -22,7 +22,7 @@ class apache_c2c::awstats {
         command => '/usr/share/doc/awstats/examples/awstats_updateall.pl -awstatsprog=/usr/lib/cgi-bin/awstats.pl -confdir=/etc/awstats now > /dev/null',
         user    => 'root',
         minute  => [0,10,20,30,40,50],
-        require => Package[awstats]
+        require => Package[awstats],
       }
 
       file { '/etc/cron.d/awstats':

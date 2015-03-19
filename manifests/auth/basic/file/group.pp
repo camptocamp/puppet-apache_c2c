@@ -15,7 +15,7 @@ define apache_c2c::auth::basic::file::group(
 
   $fname = regsubst($name, '\s', '_', 'G')
 
-  include apache_c2c::params
+  include ::apache_c2c::params
 
   if defined(Apache_c2c::Module['authn_file']) {} else {
     apache_c2c::module {'authn_file': }

@@ -42,8 +42,8 @@ class apache_c2c (
   validate_bool ($disable_port80)
 
   case $::osfamily {
-    'Debian': { include apache_c2c::debian}
-    'RedHat': { include apache_c2c::redhat}
+    'Debian': { include ::apache_c2c::debian}
+    'RedHat': { include ::apache_c2c::redhat}
     default: { fail "Unsupported osfamily ${::osfamily}" }
   }
 

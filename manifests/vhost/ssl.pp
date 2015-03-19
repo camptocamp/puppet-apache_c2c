@@ -153,7 +153,7 @@ define apache_c2c::vhost::ssl (
   }
   validate_array($options)
 
-  include apache_c2c::params
+  include ::apache_c2c::params
 
   $wwwuser = $user ? {
     ''      => $apache_c2c::params::user,
@@ -315,7 +315,7 @@ define apache_c2c::vhost::ssl (
 
     # template file used to generate SSL key, cert and csr.
     file { "${wwwroot}/${name}/ssl/ssleay.cnf":
-      ensure  => present,
+      ensure  => file,
       owner   => 'root',
       mode    => '0640',
       content => template('apache_c2c/ssleay.cnf.erb'),

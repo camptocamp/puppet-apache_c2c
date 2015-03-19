@@ -1,11 +1,11 @@
 class apache_c2c::reverseproxy {
 
-  include apache_c2c::params
+  include ::apache_c2c::params
 
   apache_c2c::module {['proxy', 'proxy_http', 'proxy_ajp', 'proxy_connect']: }
 
   file { 'reverseproxy.conf':
-    ensure  => 'present',
+    ensure  => 'file',
     path    => "${apache_c2c::params::conf}/conf.d/reverseproxy.conf",
     content => '# file managed by puppet
 <IfModule mod_proxy.c>
