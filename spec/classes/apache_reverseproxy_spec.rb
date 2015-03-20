@@ -22,15 +22,15 @@ describe 'apache_c2c::reverseproxy' do
 
       case facts[:osfamily]
       when 'Debian'
-        it { should contain_file('reverseproxy.conf').with(
+        it { should contain_file('reverseproxy.conf').with( {
           'ensure'  => 'file',
           'path'    => '/etc/apache2/conf.d/reverseproxy.conf',
-        ) }
+        } ) }
       else
-        it { should contain_file('reverseproxy.conf').with(
+        it { should contain_file('reverseproxy.conf').with( {
           'ensure'  => 'file',
           'path'    => '/etc/httpd/conf.d/reverseproxy.conf',
-        ) }
+        } ) }
       end
     end
   end
