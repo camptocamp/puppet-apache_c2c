@@ -129,7 +129,7 @@ class apache_c2c::base {
     mode    => '0644',
   }
 
-  if ! ($::apache_c2c::default_vhost or $::apache_c2c::ssl::default_vhost) {
+  if ! ($::apache_c2c::default_vhost or (defined('$apache_c2c::ssl::default_vhost') and $::apache_c2c::ssl::default_vhost)) {
 
     file { "${apache_c2c::params::conf}/sites-enabled/000-default-vhost":
       ensure => absent,
