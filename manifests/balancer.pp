@@ -48,14 +48,16 @@
 #
 define apache_c2c::balancer (
   $vhost,
-  $ensure='present',
-  $location='',
-  $proto='http',
-  $members=[],
-  $standbyurl='',
-  $params=['retry=5'],
-  $filename='',
-  $use_slash_bug_workaround=false,
+  $ensure                   = 'present',
+  $proto                    = 'http',
+  $members                  = [],
+  $params                   = ['retry    = 5'],
+  $use_slash_bug_workaround = false,
+  # lint:ignore:empty_string_assignment
+  $location   = '',
+  $standbyurl = '',
+  $filename   = '',
+  # lint:endignore
 ) {
 
   # normalise name

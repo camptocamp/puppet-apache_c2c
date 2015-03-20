@@ -36,8 +36,10 @@
 define apache_c2c::directive(
   $vhost,
   $ensure    = 'present',
+  # lint:ignore:empty_string_assignment
   $directive = '',
   $filename  = '',
+  # lint:endignore
 ) {
 
   $wwwroot = $apache_c2c::root

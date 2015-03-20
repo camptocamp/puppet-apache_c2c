@@ -29,7 +29,9 @@ define apache_c2c::redirectmatch (
   $url,
   $vhost,
   $ensure='present',
+  # lint:ignore:empty_string_assignment
   $filename=''
+  # lint:endignore
 ) {
 
   $fname = regsubst($name, '\s', '_', 'G')

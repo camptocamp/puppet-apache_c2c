@@ -34,11 +34,13 @@
 #
 define apache_c2c::proxypass (
   $vhost,
-  $ensure='present',
-  $location='',
-  $url='',
-  $params=[],
-  $filename=''
+  $ensure = 'present',
+  $params = [],
+  # lint:ignore:empty_string_assignment
+  $location = '',
+  $url      = '',
+  $filename = ''
+  # lint:endignore
 ) {
 
   $fname = regsubst($name, '\s', '_', 'G')

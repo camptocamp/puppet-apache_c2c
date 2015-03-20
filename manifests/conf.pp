@@ -29,7 +29,9 @@ define apache_c2c::conf(
   $configuration,
   $path,
   $ensure   = present,
+  # lint:ignore:empty_string_assignment
   $filename = '',
+  # lint:endignore
   $prefix   = 'configuration',
 ) {
   $fname = regsubst($name, '\s', '_', 'G')

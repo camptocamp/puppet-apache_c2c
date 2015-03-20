@@ -6,7 +6,9 @@ define apache_c2c::auth::basic::file::webdav::user (
   $auth_user_file    = undef,
   $rw_users          = 'valid-user',
   $limits            = 'GET HEAD OPTIONS PROPFIND',
+  # lint:ignore:empty_string_assignment
   $ro_users          = '',
+  # lint:endignore
   $allow_anonymous   = false,
   $restricted_access = []) {
 

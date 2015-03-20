@@ -23,7 +23,9 @@
 define apache_c2c::confd(
   $configuration,
   $ensure        = present,
+  # lint:ignore:empty_string_assignment
   $filename      = '',
+  # lint:endignore
 ) {
   include ::apache_c2c::params
   apache_c2c::conf {$name:
