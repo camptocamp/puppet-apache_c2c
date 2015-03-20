@@ -1,8 +1,8 @@
 # file managed by puppet
 
-<Location <%= location %>>
+<Location <%= @location %>>
   SSLRequireSSL
   DAV svn
-  SVNParentPath <%= parentPath %>
+  SVNParentPath <%= @parent_path %>
   SVNListParentPath On
 </Location>

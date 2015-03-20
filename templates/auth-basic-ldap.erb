@@ -4,38 +4,38 @@
   AuthName "<%= @_authname %>"
   AuthType Basic
   AuthBasicProvider ldap
-<% if @authLDAPBindDN -%>
-  AuthLDAPBindDN <%= @authLDAPBindDN %>
+<% if @auth_ldap_bind_dn -%>
+  AuthLDAPBindDN <%= @auth_ldap_bind_dn %>
 <% end -%>
-<% if @authLDAPBindPassword -%>
-  AuthLDAPBindPassword <%= @authLDAPBindPassword %>
+<% if @auth_ldap_bind_password -%>
+  AuthLDAPBindPassword <%= @auth_ldap_bind_password %>
 <% end -%>
-<% if @authLDAPCharsetConfig -%>
-  AuthLDAPCharsetConfig <%= @authLDAPCharsetConfig %>
+<% if @auth_ldap_charset_config -%>
+  AuthLDAPCharsetConfig <%= @auth_ldap_charset_config %>
 <% end -%>
-<% if @authLDAPCompareDNOnServer -%>
-  AuthLDAPCompareDNOnServer <%= @authLDAPCompareDNOnServer %>
+<% if @auth_ldap_compare_dn_on_server -%>
+  AuthLDAPCompareDNOnServer <%= @auth_ldap_compare_dn_on_server %>
 <% end -%>
-<% if @authLDAPDereferenceAliases -%>
-  AuthLDAPGroupAttribute <%= @authLDAPGroupAttribute %>
+<% if @auth_ldap_dereference_aliases -%>
+  AuthLDAPDereferenceAliases <%= @auth_ldap_dereference_aliases %>
 <% end -%>
-<% if @authLDAPGroupAttribute -%>
-  AuthLDAPGroupAttribute <%= @authLDAPGroupAttribute %>
+<% if @auth_ldap_group_attribute -%>
+  AuthLDAPGroupAttribute <%= @auth_ldap_group_attribute %>
 <% end -%>
-<% if @authLDAPGroupAttributeIsDN -%>
-  AuthLDAPGroupAttributeIsDN <%= @authLDAPGroupAttributeIsDN %>
+<% if @auth_ldap_group_attribute_is_dn -%>
+  AuthLDAPGroupAttributeIsDN <%= @auth_ldap_group_attribute_is_dn %>
 <% end -%>
-<% if @authLDAPRemoteUserAttribute -%>
-  AuthLDAPRemoteUserAttribute <%= @authLDAPRemoteUserAttribute %>
+<% if @auth_ldap_remote_user_attribute -%>
+  AuthLDAPRemoteUserAttribute <%= @auth_ldap_remote_user_attribute %>
 <% end -%>
-<% if @authLDAPRemoteUserIsDN -%>
-  AuthLDAPRemoteUserIsDN <%= @authLDAPRemoteUserIsDN %>
+<% if @auth_ldap_remote_user_is_dn -%>
+  AuthLDAPRemoteUserIsDN <%= @auth_ldap_remote_user_is_dn %>
 <% end -%>
-<% if @authzLDAPAuthoritative -%>
-  AuthzLDAPAuthoritative <%= @authzLDAPAuthoritative %>
+<% if @auth_ldap_authoritative -%>
+  AuthzLDAPAuthoritative <%= @auth_ldap_authoritative %>
 <% end -%>
-  AuthLDAPUrl "<%= @authLDAPUrl %>"
-<% [@authzRequire].flatten.compact.each do |require| -%>
+  AuthLDAPUrl "<%= @auth_ldap_url %>"
+<% [@authz_require].flatten.compact.each do |require| -%>
   Require <%= require %>
 <% end -%>
 </Location>

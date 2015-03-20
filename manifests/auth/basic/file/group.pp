@@ -1,11 +1,11 @@
 define apache_c2c::auth::basic::file::group(
   $vhost,
   $groups,
-  $ensure        = 'present',
-  $authname      = false,
-  $location      = '/',
-  $authUserFile  = false,
-  $authGroupFile = false,
+  $ensure          = 'present',
+  $authname        = false,
+  $location        = '/',
+  $auth_user_file  = undef,
+  $auth_group_file = undef,
 ) {
 
   validate_string($groups)
@@ -21,16 +21,16 @@ define apache_c2c::auth::basic::file::group(
     apache_c2c::module {'authn_file': }
   }
 
-  if $authUserFile {
-    $_authUserFile = $authUserFile
+  if $auth_user_file {
+    $_auth_user_file = $auth_user_file
   } else {
-    $_authUserFile = "${wwwroot}/${vhost}/private/htpasswd"
+    $_auth_user_file = "${wwwroot}/${vhost}/private/htpasswd"
   }
 
-  if $authGroupFile {
-    $_authGroupFile = $authGroupFile
+  if $auth_group_file {
+    $_auth_group_file = $auth_group_file
   } else {
-    $_authGroupFile = "${wwwroot}/${vhost}/private/htgroup"
+    $_auth_group_file = "${wwwroot}/${vhost}/private/htgroup"
   }
 
   if $authname {

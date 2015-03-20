@@ -1,10 +1,10 @@
 define apache_c2c::auth::basic::file::user(
   $vhost,
-  $ensure       = 'present',
-  $authname     = false,
-  $location     = '/',
-  $authUserFile = false,
-  $users        = 'valid-user',
+  $ensure         = 'present',
+  $authname       = false,
+  $location       = '/',
+  $auth_user_file = undef,
+  $users          = 'valid-user',
 ) {
 
   validate_string($users)
@@ -18,10 +18,10 @@ define apache_c2c::auth::basic::file::user(
     apache_c2c::module {'authn_file': }
   }
 
-  if $authUserFile {
-    $_authUserFile = $authUserFile
+  if $auth_user_file {
+    $_auth_user_file = $auth_user_file
   } else {
-    $_authUserFile = "${wwwroot}/${vhost}/private/htpasswd"
+    $_auth_user_file = "${wwwroot}/${vhost}/private/htpasswd"
   }
 
   if $authname {

@@ -3,7 +3,7 @@
   AuthName <%= @_authname %>
   AuthType Basic
   AuthBasicProvider file
-  AuthUserFile <%= @_authUserFile %>
+  AuthUserFile <%= @_auth_user_file %>
   require <%= @_users %>
 <% if @ro_users != '' -%>
   <Limit <%= @limits %>>

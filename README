@@ -26,8 +26,8 @@ Example:
 
    apache::auth::htpasswd {"user1 in /a/path/htpasswd":
     ensure => present,
-    userFileLocation => "/srv/a/path",
-    userFileName => "htpasswd",
+    user_file_location => "/srv/a/path",
+    user_file_name => "htpasswd",
     username => "user1",
     clearPassword => "user1", # use encryption in definition
   }
@@ -36,7 +36,7 @@ Example:
     ensure => present,
     vhost => "camptocamp.com"
     username => "user2",
-    cryptPassword => 'kdrY191UyPY3E', # (htpasswd -ndb user2 user2)
+    crypt_password => 'kdrY191UyPY3E', # (htpasswd -ndb user2 user2)
   }
  
 2. create one or more groups :
@@ -58,7 +58,7 @@ Example:
   apache::auth::basic::file::user {"user1-on-webdav2":
     vhost => "camptocamp.com",
     location => "/webdav2",
-    authUserFile => "/srv/dav0/htpasswd",
+    auth_user_file => "/srv/dav0/htpasswd",
     users => "user1", # it not defined -> 'valid-user'
   }
 
@@ -71,9 +71,9 @@ Example:
 apache::auth::basic::ldap {"collectd":
   vhost => $fqdn,
   location => "/collection3",
-  authLDAPUrl => 'ldap://ldap.foobar.ch/c=ch?uid??',
-  authLDAPGroupAttribute => "memberUid",
-  authLDAPGroupAttributeIsDN => "off",
-  authzRequire => "ldap-group ou=foo,ou=bar,o=entreprises,c=ch",
+  auth_ldap_url => 'ldap://ldap.foobar.ch/c=ch?uid??',
+  auth_ldap_group_attribute => "memberUid",
+  auth_ldap_group_attribute_is_dn => "off",
+  authz_require => "ldap-group ou=foo,ou=bar,o=entreprises,c=ch",
 }
 
