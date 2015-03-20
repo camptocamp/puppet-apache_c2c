@@ -7,7 +7,18 @@ describe 'apache_c2c::userdirinstance' do
   on_supported_os.each do |os, facts|
     context "on #{os}" do
       let(:facts) do
-        facts
+        facts.merge({
+          :concat_basedir => '/tmp',
+        })
+      end
+
+      let(:root) do
+        case facts[:osfamily]
+        when 'Debian'
+          '/var/www'
+        else
+          '/var/www/vhosts'
+        end
       end
 
       describe 'using example vhost' do
@@ -15,20 +26,29 @@ describe 'apache_c2c::userdirinstance' do
           :vhost => 'www.example.com',
         } }
 
-        it { should contain_file("#{VARS[os]['root']}/www.example.com/conf/userdir.conf").with(
-          :ensure  => 'present',
-          :source  => 'puppet:///modules/apache_c2c/userdir.conf',
-          :seltype => VARS[os]['conf_seltype']
-        ) }
+        case facts[:osfamily]
+        when 'Debian'
+          it { should contain_file("#{root}/www.example.com/conf/userdir.conf").with(
+            :ensure  => 'present',
+            :source  => 'puppet:///modules/apache_c2c/userdir.conf',
+            :seltype => nil,
+          ) }
+        else
+          it { should contain_file("#{root}/www.example.com/conf/userdir.conf").with(
+            :ensure  => 'present',
+            :source  => 'puppet:///modules/apache_c2c/userdir.conf',
+            :seltype => 'httpd_config_t',
+          ) }
+        end
       end
 
       describe 'ensuring absence' do
         let(:params) { {
-	  :ensure => 'absent',
-	  :vhost  => 'www.example.com',
-	} }
+          :ensure => 'absent',
+          :vhost  => 'www.example.com',
+        } }
 
-        it { should contain_file("#{VARS[os]['root']}/www.example.com/conf/userdir.conf").with_ensure('absent') }
+        it { should contain_file("#{root}/www.example.com/conf/userdir.conf").with_ensure('absent') }
       end
     end
   end
