@@ -1,6 +1,10 @@
 # about $allowfullyearview, refer to templates/awstats.erb in this module for
 # a detailed explanation an possible values.
-define apache_c2c::aw-stats($ensure=present, $aliases=[], $allowfullyearview=2) {
+define apache_c2c::aw_stats(
+  $ensure            = present,
+  $aliases           = [],
+  $allowfullyearview = 2,
+) {
 
   # used in ERB template
   $wwwroot = $apache_c2c::root

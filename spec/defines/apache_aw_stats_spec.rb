@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'apache_c2c::aw-stats' do
+describe 'apache_c2c::aw_stats' do
   let(:title) { 'foo' }
 
   let(:pre_condition) { 'include ::apache_c2c' }
