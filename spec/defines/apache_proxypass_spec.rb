@@ -7,7 +7,9 @@ describe 'apache_c2c::proxypass' do
   on_supported_os.each do |os, facts|
     context "on #{os}" do
       let(:facts) do
-        facts
+        facts.merge({
+          :concat_basedir => '/tmp',
+        })
       end
 
       describe 'using example usage' do
@@ -24,11 +26,20 @@ describe 'apache_c2c::proxypass' do
         it { should contain_apache_c2c__module('proxy').with_ensure('present') }
         it { should contain_apache_c2c__module('proxy_http').with_ensure('present') }
 
-        it { should contain_file('proxy legacy dir to legacy server proxypass on www.example.com').with(
-          'ensure'  => 'present',
-          'seltype' => VARS[os]['conf_seltype'],
-          'path'    => "#{VARS[os]['root']}/www.example.com/conf/proxypass-proxy_legacy_dir_to_legacy_server.conf"
-        ) }
+        case facts[:osfamily]
+        when 'Debian'
+          it { should contain_file('proxy legacy dir to legacy server proxypass on www.example.com').with(
+            'ensure'  => 'present',
+            'seltype' => nil,
+            'path'    => '/var/www/www.example.com/conf/proxypass-proxy_legacy_dir_to_legacy_server.conf',
+          ) }
+        else
+          it { should contain_file('proxy legacy dir to legacy server proxypass on www.example.com').with(
+            'ensure'  => 'present',
+            'seltype' => 'httpd_config_t',
+            'path'    => '/var/www/vhosts/www.example.com/conf/proxypass-proxy_legacy_dir_to_legacy_server.conf',
+          ) }
+        end
       end
 
       describe 'ensuring absent' do
