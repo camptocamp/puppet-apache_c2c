@@ -83,7 +83,7 @@ describe 'apache_c2c::balancer' do
         it do
           expect {
             should contain_class('apache_c2c::params')
-          }.to raise_error(Puppet::Error, /foo/)
+          }.to raise_error(/foo/)
         end
       end
     end
