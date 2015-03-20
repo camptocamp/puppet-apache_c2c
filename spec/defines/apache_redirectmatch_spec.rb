@@ -7,7 +7,9 @@ describe 'apache_c2c::redirectmatch' do
   on_supported_os.each do |os, facts|
     context "on #{os}" do
       let(:facts) do
-        facts
+        facts.merge({
+          :concat_basedir => '/tmp',
+        })
       end
 
       describe 'using example usage' do
@@ -19,12 +21,22 @@ describe 'apache_c2c::redirectmatch' do
         } }
         it { should contain_class('apache_c2c::params') }
 
-        it { should contain_file('example redirect on www.example.com').with(
-          :ensure  => 'present',
-          :content => "# file managed by puppet\nRedirectMatch ^/(foo|bar)/ http://foobar.example.com/\n",
-          :seltype => VARS[os]['conf_seltype'],
-          :path    => "#{VARS[os]['root']}/www.example.com/conf/redirect-example.conf"
-        ) }
+        case facts[:osfamily]
+        when 'Debian'
+          it { should contain_file('example redirect on www.example.com').with(
+            :ensure  => 'present',
+            :content => "# file managed by puppet\nRedirectMatch ^/(foo|bar)/ http://foobar.example.com/\n",
+            :seltype => nil,
+            :path    => '/var/www/www.example.com/conf/redirect-example.conf',
+          ) }
+        else
+          it { should contain_file('example redirect on www.example.com').with(
+            :ensure  => 'present',
+            :content => "# file managed by puppet\nRedirectMatch ^/(foo|bar)/ http://foobar.example.com/\n",
+            :seltype => 'httpd_config_t',
+            :path    => '/var/www/vhosts/www.example.com/conf/redirect-example.conf',
+          ) }
+        end
       end
 
       describe 'ensuring example usage is absent' do
@@ -50,7 +62,7 @@ describe 'apache_c2c::redirectmatch' do
         it do
           expect {
             should contain_class('apache_c2c::params')
-          }.to raise_error(Puppet::Error, /Must pass regex to Apache_c2c::Redirectmatch\[example\]/)
+          }.to raise_error(/Must pass regex to Apache_c2c::Redirectmatch\[example\]/)
         end
       end
     end
