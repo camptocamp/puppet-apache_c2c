@@ -14,23 +14,8 @@ describe 'apache_c2c::debian' do
       it { should contain_class('apache_c2c::params') }
 
       describe 'using default values' do
-        let(:root) do
-          case facts[:osfamily]
-          when 'Debian'
-            '/var/www'
-          else
-            '/var/www/vhosts'
-          end
-        end
-
-        let(:conf) do
-          case facts[:osfamily]
-          when 'Debian'
-            '/etc/apache2'
-          else
-            '/etc/httpd'
-          end
-        end
+        let(:root) { '/var/www' }
+        let(:conf) { '/etc/apache2' }
 
         it { should contain_package('apache2-mpm-prefork').with_ensure('installed') }
 
