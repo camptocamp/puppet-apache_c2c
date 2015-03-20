@@ -73,7 +73,7 @@ describe 'apache_c2c::module' do
         it do
           expect {
             should contain_exec('a2enmode deflate')
-          }.to raise_error(Puppet::Error, /Unknown ensure value: 'running'/)
+          }.to raise_error(/Unknown ensure value: 'running'/)
         end
       end
     end
