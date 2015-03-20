@@ -6,7 +6,9 @@ describe 'apache_c2c::directive' do
   on_supported_os.each do |os, facts|
     context "on #{os}" do
       let(:facts) do
-        facts
+        facts.merge({
+          :concat_basedir => '/tmp',
+        })
       end
 
       describe 'using example usage 1' do
@@ -19,13 +21,24 @@ describe 'apache_c2c::directive' do
 
         it { should contain_class('apache_c2c::params') }
 
-        it do should contain_apache_c2c__conf('example 1').with(
-          'ensure'        => 'present',
-          'path'          => "#{VARS[os]['root']}/www.example.com/conf",
-          'prefix'        => 'directive',
-          'filename'      => '',
-          'configuration' => "\nRewriteEngine on\nRewriteRule ^/?$ https://www.example.com/\n"
-        ) end
+        case facts[:osfamily]
+        when 'Debian'
+          it { should contain_apache_c2c__conf('example 1').with(
+            'ensure'        => 'present',
+            'path'          => '/var/www/www.example.com/conf',
+            'prefix'        => 'directive',
+            'filename'      => '',
+            'configuration' => "\nRewriteEngine on\nRewriteRule ^/?$ https://www.example.com/\n"
+          ) }
+        else
+          it { should contain_apache_c2c__conf('example 1').with(
+            'ensure'        => 'present',
+            'path'          => '/var/www/vhosts/www.example.com/conf',
+            'prefix'        => 'directive',
+            'filename'      => '',
+            'configuration' => "\nRewriteEngine on\nRewriteRule ^/?$ https://www.example.com/\n"
+          ) }
+        end
       end
 
       describe 'ensuring example usage 1 is absent' do
