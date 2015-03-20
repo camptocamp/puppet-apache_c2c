@@ -77,7 +77,7 @@ describe 'apache_c2c::base' do
         ) end
 
         it do should contain_file('logrotate configuration').with(
-          'ensure' => 'present',
+          'ensure' => 'file',
           'owner'  => 'root',
           'group'  => 'root',
           'mode'   => '0644',
@@ -94,7 +94,7 @@ describe 'apache_c2c::base' do
         case facts[:osfamily]
         when 'Debian'
           it do should contain_file('default status module configuration').with(
-            'ensure' => 'present',
+            'ensure' => 'file',
             'owner'  => 'root',
             'group'  => 'root',
             'source' => 'puppet:///modules/apache_c2c/etc/apache2/mods-available/status.conf'
@@ -106,7 +106,7 @@ describe 'apache_c2c::base' do
           ) end
         when 'RedHat'
           it do should contain_file('default status module configuration').with(
-            'ensure' => 'present',
+            'ensure' => 'file',
             'owner'  => 'root',
             'group'  => 'root',
             'source' => 'puppet:///modules/apache_c2c/etc/httpd/conf/status.conf'
@@ -120,7 +120,7 @@ describe 'apache_c2c::base' do
 
         it do should contain_file('default virtualhost').with(
           'path'   => "#{conf}/sites-available/default-vhost",
-          'ensure' => 'present',
+          'ensure' => 'file',
           'mode'   => '0644'
         ) end
 
@@ -131,7 +131,7 @@ describe 'apache_c2c::base' do
         ) end
 
         it do should contain_file('/usr/local/bin/htgroup').with(
-          'ensure' => 'present',
+          'ensure' => 'file',
           'owner'  => 'root',
           'group'  => 'root',
           'mode'   => '0755',
