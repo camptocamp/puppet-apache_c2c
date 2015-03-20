@@ -19,19 +19,19 @@ describe 'apache_c2c::aw-stats' do
 
       case facts[:osfamily]
       when 'Debian'
-        it { should contain_file('/var/www/foo/conf/awstats.conf').with(
+        it { should contain_file('/var/www/foo/conf/awstats.conf').with( {
           'ensure'  => 'present',
           'owner'   => 'root',
           'group'   => 'root',
           'source'  => 'puppet:///modules/apache_c2c/awstats.deb.conf',
-        ) }
+        } ) }
       else
-        it { should contain_file('/var/www/vhosts/foo/conf/awstats.conf').with(
+        it { should contain_file('/var/www/vhosts/foo/conf/awstats.conf').with( {
           'ensure'  => 'present',
           'owner'   => 'root',
           'group'   => 'root',
           'source'  => 'puppet:///modules/apache_c2c/awstats.rh.conf',
-        ) }
+        } ) }
       end
     end
   end
