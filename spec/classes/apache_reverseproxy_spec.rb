@@ -2,10 +2,16 @@ require 'spec_helper'
 
 describe 'apache_c2c::reverseproxy' do
 
+  let(:pre_condition) do
+    "include ::apache_c2c"
+  end
+
   on_supported_os.each do |os, facts|
     context "on #{os}" do
       let(:facts) do
-        facts
+        facts.merge({
+          :concat_basedir => '/tmp',
+        })
       end
 
       it { should contain_class('apache_c2c::params') }
@@ -14,10 +20,18 @@ describe 'apache_c2c::reverseproxy' do
         it { should contain_apache_c2c__module(m).with_ensure('present') }
       end
 
-      it { should contain_file('reverseproxy.conf').with(
-        'ensure'  => 'present',
-        'path'    => "#{VARS[os]['conf']}/conf.d/reverseproxy.conf"
-      ) }
+      case facts[:osfamily]
+      when 'Debian'
+        it { should contain_file('reverseproxy.conf').with(
+          'ensure'  => 'file',
+          'path'    => '/etc/apache2/conf.d/reverseproxy.conf',
+        ) }
+      else
+        it { should contain_file('reverseproxy.conf').with(
+          'ensure'  => 'file',
+          'path'    => '/etc/httpd/conf.d/reverseproxy.conf',
+        ) }
+      end
     end
   end
 end
