@@ -8,10 +8,18 @@ describe 'apache_c2c::dev' do
         facts
       end
 
-      it do should contain_package('apache-devel').with(
-        'ensure' => 'present',
-        'name'   => VARS[os]['apache_devel']
-      ) end
+      case facts[:osfamily]
+      when 'Debian'
+        it { should contain_package('apache-devel').with(
+          'ensure' => 'present',
+          'name'   => 'apache2-threaded-dev',
+        ) }
+      else
+        it { should contain_package('apache-devel').with(
+          'ensure' => 'present',
+          'name'   => 'httpd-devel',
+        ) }
+      end
     end
   end
 end
