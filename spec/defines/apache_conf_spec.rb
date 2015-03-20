@@ -25,12 +25,12 @@ describe 'apache_c2c::conf' do
           :configuration => 'WSGIPythonEggs /var/cache/python-eggs',
         } }
 
-        it do should contain_file('example 1 configuration in /var/www/foo/conf').with(
+        it { should contain_file('example 1 configuration in /var/www/foo/conf').with({
           :ensure  => 'present',
           :content => "# file managed by puppet\nWSGIPythonEggs /var/cache/python-eggs\n",
           :path    => '/var/www/foo/conf/configuration-example_1.conf',
           :seltype => conf_seltype,
-          ) end
+        } ) }
       end
 
       describe 'ensuring absence of example usage' do
@@ -51,12 +51,12 @@ describe 'apache_c2c::conf' do
           :filename      => 'myparams.conf',
         } }
 
-        it do should contain_file('example 1 configuration in /var/www/foo/conf').with(
+        it { should contain_file('example 1 configuration in /var/www/foo/conf').with( {
           :ensure  => 'present',
           :content => "# file managed by puppet\nWSGIPythonEggs /var/cache/python-eggs\n",
           :path    => '/var/www/foo/conf/myparams.conf',
           :seltype => conf_seltype,
-          ) end
+        } ) }
       end
 
       describe 'setting prefix' do
@@ -67,12 +67,12 @@ describe 'apache_c2c::conf' do
           :prefix        => 'aconf',
         } }
 
-        it do should contain_file('example 1 configuration in /var/www/foo/conf').with(
+        it { should contain_file('example 1 configuration in /var/www/foo/conf').with( {
           :ensure  => 'present',
           :content => "# file managed by puppet\nWSGIPythonEggs /var/cache/python-eggs\n",
           :path    => '/var/www/foo/conf/aconf-example_1.conf',
           :seltype => conf_seltype,
-          ) end
+        } ) }
       end
     end
   end

@@ -23,7 +23,7 @@ describe 'apache_c2c::module' do
         it { should contain_class('apache_c2c::params') }
 
         describe "using selinux" do
-          let (:facts) do
+          let(:facts) do
             super().merge({
               :selinux => true,
             })
@@ -33,13 +33,13 @@ describe 'apache_c2c::module' do
 
           case facts[:osfamily]
           when 'Debian'
-            it { should contain_exec('a2enmod deflate').with(
+            it { should contain_exec('a2enmod deflate').with( {
               'command' => '/usr/sbin//a2enmod deflate',
-            ) }
+            } ) }
           else
-            it { should contain_exec('a2enmod deflate').with(
+            it { should contain_exec('a2enmod deflate').with( {
               'command' => '/usr/local/sbin//a2enmod deflate',
-            ) }
+            } ) }
           end
         end
       end
@@ -55,13 +55,13 @@ describe 'apache_c2c::module' do
 
         case facts[:osfamily]
         when 'Debian'
-          it { should contain_exec('a2dismod deflate').with(
+          it { should contain_exec('a2dismod deflate').with( {
             'command' => '/usr/sbin//a2dismod deflate',
-          ) }
+          } ) }
         else
-          it { should contain_exec('a2dismod deflate').with(
+          it { should contain_exec('a2dismod deflate').with( {
             'command' => '/usr/local/sbin//a2dismod deflate',
-          ) }
+          } ) }
         end
       end
 

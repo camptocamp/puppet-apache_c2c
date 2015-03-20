@@ -28,17 +28,17 @@ describe 'apache_c2c::userdirinstance' do
 
         case facts[:osfamily]
         when 'Debian'
-          it { should contain_file("#{root}/www.example.com/conf/userdir.conf").with(
+          it { should contain_file("#{root}/www.example.com/conf/userdir.conf").with( {
             :ensure  => 'present',
             :source  => 'puppet:///modules/apache_c2c/userdir.conf',
             :seltype => nil,
-          ) }
+          } ) }
         else
-          it { should contain_file("#{root}/www.example.com/conf/userdir.conf").with(
+          it { should contain_file("#{root}/www.example.com/conf/userdir.conf").with( {
             :ensure  => 'present',
             :source  => 'puppet:///modules/apache_c2c/userdir.conf',
             :seltype => 'httpd_config_t',
-          ) }
+          } ) }
         end
       end
 

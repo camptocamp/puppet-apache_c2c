@@ -23,19 +23,19 @@ describe 'apache_c2c::redirectmatch' do
 
         case facts[:osfamily]
         when 'Debian'
-          it { should contain_file('example redirect on www.example.com').with(
+          it { should contain_file('example redirect on www.example.com').with( {
             :ensure  => 'present',
             :content => "# file managed by puppet\nRedirectMatch ^/(foo|bar)/ http://foobar.example.com/\n",
             :seltype => nil,
             :path    => '/var/www/www.example.com/conf/redirect-example.conf',
-          ) }
+          } ) }
         else
-          it { should contain_file('example redirect on www.example.com').with(
+          it { should contain_file('example redirect on www.example.com').with( {
             :ensure  => 'present',
             :content => "# file managed by puppet\nRedirectMatch ^/(foo|bar)/ http://foobar.example.com/\n",
             :seltype => 'httpd_config_t',
             :path    => '/var/www/vhosts/www.example.com/conf/redirect-example.conf',
-          ) }
+          } ) }
         end
       end
 

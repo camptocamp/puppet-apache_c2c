@@ -41,82 +41,82 @@ describe 'apache_c2c::vhost' do
       it { should contain_class('apache_c2c::params') }
 
       describe 'ensuring present with defaults' do
-        it { should contain_file("#{conf}/sites-available/25-#{vhost}.conf").with(
+        it { should contain_file("#{conf}/sites-available/25-#{vhost}.conf").with( {
           :ensure  => 'file',
           :owner   => 'root',
           :group   => 'root',
           :mode    => '0644',
           :seltype => conf_seltype,
-        ) }
+        } ) }
 
-        it { should contain_file("#{root}/#{vhost}").with(
+        it { should contain_file("#{root}/#{vhost}").with( {
           :ensure  => 'directory',
           :owner   => 'root',
           :group   => 'root',
           :mode    => '0755',
           :seltype => cont_seltype,
-        ) }
+        } ) }
 
-        it { should contain_file("#{root}/#{vhost}/conf").with(
+        it { should contain_file("#{root}/#{vhost}/conf").with( {
           :ensure  => 'directory',
           :owner   => user,
           :group   => group,
           :mode    => '2570',
           :seltype => conf_seltype,
           :source  => nil,
-        ) }
+        } ) }
 
-        it { should contain_file("#{root}/#{vhost}/htdocs").with(
+        it { should contain_file("#{root}/#{vhost}/htdocs").with( {
           :ensure  => 'directory',
           :owner   => user,
           :group   => group,
           :mode    => '2570',
           :seltype => cont_seltype,
           :source  => nil,
-        ) }
+        } ) }
 
-        it { should contain_file("#{root}/#{vhost} cgi-bin directory").with(
+        it { should contain_file("#{root}/#{vhost} cgi-bin directory").with({ 
           :ensure  => 'directory',
           :path    => "#{root}/#{vhost}/cgi-bin/",
           :owner   => user,
           :group   => group,
           :mode    => '2570',
           :seltype => script_seltype,
-        ) }
+        } ) }
 
-        it { should contain_file("#{root}/#{vhost}/logs").with(
+        it { should contain_file("#{root}/#{vhost}/logs").with( {
           :ensure  => 'directory',
           :owner   => 'root',
           :group   => 'root',
           :mode    => '0755',
           :seltype => log_seltype,
-        ) }
+        } ) }
 
         ['access', 'error'].each do |f|
-          it { should contain_file("#{root}/#{vhost}/logs/#{f}.log").with(
+          it { should contain_file("#{root}/#{vhost}/logs/#{f}.log").with( {
             :ensure  => 'present',
             :owner   => 'root',
             :group   => 'adm',
             :mode    => '0644',
             :seltype => log_seltype,
-          ) }
+          } ) }
         end
 
-        it { should contain_file("#{root}/#{vhost}/private").with(
+        it { should contain_file("#{root}/#{vhost}/private").with( {
           :ensure  => 'directory',
           :owner   => user,
           :group   => group,
           :mode    => '2570',
           :seltype => cont_seltype,
-        ) }
+        } ) }
 
-        it { should contain_file("#{root}/#{vhost}/README").with(
+        it { should contain_file("#{root}/#{vhost}/README").with( {
           :ensure  => 'present',
           :owner   => 'root',
           :group   => 'root',
           :mode    => '0644',
           :content => /^Your website is hosted in #{root}\/#{vhost}\/$/
-        ) }
+        } ) }
 
         it { should contain_exec("enable vhost #{vhost}").with(
           :command => "#{a2ensite} 25-#{vhost}.conf"
@@ -131,14 +131,14 @@ describe 'apache_c2c::vhost' do
         it { should contain_file("#{conf}/sites-enabled/25-#{vhost}.conf").with_ensure('absent') }
         it { should contain_file("#{conf}/sites-available/25-#{vhost}.conf").with_ensure('absent') }
 
-        it { should contain_exec("remove #{root}/#{vhost}").with(
+        it { should contain_exec("remove #{root}/#{vhost}").with( {
           :command => "rm -rf #{root}/#{vhost}",
           :onlyif  => "test -d #{root}/#{vhost}"
-        ) }
+        } ) }
 
-        it { should contain_exec("disable vhost #{vhost}").with(
+        it { should contain_exec("disable vhost #{vhost}").with( {
           :command => "#{a2dissite} 25-#{vhost}.conf"
-        ) }
+        } ) }
       end
 
       describe 'ensuring disabled' do
@@ -146,13 +146,13 @@ describe 'apache_c2c::vhost' do
           :ensure => 'disabled',
         } }
 
-        it { should contain_exec("disable vhost #{vhost}").with(
+        it { should contain_exec("disable vhost #{vhost}").with( {
           :command => "#{a2dissite} 25-#{vhost}.conf"
-        ) }
+        } ) }
 
-        it { should contain_file("#{conf}/sites-enabled/25-#{vhost}.conf").with(
+        it { should contain_file("#{conf}/sites-enabled/25-#{vhost}.conf").with( {
           :ensure => 'absent'
-        ) }
+        } ) }
       end
 
       describe 'using wrong ensure value' do

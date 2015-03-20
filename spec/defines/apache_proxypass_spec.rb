@@ -28,17 +28,17 @@ describe 'apache_c2c::proxypass' do
 
         case facts[:osfamily]
         when 'Debian'
-          it { should contain_file('proxy legacy dir to legacy server proxypass on www.example.com').with(
+          it { should contain_file('proxy legacy dir to legacy server proxypass on www.example.com').with( {
             'ensure'  => 'present',
             'seltype' => nil,
             'path'    => '/var/www/www.example.com/conf/proxypass-proxy_legacy_dir_to_legacy_server.conf',
-          ) }
+          } ) }
         else
-          it { should contain_file('proxy legacy dir to legacy server proxypass on www.example.com').with(
+          it { should contain_file('proxy legacy dir to legacy server proxypass on www.example.com').with( {
             'ensure'  => 'present',
             'seltype' => 'httpd_config_t',
             'path'    => '/var/www/vhosts/www.example.com/conf/proxypass-proxy_legacy_dir_to_legacy_server.conf',
-          ) }
+          } ) }
         end
       end
 
