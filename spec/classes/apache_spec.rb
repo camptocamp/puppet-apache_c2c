@@ -5,7 +5,9 @@ describe 'apache_c2c' do
   on_supported_os.each do |os, facts|
     context "on #{os}" do
       let(:facts) do
-        facts
+        facts.merge({
+          :concat_basedir => '/tmp',
+        })
       end
 
       case facts[:osfamily]
