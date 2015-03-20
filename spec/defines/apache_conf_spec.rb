@@ -9,6 +9,15 @@ describe 'apache_c2c::conf' do
         facts
       end
 
+      let(:conf_seltype) do
+        case facts[:osfamily]
+        when 'Debian'
+          nil
+        else
+          'httpd_config_t'
+        end
+      end
+
       describe 'using example usage' do
         let(:params) { {
           :ensure        => 'present',
@@ -20,7 +29,7 @@ describe 'apache_c2c::conf' do
           :ensure  => 'present',
           :content => "# file managed by puppet\nWSGIPythonEggs /var/cache/python-eggs\n",
           :path    => '/var/www/foo/conf/configuration-example_1.conf',
-          :seltype => VARS[os]['conf_seltype']
+          :seltype => conf_seltype,
           ) end
       end
 
@@ -46,7 +55,7 @@ describe 'apache_c2c::conf' do
           :ensure  => 'present',
           :content => "# file managed by puppet\nWSGIPythonEggs /var/cache/python-eggs\n",
           :path    => '/var/www/foo/conf/myparams.conf',
-          :seltype => VARS[os]['conf_seltype']
+          :seltype => conf_seltype,
           ) end
       end
 
@@ -62,7 +71,7 @@ describe 'apache_c2c::conf' do
           :ensure  => 'present',
           :content => "# file managed by puppet\nWSGIPythonEggs /var/cache/python-eggs\n",
           :path    => '/var/www/foo/conf/aconf-example_1.conf',
-          :seltype => VARS[os]['conf_seltype']
+          :seltype => conf_seltype,
           ) end
       end
     end
