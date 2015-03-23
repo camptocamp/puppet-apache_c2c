@@ -51,7 +51,7 @@ define apache_c2c::balancer (
   $ensure                   = 'present',
   $proto                    = 'http',
   $members                  = [],
-  $params                   = ['retry    = 5'],
+  $params                   = ['retry=5'],
   $use_slash_bug_workaround = false,
   # lint:ignore:empty_string_assignment
   $location   = '',
