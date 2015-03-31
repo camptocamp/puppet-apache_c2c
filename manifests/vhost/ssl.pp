@@ -17,10 +17,6 @@
 # - *$ensure*: see apache::vhost
 # - *$config_file*: see apache::vhost
 # - *$config_content*: see apache::vhost
-# - *$htdocs_source*: see apache::vhost
-# - *$conf_source*: see apache::vhost
-# - *$cgi_source*: see apache::vhost
-# - *$private_source*: see apache::vhost
 # - *$readme*: see apache::vhost
 # - *$docroot*: see apache::vhost
 # - *$cgibin*: see apache::vhost
@@ -112,10 +108,6 @@ define apache_c2c::vhost::ssl (
   $group                = '',
   # lint:endignore
   $config_content       = false,
-  $htdocs_source        = false,
-  $conf_source          = false,
-  $cgi_source           = false,
-  $private_source       = false,
   $readme               = false,
   $docroot              = false,
   $cgibin               = true,
@@ -259,10 +251,6 @@ define apache_c2c::vhost::ssl (
     config_file         => $config_file,
     config_content      => $_config_content,
     aliases             => $aliases,
-    htdocs_source       => $htdocs_source,
-    conf_source         => $conf_source,
-    cgi_source          => $cgi_source,
-    private_source      => $private_source,
     readme              => $readme,
     docroot             => $docroot,
     user                => $wwwuser,

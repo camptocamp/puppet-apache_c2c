@@ -1,10 +1,6 @@
 define apache_c2c::vhost (
   $ensure         = present,
   $config_content = false,
-  $htdocs_source  = false,
-  $conf_source    = false,
-  $cgi_source     = false,
-  $private_source = false,
   $readme         = false,
   $docroot        = false,
   $cgibin         = true,
@@ -213,42 +209,6 @@ define apache_c2c::vhost (
           seltype => $cgidir_seltype,
         }
       )
-
-      if $conf_source {
-        File["${::apache_c2c::root}/${servername}/conf"] {
-          source  => $conf_source,
-          recurse => true,
-          purge   => true,
-          force   => true,
-        }
-      }
-
-      if $htdocs_source {
-        File["${::apache_c2c::root}/${servername}/htdocs"] {
-          source  => $htdocs_source,
-          recurse => true,
-          purge   => true,
-          force   => true,
-        }
-      }
-
-      if $private_source {
-        File["${::apache_c2c::root}/${servername}/private"] {
-          source  => $private_source,
-          recurse => true,
-          purge   => true,
-          force   => true,
-        }
-      }
-
-      if $cgi_source {
-        File["${::apache_c2c::root}/${servername} cgi-bin directory"] {
-          source  => $cgi_source,
-          recurse => true,
-          purge   => true,
-          force   => true,
-        }
-      }
 
       # Log files
       $logdir_seltype = $::osfamily ? {
