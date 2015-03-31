@@ -9,28 +9,6 @@
 # The content of this file is influenced by a few class variables described
 # below.
 #
-# == Class variables ==
-#
-# [*sslcert_country*]
-#   Content of the "countryName" field in generated certificates. Setting this
-#   field is mandatory.
-#
-# [*sslcert_state*]
-#   Content of the "stateOrProvinceName" field in generated certificates.
-#
-# [*sslcert_locality*]
-#   Content of the "localityName" field in generated certificates.
-#
-# [*sslcert_organization*]
-#   Content of the "organizationName" field in generated certificates. Setting
-#   this field is mandatory.
-#
-# [*sslcert_unit*]
-#   Content of the "organizationalUnitName" field in generated certificates.
-#
-# [*sslcert_email*]
-#   Content of the "emailAddress" field in generated certificates.
-#
 # == Parameters ===
 #
 # [*root*]
