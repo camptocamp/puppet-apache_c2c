@@ -36,8 +36,8 @@ class apache_c2c (
   $backend         = 'camptocamp',
 ) inherits ::apache_c2c::params {
 
-  if ($::osfamily == 'Debian' and versioncmp($::operatingsystemmajrelease, 7) > 0)
-    or ($::osfamily == 'RedHat' and versioncmp($::operatingsystemmajrelease, 6) > 0) {
+  if ($::osfamily == 'Debian' and versioncmp($::operatingsystemmajrelease, '7') > 0)
+    or ($::osfamily == 'RedHat' and versioncmp($::operatingsystemmajrelease, '6') > 0) {
     fail "Please don't use this on modern distrib"
   }
 
