@@ -50,11 +50,11 @@ class apache_c2c::redhat inherits apache_c2c::base {
     '/usr/local/sbin/a2enmod',
     '/usr/local/sbin/a2dismod',
   ]:
-    ensure => file,
-    mode   => '0755',
-    owner  => 'root',
-    group  => 'root',
-    source => 'puppet:///modules/apache_c2c/usr/local/sbin/a2X.redhat',
+    ensure  => file,
+    mode    => '0755',
+    owner   => 'root',
+    group   => 'root',
+    content => file('apache_c2c/usr/local/sbin/a2X.redhat'),
   }
 
   $httpd_mpm = 'httpd'

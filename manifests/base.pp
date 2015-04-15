@@ -158,11 +158,11 @@ class apache_c2c::base {
   }
 
   file {'/usr/local/bin/htgroup':
-    ensure => file,
-    owner  => root,
-    group  => root,
-    mode   => '0755',
-    source => 'puppet:///modules/apache_c2c/usr/local/bin/htgroup',
+    ensure  => file,
+    owner   => root,
+    group   => root,
+    mode    => '0755',
+    content => file('apache_c2c/usr/local/bin/htgroup'),
   }
 
   file { ["${apache_c2c::params::conf}/sites-enabled/default",
