@@ -1,7 +1,8 @@
 fixtures:
   repositories:
-    concat: https://github.com/puppetlabs/puppetlabs-concat.git
     collectd: https://github.com/camptocamp/puppet-collectd.git
-    stdlib: https://github.com/puppetlabs/puppetlabs-stdlib.git
+  forge_modules:
+    concat: 'puppetlabs-concat'
+    stdlib: 'puppetlabs-stdlib'
   symlinks:
     apache_c2c: "#{source_dir}"
