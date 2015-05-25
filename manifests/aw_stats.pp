@@ -26,8 +26,9 @@ define apache_c2c::aw_stats(
   }
   file { "${wwwroot}/${name}/conf/awstats.conf":
     ensure  => $ensure,
-    owner   => root,
-    group   => root,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
     source  => $source,
     seltype => $seltype,
     notify  => Exec['apache-graceful'],

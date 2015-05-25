@@ -131,11 +131,11 @@ describe 'apache_c2c::base' do
         ) end
 
         it do should contain_file('/usr/local/bin/htgroup').with(
-          'ensure' => 'file',
-          'owner'  => 'root',
-          'group'  => 'root',
-          'mode'   => '0755',
-          'source' => 'puppet:///modules/apache_c2c/usr/local/bin/htgroup'
+          'ensure'  => 'file',
+          'owner'   => 'root',
+          'group'   => 'root',
+          'mode'    => '0755',
+          'content' => /^#!\/bin\/sh/,
         ) end
 
         ['default', '000-default', 'default-ssl'].each do |s|

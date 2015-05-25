@@ -19,11 +19,11 @@ describe 'apache_c2c::redhat' do
       ['a2ensite', 'a2dissite', 'a2enmod', 'a2dismod'].each do |script|
         it { should contain_file("/usr/local/sbin/#{script}").with(
           {
-            'ensure' => 'file',
-            'mode'   => '0755',
-            'owner'  => 'root',
-            'group'  => 'root',
-            'source' => 'puppet:///modules/apache_c2c/usr/local/sbin/a2X.redhat'
+            :ensure  => 'file',
+            :mode    => '0755',
+            :owner   => 'root',
+            :group   => 'root',
+            :content => /^#!\/bin\/bash/,
           }
         ) }
       end

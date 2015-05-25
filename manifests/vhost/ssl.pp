@@ -426,6 +426,8 @@ define apache_c2c::vhost::ssl (
       ensure  => $public_csr_ensure,
       path    => $public_csr_path,
       source  => $public_csr_source,
+      owner   => 'root',
+      group   => 'root',
       mode    => '0640',
       seltype => 'httpd_sys_content_t',
       require => Exec["generate-ssl-cert-${name}"],

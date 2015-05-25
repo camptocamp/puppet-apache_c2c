@@ -85,8 +85,9 @@ class apache_c2c::base {
     file {'default status module configuration':
       ensure  => file,
       path    => undef,
-      owner   => root,
-      group   => root,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
       source  => undef,
       require => Apache_c2c::Module['status'],
       notify  => Exec['apache-graceful'],
