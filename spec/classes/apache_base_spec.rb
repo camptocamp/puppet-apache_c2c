@@ -41,8 +41,6 @@ describe 'apache_c2c::base' do
         let(:pre_condition) { "include ::apache_c2c" }
         it { should contain_class('apache_c2c::params') }
 
-        it { should contain_class('concat::setup') }
-
         it { should contain_concat("#{conf}/ports.conf") }
 
         it do should contain_file('log directory').with(
@@ -130,13 +128,13 @@ describe 'apache_c2c::base' do
           'target' => "#{conf}/sites-available/default-vhost"
         ) end
 
-        it do should contain_file('/usr/local/bin/htgroup').with(
+        it do should contain_file('/usr/local/bin/htgroup').with({
           'ensure'  => 'file',
           'owner'   => 'root',
           'group'   => 'root',
           'mode'    => '0755',
           'content' => /^#!\/bin\/sh/,
-        ) end
+        }) end
 
         ['default', '000-default', 'default-ssl'].each do |s|
           it { should contain_file("#{conf}/sites-enabled/#{s}").with_ensure('absent') }
