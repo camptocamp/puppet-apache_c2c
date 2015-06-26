@@ -4,8 +4,8 @@ define apache_c2c::vhost (
   $readme         = false,
   $docroot        = false,
   $cgibin         = true,
+  $config_file    = undef,
   # lint:ignore:empty_string_assignment
-  $config_file    = '',
   $user           = '',
   $admin          = '',
   $group          = '',
@@ -97,7 +97,7 @@ define apache_c2c::vhost (
               source => $config_file,
             }
           }
-          '': {
+          undef: {
 
             if $config_content {
               File["${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf"] {

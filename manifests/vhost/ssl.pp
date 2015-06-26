@@ -102,8 +102,8 @@
 
 define apache_c2c::vhost::ssl (
   $ensure               = present,
+  $config_file          = undef,
   # lint:ignore:empty_string_assignment
-  $config_file          = '',
   $user                 = '',
   $group                = '',
   # lint:endignore
