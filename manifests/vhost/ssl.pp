@@ -112,7 +112,7 @@ define apache_c2c::vhost::ssl (
   $docroot              = false,
   $cgibin               = true,
   $admin                = undef,
-  $mode                 = 2570,
+  $mode                 = '2570',
   $aliases              = [],
   $ip_address           = '*',
   $cert                 = false,
