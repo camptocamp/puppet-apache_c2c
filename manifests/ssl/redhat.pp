@@ -26,8 +26,8 @@ class apache_c2c::ssl::redhat inherits apache_c2c::base::ssl {
     before  => Exec['apache-graceful'],
   }
 
-  case $::operatingsystemmajrelease {
-    5,6: {
+  case "${::operatingsystemmajrelease}" {
+    '5','6': {
       file {'/etc/httpd/mods-available/ssl.load':
         ensure  => file,
         content => template("apache_c2c/ssl.load.rhel${::operatingsystemmajrelease}.erb"),
