@@ -38,7 +38,7 @@ class apache_c2c (
 
   if ($::osfamily == 'Debian' and versioncmp($::operatingsystemmajrelease, '7') > 0)
     or ($::osfamily == 'RedHat' and versioncmp($::operatingsystemmajrelease, '6') > 0) {
-    fail "Please don't use this on modern distrib"
+    fail "Module 'apache_c2c' not compatible with this distro, use 'puppetlabs-apache' instead"
   }
 
   validate_absolute_path ($root)
