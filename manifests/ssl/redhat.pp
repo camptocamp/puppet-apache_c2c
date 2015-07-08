@@ -26,7 +26,9 @@ class apache_c2c::ssl::redhat inherits apache_c2c::base::ssl {
     before  => Exec['apache-graceful'],
   }
 
+  # lint:ignore:only_variable_string
   case "${::operatingsystemmajrelease}" {
+  # lint:endignore
     '5','6': {
       file {'/etc/httpd/mods-available/ssl.load':
         ensure  => file,
