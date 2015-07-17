@@ -28,18 +28,25 @@ describe 'apache_c2c::awstats' do
 
         it { should contain_file('/etc/cron.d/awstats').with_ensure('absent') }
       when 'RedHat'
-        it do should contain_file('/usr/share/awstats/wwwroot/cgi-bin/').with(
-          'seltype' => 'httpd_sys_script_exec_t',
-          'mode'    => '0755',
-          'recurse' => 'true'
-        ) end
-
-        it do should contain_file('/var/lib/awstats/').with(
-          'seltype' => 'httpd_sys_script_ro_t',
-          'recurse' => 'true'
-        ) end
-
         it { should contain_file('/etc/httpd/conf.d/awstats.conf').with_ensure('absent') }
+        case facts[:operatingsystemmajrelease]
+        when '5'
+          it do should contain_file('/usr/share/awstats/wwwroot/cgi-bin/').with(
+            'seltype' => 'httpd_sys_script_exec_t',
+            'mode'    => '0755',
+            'recurse' => 'true'
+          ) end
+ 
+          it do should contain_file('/var/lib/awstats/').with(
+            'seltype' => 'httpd_sys_script_ro_t',
+            'recurse' => 'true'
+          ) end
+        when '6'
+          it do should contain_file('/usr/share/awstats/wwwroot/cgi-bin/').with(
+            'mode'    => '0755',
+            'recurse' => 'true'
+          ) end
+        end
       end
     end
   end
