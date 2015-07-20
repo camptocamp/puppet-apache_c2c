@@ -87,7 +87,7 @@ define apache_c2c::vhost (
           group   => root,
           mode    => '0644',
           seltype => $vhost_seltype,
-          require => Package[$apache_c2c::params::pkg],
+          require => Package['httpd'],
           notify  => Exec['apache-graceful'],
         }
         case $config_file {
@@ -277,7 +277,7 @@ define apache_c2c::vhost (
           require  => [
             $::osfamily ? {
               'RedHat' => File[$apache_c2c::params::a2ensite],
-              default  => Package[$apache_c2c::params::pkg]
+              default  => Package['httpd']
             },
             File["${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf"],
             File["${::apache_c2c::root}/${servername}/htdocs"],
@@ -316,7 +316,7 @@ define apache_c2c::vhost (
         before  => Exec["remove ${::apache_c2c::root}/${servername}"],
         require => [$::osfamily ? {
           'RedHat' => File[$apache_c2c::params::a2ensite],
-          default  => Package[$apache_c2c::params::pkg]
+          default  => Package['httpd']
           }],
         onlyif  => "/bin/sh -c '[ -L ${apache_c2c::params::conf}/sites-enabled/${priority}-${name}.conf ] \\
           && [ ${apache_c2c::params::conf}/sites-enabled/${priority}-${name}.conf -ef ${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf ]'",
@@ -327,7 +327,7 @@ define apache_c2c::vhost (
       exec { "disable vhost ${name}":
         command => $disable_vhost_command,
         notify  => Exec['apache-graceful'],
-        require => Package[$apache_c2c::params::pkg],
+        require => Package['httpd'],
         onlyif  => "/bin/sh -c '[ -L ${apache_c2c::params::conf}/sites-enabled/${priority}-${name}.conf ] \\
           && [ ${apache_c2c::params::conf}/sites-enabled/${priority}-${name}.conf -ef ${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf ]'",
       }
