@@ -16,15 +16,15 @@ describe 'apache_c2c::security' do
 
       case facts[:osfamily]
       when 'Debian'
-        it { should contain_package('libapache-mod-security').with(
-          'ensure' => 'present',
-          'alias'  => 'apache-mod_security'
-        ) }
+        it { should contain_package('apache-mod_security').with({
+          :ensure => 'present',
+          :name   => 'libapache-mod-security',
+        } ) }
       else
-        it { should contain_package('mod_security').with(
-          'ensure' => 'present',
-          'alias'  => 'apache-mod_security'
-        ) }
+        it { should contain_package('apache-mod_security').with({
+          :ensure => 'present',
+          :name   => 'mod_security',
+        } ) }
       end
 
       if ['RedHat', 'CentOS'].include? os
