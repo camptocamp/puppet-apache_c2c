@@ -16,7 +16,7 @@ class apache_c2c::security {
   Include modsecurity.d/modsecurity_localrules.conf
 </IfModule>
 ',
-        require => Package['mod_security'],
+        require => Package['apache-mod_security'],
         notify  => Exec['apache-graceful'],
       }
     }
