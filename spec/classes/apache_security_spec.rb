@@ -14,6 +14,8 @@ describe 'apache_c2c::security' do
         })
       end
 
+      it { is_expected.to compile.with_all_deps }
+
       case facts[:osfamily]
       when 'Debian'
         it { should contain_package('apache-mod_security').with({
