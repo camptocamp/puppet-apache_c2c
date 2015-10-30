@@ -20,7 +20,9 @@
 define apache_c2c::namevhost ($ensure='present') {
 
   if $::apache_c2c::backend == 'puppetlabs' {
-    apache::namevirtualhost { $name: }
+    if ! defined(Apache::Namevirtualhost[$name]) {
+      apache::namevirtualhost { $name: }
+    }
   } else {
     include ::apache_c2c::params
 
