@@ -17,7 +17,9 @@
 define apache_c2c::listen ($ensure='present') {
 
   if $::apache_c2c::backend == 'puppetlabs' {
-    apache::listen { $name: }
+    if ! defined(Apache::Listen[$name]) {
+      apache::listen { $name: }
+    }
   } else {
     include ::apache_c2c::params
 
