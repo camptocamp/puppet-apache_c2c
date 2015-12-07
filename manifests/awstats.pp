@@ -44,6 +44,7 @@ class apache_c2c::awstats {
 
           file { '/var/lib/awstats/':
             seltype => 'httpd_sys_script_ro_t',
+            seluser => 'user_u',
             recurse => true,
             require => Package['awstats'],
           }
