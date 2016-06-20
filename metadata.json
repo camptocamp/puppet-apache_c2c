@@ -1,6 +1,6 @@
 {
   "name": "camptocamp-apache_c2c",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "author": "Camptocamp",
   "summary": "Puppet Apache module",
   "license": "Apache-2.0",
