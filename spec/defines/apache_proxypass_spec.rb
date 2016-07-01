@@ -63,7 +63,7 @@ describe 'apache_c2c::proxypass' do
         it do
           expect {
             should contain_class('apache_c2c::params')
-          }.to raise_error(/Must pass vhost to Apache_c2c::Proxypass\[proxy legacy dir to legacy server\]/)
+          }.to raise_error(/vhost/)
         end
       end
     end
