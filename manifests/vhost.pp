@@ -73,10 +73,7 @@ define apache_c2c::vhost (
 
   case $ensure {
     'present': {
-      $vhost_seltype = $::osfamily ? {
-        'RedHat' => 'httpd_config_t',
-        default  => undef,
-      }
+      $vhost_seltype = 'httpd_config_t'
       file { "${apache_c2c::params::conf}/sites-enabled/${name}":
         ensure => absent,
       }
@@ -113,10 +110,7 @@ define apache_c2c::vhost (
         }
       }
 
-      $docroot_seltype = $::osfamily ? {
-        'RedHat' => 'httpd_sys_content_t',
-        default  => undef,
-      }
+      $docroot_seltype = 'httpd_sys_content_t'
       ensure_resource(
         'file',
         "${::apache_c2c::root}/${servername}",
@@ -134,10 +128,7 @@ define apache_c2c::vhost (
         ''      => $wwwuser,
         default => $admin,
       }
-      $confdir_seltype = $::osfamily ? {
-        'RedHat' => 'httpd_config_t',
-        default  => undef,
-      }
+      $confdir_seltype = 'httpd_config_t'
       ensure_resource(
         'file',
         "${::apache_c2c::root}/${servername}/conf",
@@ -150,10 +141,7 @@ define apache_c2c::vhost (
         }
       )
 
-      $htdocs_seltype = $::osfamily ? {
-        'RedHat' => 'httpd_sys_content_t',
-        default  => undef,
-      }
+      $htdocs_seltype ='httpd_sys_content_t'
       ensure_resource(
         'file',
         "${::apache_c2c::root}/${servername}/htdocs",
@@ -167,10 +155,7 @@ define apache_c2c::vhost (
       )
 
       # Private data
-      $private_seltype = $::osfamily ? {
-        'RedHat' => 'httpd_sys_content_t',
-        default  => undef,
-      }
+      $private_seltype ='httpd_sys_content_t'
       ensure_resource(
         'file',
         "${::apache_c2c::root}/${servername}/private",
@@ -193,10 +178,7 @@ define apache_c2c::vhost (
         false   => "${::apache_c2c::root}/${servername}/cgi-bin/",
         default => $cgipath,
       }
-      $cgidir_seltype = $::osfamily ? {
-        'RedHat' => 'httpd_sys_script_exec_t',
-        default  => undef,
-      }
+      $cgidir_seltype = 'httpd_sys_script_exec_t'
       ensure_resource(
         'file',
         "${::apache_c2c::root}/${servername} cgi-bin directory",
@@ -211,10 +193,7 @@ define apache_c2c::vhost (
       )
 
       # Log files
-      $logdir_seltype = $::osfamily ? {
-        'RedHat' => 'httpd_log_t',
-        default  => undef,
-      }
+      $logdir_seltype = 'httpd_log_t'
       ensure_resource(
         'file',
         "${::apache_c2c::root}/${servername}/logs",
@@ -229,10 +208,7 @@ define apache_c2c::vhost (
 
       # We have to give log files to right people with correct rights on them.
       # Those rights have to match those set by logrotate
-      $logfiles_seltype = $::osfamily ? {
-        'RedHat' => 'httpd_log_t',
-        default  => undef,
-      }
+      $logfiles_seltype = 'httpd_log_t'
       ensure_resource(
         'file',
         [
