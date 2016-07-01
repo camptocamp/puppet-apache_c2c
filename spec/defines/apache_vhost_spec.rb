@@ -18,25 +18,21 @@ describe 'apache_c2c::vhost' do
         let(:a2ensite) { '/usr/sbin/a2ensite' }
         let(:a2dissite) { '/usr/sbin/a2dissite' }
         let(:conf) { '/etc/apache2' }
-        let(:conf_seltype) { nil }
-        let(:cont_seltype) { nil }
         let(:group) { 'www-data' }
-        let(:log_seltype) { nil }
         let(:root) { '/var/www' }
-        let(:script_seltype) { nil }
         let(:user) { 'www-data' }
       else
         let(:a2ensite) { '/usr/local/sbin/a2ensite' }
         let(:a2dissite) { '/usr/local/sbin/a2dissite' }
         let(:conf) { '/etc/httpd' }
-        let(:conf_seltype) { 'httpd_config_t' }
-        let(:cont_seltype) { 'httpd_sys_content_t' }
         let(:group) { 'apache' }
-        let(:log_seltype) { 'httpd_log_t' }
         let(:root) { '/var/www/vhosts' }
-        let(:script_seltype) { 'httpd_sys_script_exec_t' }
         let(:user) { 'apache' }
       end
+      let(:conf_seltype) { 'httpd_config_t' }
+      let(:cont_seltype) { 'httpd_sys_content_t' }
+      let(:log_seltype) { 'httpd_log_t' }
+      let(:script_seltype) { 'httpd_sys_script_exec_t' }
 
       it { should contain_class('apache_c2c::params') }
 

@@ -62,7 +62,7 @@ describe 'apache_c2c::redirectmatch' do
         it do
           expect {
             should contain_class('apache_c2c::params')
-          }.to raise_error(/Must pass regex to Apache_c2c::Redirectmatch\[example\]/)
+          }.to raise_error(/regex/)
         end
       end
     end
