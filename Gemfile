@@ -1,8 +1,8 @@
 source ENV['GEM_SOURCE'] || "https://rubygems.org"
 
 group :development, :unit_tests do
-  gem 'rake', ' < 11.0',                                   :require => false if RUBY_VERSION =~ /^1\.8/
-  gem 'rspec', '< 3.2',                                    :require => false if RUBY_VERSION =~ /^1\.8/
+  gem 'rake',                                              :require => false
+  gem 'rspec',                                             :require => false
   gem 'rspec-puppet',                                      :require => false
   gem 'puppetlabs_spec_helper',                            :require => false
   gem 'metadata-json-lint',                                :require => false
@@ -10,7 +10,6 @@ group :development, :unit_tests do
   gem 'puppet-lint-unquoted_string-check',                 :require => false
   gem 'puppet-lint-empty_string-check',                    :require => false
   gem 'puppet-lint-spaceship_operator_without_tag-check',  :require => false
-  gem 'puppet-lint-variable_contains_upcase',              :require => false
   gem 'puppet-lint-absolute_classname-check',              :require => false
   gem 'puppet-lint-undef_in_function-check',               :require => false
   gem 'puppet-lint-leading_zero-check',                    :require => false
@@ -22,14 +21,15 @@ group :development, :unit_tests do
   gem 'rspec-puppet-facts',                                :require => false
   gem 'ruby-augeas',                                       :require => false
   gem 'puppet-blacksmith',                                 :require => false if RUBY_VERSION !~ /^1\./
+  gem 'json_pure', '< 2.0.2',                              :require => false
 end
 
 group :system_tests do
-  gem 'beaker',               :require => false
-  gem 'beaker-rspec',         :require => false
-  gem 'beaker_spec_helper',   :require => false
-  gem 'serverspec',           :require => false
-  gem 'specinfra', '2.59.0',  :require => false
+  gem 'beaker',              :require => false
+  gem 'beaker-rspec',        :require => false
+  gem 'beaker_spec_helper',  :require => false
+  gem 'serverspec',          :require => false
+  gem 'specinfra',           :require => false
 end
 
 if facterversion = ENV['FACTER_GEM_VERSION']
