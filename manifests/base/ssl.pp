@@ -13,9 +13,4 @@ class apache_c2c::base::ssl {
 
   }
 
-  file { '/usr/local/sbin/generate-ssl-cert.sh':
-    content => file('apache_c2c/generate-ssl-cert.sh'),
-    mode    => '0755',
-  }
-
 }
