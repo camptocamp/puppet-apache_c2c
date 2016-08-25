@@ -45,10 +45,6 @@
 #   Authentication. Must be one of 'none', 'optional', 'require' or
 #   'optional_no_ca'.
 # - *$options*: Configure various SSL engine run-time options.
-# - *$publish_csr*: if set to "true", the CSR will be copied in
-#   htdocs/$name.csr.
-#   If set to a path, the CSR will be copied into the specified file. Defaults
-#   to "false", which means don't copy the CSR anywhere.
 # - *$sslonly*: if set to "true", only the https virtualhost will be configured.
 #   Defaults to "true", which means there is a redirection from non-SSL port to
 #   SSL
@@ -82,19 +78,16 @@
 #   include apache_c2c::ssl
 #
 #   apache_c2c::vhost::ssl { "foo.example.com":
-#     ensure => present,
-#     ip_address => "10.0.0.2",
-#     publish_csr => "/home/webmaster/foo.example.com.csr",
+#     ensure      => present,
+#     ip_address  => "10.0.0.2",
 #   }
 #
-#   # go to https://bar.example.com/bar.example.com.csr to retrieve the CSR.
 #   apache_c2c::vhost::ssl { "bar.example.com":
-#     ensure => present,
-#     ip_address => "10.0.0.3",
-#     cert => "puppet:///modules/exampleproject/ssl-certs/bar.example.com.crt",
-#     certchain => "puppet:///modules/exampleproject/ssl-certs/quovadis.chain.crt",
-#     publish_csr => true,
-#     sslonly => true,
+#     ensure      => present,
+#     ip_address  => "10.0.0.3",
+#     cert        => "puppet:///modules/exampleproject/ssl-certs/bar.example.com.crt",
+#     certchain   => "puppet:///modules/exampleproject/ssl-certs/quovadis.chain.crt",
+#     sslonly     => true,
 #   }
 
 define apache_c2c::vhost::ssl (
@@ -119,7 +112,6 @@ define apache_c2c::vhost::ssl (
   $certchain            = false,
   $verifyclient         = undef,
   $options              = [],
-  $publish_csr          = false,
   $sslonly              = true,
   $ports                = ['*:80'],
   $sslports             = ['*:443'],
@@ -402,32 +394,5 @@ define apache_c2c::vhost::ssl (
         require => File["${wwwroot}/${name}/ssl"],
       }
     }
-
-    # put a copy of the CSR in htdocs, or another location if $publish_csr
-    # specifies so.
-    $public_csr_ensure = $publish_csr ? {
-      false   => 'absent',
-      default => 'present',
-    }
-    $public_csr_path = $publish_csr ? {
-      true    => "${wwwroot}/${name}/htdocs/${name}.csr",
-      false   => "${wwwroot}/${name}/htdocs/${name}.csr",
-      default => $publish_csr,
-    }
-    $public_csr_source = $publish_csr ? {
-      false   => undef,
-      default => "file://${csrfile}",
-    }
-    file { "public CSR file for ${name}":
-      ensure  => $public_csr_ensure,
-      path    => $public_csr_path,
-      source  => $public_csr_source,
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0640',
-      seltype => 'httpd_sys_content_t',
-      require => Exec["generate-ssl-cert-${name}"],
-    }
-
   }
 }
