@@ -86,6 +86,7 @@ define apache_c2c::vhost::ssl (
   $ssl_cert             = undef,
   $ssl_key              = undef,
   $ssl_chain            = undef,
+  $ssl_ca               = undef,
   $cert                 = false,
   $certkey              = false,
   $cacert               = false,
@@ -148,7 +149,9 @@ define apache_c2c::vhost::ssl (
   $certkeyfile   = pick($ssl_key, "${wwwroot}/${name}/ssl/${name}.key")
 
   # By default, use CA certificate list shipped with the distribution.
-  if $cacert != false {
+  if $ssl_ca != undef {
+    $cacertfile = $ssl_ca
+  } elsif $cacert != false {
     $cacertfile = "${wwwroot}/${name}/ssl/cacert.crt"
   } else {
     $cacertfile = $::osfamily ? {
@@ -304,7 +307,7 @@ define apache_c2c::vhost::ssl (
       }
     }
 
-    if $cacert != false {
+    if $ssl_ca == undef and $cacert != false {
       # The certificate from your certification authority. Defaults to the
       # certificate bundle shipped with your distribution.
       file { $cacertfile:
