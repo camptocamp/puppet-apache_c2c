@@ -85,6 +85,7 @@ define apache_c2c::vhost::ssl (
   $ip_address           = '*',
   $ssl_cert             = undef,
   $ssl_key              = undef,
+  $ssl_chain            = undef,
   $cert                 = false,
   $certkey              = false,
   $cacert               = false,
@@ -161,7 +162,9 @@ define apache_c2c::vhost::ssl (
     $cacrlfile = "${wwwroot}/${name}/ssl/cacert.crl"
   }
 
-  if $certchain != false {
+  if $ssl_chain != undef {
+    $certchainfile = $ssl_chain
+  } elsif $certchain != false {
     $certchainfile = "${wwwroot}/${name}/ssl/certchain.crt"
   } else {
     $certchainfile = undef
@@ -328,7 +331,7 @@ define apache_c2c::vhost::ssl (
       }
     }
 
-    if $certchain != false {
+    if $ssl_chain == undef and $certchain != false {
 
       # The certificate chain file from your certification authority's. They
       # should inform you if you need one.
