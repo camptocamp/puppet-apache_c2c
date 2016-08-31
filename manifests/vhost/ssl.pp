@@ -162,7 +162,7 @@ define apache_c2c::vhost::ssl (
   }
 
   # If a revocation file is provided
-  if $ssl_crl != undef {
+  if $ssl_crl != undef {
     $cacrlfile = $ssl_crl
   } elsif $cacrl != false {
     $cacrlfile = "${wwwroot}/${name}/ssl/cacert.crl"
