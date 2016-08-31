@@ -168,7 +168,7 @@ define apache_c2c::vhost::ssl (
     $cacrlfile = "${wwwroot}/${name}/ssl/cacert.crl"
   }
 
-  if $ssl_chain != undef {
+  if $ssl_chain != undef {
     $certchainfile = $ssl_chain
   } elsif $certchain != false {
     $certchainfile = "${wwwroot}/${name}/ssl/certchain.crt"
