@@ -87,6 +87,7 @@ define apache_c2c::vhost::ssl (
   $ssl_key              = undef,
   $ssl_chain            = undef,
   $ssl_ca               = undef,
+  $ssl_crl              = undef,
   $cert                 = false,
   $certkey              = false,
   $cacert               = false,
@@ -161,7 +162,9 @@ define apache_c2c::vhost::ssl (
   }
 
   # If a revocation file is provided
-  if $cacrl != false {
+  if $ssl_crl != undef {
+    $cacrlfile = $ssl_crl
+  } elsif $cacrl != false {
     $cacrlfile = "${wwwroot}/${name}/ssl/cacert.crl"
   }
 
@@ -321,7 +324,7 @@ define apache_c2c::vhost::ssl (
       }
     }
 
-    if $cacrl != false {
+    if $ssl_crl == undef and $cacrl != false {
       # certificate revocation file
       file { $cacrlfile:
         owner   => 'root',
