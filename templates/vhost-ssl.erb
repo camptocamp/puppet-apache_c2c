@@ -47,14 +47,14 @@
 
   ## SSL directives
   SSLEngine on
-  SSLCertificateFile      "<%= @certfile %>"
-  SSLCertificateKeyFile   "<%= @certkeyfile %>"
-<% if @certchainfile -%>
-  SSLCertificateChainFile "<%= @certchainfile %>"
+  SSLCertificateFile      "<%= @ssl_cert %>"
+  SSLCertificateKeyFile   "<%= @ssl_key %>"
+<% if @ssl_chain -%>
+  SSLCertificateChainFile "<%= @ssl_chain %>"
 <% end -%>
-  SSLCACertificateFile    "<%= @cacertfile %>"
-<% if @cacrlfile -%>
-  SSLCARevocationFile     "<%= @cacrlfile %>"
+  SSLCACertificateFile    "<%= @ssl_ca %>"
+<% if @ssl_crl -%>
+  SSLCARevocationFile     "<%= @ssl_crl %>"
 <% end -%>
 <% if @verifyclient -%>
   SSLVerifyClient         <%= @verifyclient %>
