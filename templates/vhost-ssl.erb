@@ -4,7 +4,7 @@
 # ************************************
 
 <VirtualHost<% [@sslports].flatten.compact.each do |port| -%> <%= port %><% end -%>>
-  ServerName <%= @name %>
+  ServerName <%= @servername %>
 
   ## Vhost docroot
   DocumentRoot "<%= @documentroot %>"
@@ -22,14 +22,14 @@
 
   ## Load additional static includes
 
-  Include "<%= @wwwroot %>/<%= @name%>/conf/*.conf"
+  Include "<%= @wwwroot %>/<%= @servername %>/conf/*.conf"
 
 
   ## Logging
-  ErrorLog "<%= @wwwroot %>/<%= @name %>/logs/error.log"
+  ErrorLog "<%= @wwwroot %>/<%= @servername %>/logs/error.log"
   LogLevel warn
   ServerSignature Off
-  CustomLog "<%= @wwwroot %>/<%= @name %>/logs/access.log" combined
+  CustomLog "<%= @wwwroot %>/<%= @servername %>/logs/access.log" combined
 
 
 

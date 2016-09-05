@@ -4,7 +4,7 @@
 # ************************************
 
 <VirtualHost<% [@ports].flatten.compact.each do |port| -%> <%= port %><% end -%>>
-  ServerName <%= @name %>
+  ServerName <%= @servername %>
 
   ## Vhost docroot
   DocumentRoot "<%= @documentroot %>"
