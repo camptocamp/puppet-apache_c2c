@@ -35,7 +35,6 @@ define apache_c2c::vhost (
   $ssl_certs_dir       = undef,
   $ssl_chain           = undef,
   $ssl_key             = undef,
-  $redirect_dest       = undef,
 ) {
 
   include ::apache_c2c::params
@@ -105,7 +104,7 @@ define apache_c2c::vhost (
           } else {
             if $ssl {
               $_config_content = template('apache_c2c/vhost-ssl.erb')
-            } elsif $redirect_dest != undef {
+            } elsif $rewrites != undef {
               $_config_content = template('apache_c2c/vhost-redirect-ssl.erb')
             } else {
               $_config_content = template('apache_c2c/vhost.erb')
