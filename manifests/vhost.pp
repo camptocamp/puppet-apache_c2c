@@ -34,6 +34,7 @@ define apache_c2c::vhost (
   $ssl_cert            = undef,
   $ssl_certs_dir       = undef,
   $ssl_chain           = undef,
+  $ssl_crl             = undef,
   $ssl_key             = undef,
 ) {
 
@@ -380,6 +381,7 @@ define apache_c2c::vhost (
       ssl_cert            => $ssl_cert,
       ssl_certs_dir       => $ssl_certs_dir,
       ssl_chain           => $ssl_chain,
+      ssl_crl             => $ssl_crl,
       ssl_key             => $ssl_key,
     }
   }
