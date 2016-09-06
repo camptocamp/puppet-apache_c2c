@@ -13,7 +13,9 @@ define apache_c2c::vhost (
   $mode           = '2570',
   $aliases        = [],
   $ports          = ['*:80'],
+  $sslports       = ['*:443'],
   $priority       = '25',
+  $options        = [],
 
   $access_log          = undef,
   $additional_includes = undef,
@@ -25,11 +27,15 @@ define apache_c2c::vhost (
   $scriptaliases       = undef,
   $servername          = $name,
   $ssl                 = undef,
-  $ssl_ca              = undef,
+  $ssl_ca              = $::osfamily ? {
+    'RedHat' => '/etc/pki/tls/certs/ca-bundle.crt',
+    'Debian' => '/etc/ssl/certs/ca-certificates.crt',
+  },
   $ssl_cert            = undef,
   $ssl_certs_dir       = undef,
   $ssl_chain           = undef,
   $ssl_key             = undef,
+  $redirect_dest       = undef,
 ) {
 
   include ::apache_c2c::params
@@ -87,25 +93,27 @@ define apache_c2c::vhost (
           require => Package['httpd'],
           notify  => Exec['apache-graceful'],
         }
-        case $config_file {
-
-          default: {
-            File["${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf"] {
-              source => $config_file,
-            }
+        if $config_file {
+          File["${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf"] {
+            source => $config_file,
           }
-          undef: {
-
-            if $config_content {
-              File["${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf"] {
-                content => $config_content,
-              }
-              } else {
-                # default vhost template
-                File["${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf"] {
-                  content => template('apache_c2c/vhost.erb'),
-                }
-              }
+        } else {
+          if $config_content {
+            File["${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf"] {
+              content => $config_content,
+            }
+          } else {
+            if $ssl {
+              $_config_content = template('apache_c2c/vhost-ssl.erb')
+            } elsif $redirect_dest != undef {
+              $_config_content = template('apache_c2c/vhost-redirect-ssl.erb')
+            } else {
+              $_config_content = template('apache_c2c/vhost.erb')
+            }
+            # default vhost template
+            File["${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf"] {
+              content => $_config_content,
+            }
           }
         }
       }
