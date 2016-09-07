@@ -70,6 +70,14 @@ define apache_c2c::vhost (
     default  => "/usr/sbin/a2dissite ${priority}-${name}.conf",
   }
 
+  if $ssl and $ensure == 'present' {
+    case $::osfamily {
+      'Debian': { include ::apache_c2c::ssl::debian}
+      'RedHat': { include ::apache_c2c::ssl::redhat}
+      default: { fail "Unsupported osfamily ${::osfamily}" }
+    }
+  }
+
   # Set access log format
   if $accesslog_format {
     $_accesslog_format = "\"${accesslog_format}\""

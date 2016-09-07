@@ -1,4 +1,6 @@
-class apache_c2c::ssl::redhat inherits apache_c2c::base::ssl {
+class apache_c2c::ssl::redhat {
+
+  include ::apache_c2c::base::ssl
 
   package {'mod_ssl':
     ensure => installed,
