@@ -26,10 +26,6 @@
 # [*disable_port80*]
 #   Disable the default HTTP port 80. Default is false (the port 80 is enabled).
 #
-# [*disable_port443*]
-#   Disable the default HTTPS port 443. Default is false (the port 443 is
-#   enabled).
-#
 # == Example ==
 #
 #  include apache_c2c::ssl
@@ -39,7 +35,6 @@ class apache_c2c::ssl (
   $service_ensure  = 'running',
   $service_enable  = true,
   $disable_port80  = false,
-  $disable_port443 = false,
   $default_vhost   = true,
 ) inherits ::apache_c2c::params {
 
