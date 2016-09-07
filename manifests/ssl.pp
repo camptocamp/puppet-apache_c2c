@@ -42,7 +42,6 @@ class apache_c2c::ssl (
   validate_re ($service_ensure, 'running|stopped|unmanaged')
   validate_bool ($service_enable)
   validate_bool ($disable_port80)
-  validate_bool ($disable_port443)
 
   class { '::apache_c2c':
     root           => $root,
