@@ -1,4 +1,6 @@
-class apache_c2c::svnserver inherits apache_c2c::ssl {
+class apache_c2c::svnserver {
+
+  include ::apache_c2c
 
   case $::osfamily {
 
