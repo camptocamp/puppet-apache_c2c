@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'apache_c2c::base::ssl' do
-  let(:pre_condition) { "include ::apache_c2c::ssl" }
+  let(:pre_condition) { "include ::apache_c2c" }
 
   on_supported_os.each do |os, facts|
     context "on #{os}" do
