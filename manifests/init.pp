@@ -20,9 +20,6 @@
 #   Enable value passed to the Apache service, defining the service's status
 #   at boot. Valid values are true (default) and false.
 #
-# [*disable_port80*]
-#   Disable the default HTTP port 80. Default is false (the port 80 is enabled).
-#
 # == Example ===
 #
 #   include apache
@@ -31,7 +28,6 @@ class apache_c2c (
   $root            = $apache_c2c::params::root,
   $service_ensure  = 'running',
   $service_enable  = true,
-  $disable_port80  = false,
   $default_vhost   = true,
   $backend         = 'camptocamp',
 ) inherits ::apache_c2c::params {
@@ -44,7 +40,6 @@ class apache_c2c (
   validate_absolute_path ($root)
   validate_re ($service_ensure, 'running|stopped|unmanaged')
   validate_bool ($service_enable)
-  validate_bool ($disable_port80)
 
   case $::osfamily {
     'Debian': { include ::apache_c2c::debian}
