@@ -104,13 +104,9 @@ class apache_c2c::base {
     require => Package['httpd'],
   }
 
-  if ! $apache_c2c::disable_port80 {
-
-    if $::apache_c2c::backend != 'puppetlabs' {
-      apache_c2c::listen { '80': ensure => present }
-      apache_c2c::namevhost { '*:80': ensure => present }
-    }
-
+  if $::apache_c2c::backend != 'puppetlabs' {
+    apache_c2c::listen { '80': ensure => present }
+    apache_c2c::namevhost { '*:80': ensure => present }
   }
 
   apache_c2c::module {['alias', 'auth_basic', 'authn_file', 'authz_default',
