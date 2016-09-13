@@ -106,14 +106,6 @@ describe 'apache_c2c::vhost' do
           :seltype => cont_seltype,
         } ) }
 
-        it { should contain_file("#{root}/#{vhost}/README").with( {
-          :ensure  => 'present',
-          :owner   => 'root',
-          :group   => 'root',
-          :mode    => '0644',
-          :content => /^Your website is hosted in #{root}\/#{vhost}\/$/
-        } ) }
-
         it { should contain_exec("enable vhost #{vhost}").with(
           :command => "#{a2ensite} 25-#{vhost}.conf"
         ) }
