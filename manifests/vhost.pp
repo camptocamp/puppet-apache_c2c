@@ -114,6 +114,7 @@ define apache_c2c::vhost (
             if $ssl {
               $_config_content = template('apache_c2c/vhost-ssl.erb')
             } elsif $rewrites != undef {
+              $_rewrite_config = template('apache/vhost/_rewrite.erb')
               $_config_content = template('apache_c2c/vhost-redirect-ssl.erb')
             } else {
               $_config_content = template('apache_c2c/vhost.erb')
