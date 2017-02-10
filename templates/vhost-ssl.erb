@@ -32,6 +32,8 @@
   CustomLog "<%= @wwwroot %>/<%= @servername %>/logs/access.log" combined
 
 
+<%= @_rewrite_config %>
+
 
   ## Script alias directives
 <% if @cgipath -%>
