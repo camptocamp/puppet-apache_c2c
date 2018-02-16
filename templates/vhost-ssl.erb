@@ -29,7 +29,7 @@
   ErrorLog "<%= @wwwroot %>/<%= @servername %>/logs/error.log"
   LogLevel warn
   ServerSignature Off
-  CustomLog "<%= @wwwroot %>/<%= @servername %>/logs/access.log" combined
+  CustomLog "<%= @wwwroot %>/<%= @servername %>/logs/access.log" <%= @_accesslog_format %>
 
 
 
