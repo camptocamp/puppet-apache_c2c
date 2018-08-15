@@ -24,7 +24,6 @@ define apache_c2c::listen ($ensure='present') {
     include ::apache_c2c::params
 
     concat::fragment { "apache-ports.conf-${name}":
-      ensure  => $ensure,
       target  => "${apache_c2c::params::conf}/ports.conf",
       content => "Listen ${name}\n",
     }
