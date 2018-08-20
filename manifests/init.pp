@@ -24,6 +24,7 @@
 #
 #   include apache
 #
+#
 class apache_c2c (
   $root            = $apache_c2c::params::root,
   $service_ensure  = 'running',
