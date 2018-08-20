@@ -265,9 +265,9 @@ define apache_c2c::vhost (
           default  => "${apache_c2c::params::a2ensite} ${priority}-${name}.conf"
         }
         exec {"enable vhost ${name}":
-          command => $enable_vhost_command,
-          notify  => Exec['apache-graceful'],
-          require => [
+          command  => $enable_vhost_command,
+          notify   => Exec['apache-graceful'],
+          require  => [
             $::osfamily ? {
               'RedHat' => File[$apache_c2c::params::a2ensite],
               default  => Package['httpd']
@@ -277,7 +277,7 @@ define apache_c2c::vhost (
             File["${::apache_c2c::root}/${servername}/logs"],
             File["${::apache_c2c::root}/${servername}/conf"]
             ],
-            unless  => "/bin/sh -c '[ -L ${apache_c2c::params::conf}/sites-enabled/${priority}-${name}.conf ] \\
+            unless => "/bin/sh -c '[ -L ${apache_c2c::params::conf}/sites-enabled/${priority}-${name}.conf ] \\
             && [ ${apache_c2c::params::conf}/sites-enabled/${priority}-${name}.conf -ef ${apache_c2c::params::conf}/sites-available/${priority}-${name}.conf ]'",
         }
       }

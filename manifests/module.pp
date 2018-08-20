@@ -10,7 +10,7 @@ define apache_c2c::module ($ensure='present') {
           }
         }
         'status': {
-          include ::monitoring::apache
+          include ::monitoring::apache_c2c
         }
         default: {
           if defined("apache::mod::${name}") {

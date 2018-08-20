@@ -9,7 +9,8 @@
   "issues_url": "https://github.com/camptocamp/puppet-apache_c2c/issues",
   "dependencies": [
     {
-      "name": "camptocamp/collectd"
+      "name": "camptocamp/collectd",
+      "version_requirement": ">0.2.0"
     },
     {
       "name": "puppetlabs/concat",

@@ -16,23 +16,6 @@
 #   include apache_c2c::collectd
 #
 class apache_c2c::collectd {
-
   # trick to check which collectd module we are using
-  include ::collectd
-  if ($::collectd::confdir != '') {
-
-    collectd::config::plugin { 'monitor local apache':
-      plugin   => 'apache',
-      settings => '
-  <Instance "apache80">
-    URL "http://localhost/server-status?auto"
-  </Instance>',
-    }
-  } else {
-    collectd::plugin { 'apache':
-      lines   => ['URL "http://localhost/server-status?auto"'],
-      require => Package['curl'],
-    }
-  }
-
+  include ::monitoring::apache_c2c
 }
