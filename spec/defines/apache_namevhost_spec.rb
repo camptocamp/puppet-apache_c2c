@@ -25,7 +25,7 @@ describe 'apache_c2c::namevhost' do
 
           case facts[:osfamily]
           when 'Debian'
-            if( e == 'present')
+            if e == 'present'
               it { should contain_concat__fragment('apache-namevhost.conf-*:8080').with( {
                 'content' => "NameVirtualHost *:8080\n",
                 'target'  => '/etc/apache2/ports.conf',
@@ -37,7 +37,7 @@ describe 'apache_c2c::namevhost' do
               } ) }
             end
           else
-            if( e == 'present')
+            if e == 'present'
               it { should contain_concat__fragment('apache-namevhost.conf-*:8080').with( {
                 'content' => "NameVirtualHost *:8080\n",
                 'target'  => '/etc/httpd/ports.conf',
