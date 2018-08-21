@@ -17,26 +17,17 @@ describe 'apache_c2c::namevhost' do
 
       it { should contain_class('apache_c2c::params') }
 
-      ['present', 'absent'].each do |e|
-        describe "ensuring #{e}" do
-          let(:params) { {
-            :ensure => e,
-          } }
-
           case facts[:osfamily]
           when 'Debian'
             it { should contain_concat__fragment('apache-namevhost.conf-*:8080').with( {
-              'ensure'  => e,
               'content' => "NameVirtualHost *:8080\n",
               'target'  => '/etc/apache2/ports.conf',
             } ) }
           else
             it { should contain_concat__fragment('apache-namevhost.conf-*:8080').with( {
-              'ensure'  => e,
               'content' => "NameVirtualHost *:8080\n",
               'target'  => '/etc/httpd/ports.conf',
             } ) }
-          end
         end
       end
     end
