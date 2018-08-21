@@ -25,17 +25,29 @@ describe 'apache_c2c::namevhost' do
 
           case facts[:osfamily]
           when 'Debian'
-            it { should contain_concat__fragment('apache-namevhost.conf-*:8080').with( {
-              'ensure'  => e,
-              'content' => "NameVirtualHost *:8080\n",
-              'target'  => '/etc/apache2/ports.conf',
-            } ) }
+            if( e == 'present')
+              it { should contain_concat__fragment('apache-namevhost.conf-*:8080').with( {
+                'content' => "NameVirtualHost *:8080\n",
+                'target'  => '/etc/apache2/ports.conf',
+              } ) }
+            else
+              it { should_not contain_concat__fragment('apache-namevhost.conf-*:8080').with( {
+                'content' => "NameVirtualHost *:8080\n",
+                'target'  => '/etc/apache2/ports.conf',
+              } ) }
+            end
           else
-            it { should contain_concat__fragment('apache-namevhost.conf-*:8080').with( {
-              'ensure'  => e,
-              'content' => "NameVirtualHost *:8080\n",
-              'target'  => '/etc/httpd/ports.conf',
-            } ) }
+            if( e == 'present')
+              it { should contain_concat__fragment('apache-namevhost.conf-*:8080').with( {
+                'content' => "NameVirtualHost *:8080\n",
+                'target'  => '/etc/httpd/ports.conf',
+              } ) }
+            else
+              it { should_not contain_concat__fragment('apache-namevhost.conf-*:8080').with( {
+                'content' => "NameVirtualHost *:8080\n",
+                'target'  => '/etc/httpd/ports.conf',
+              } ) }
+            end
           end
         end
       end
