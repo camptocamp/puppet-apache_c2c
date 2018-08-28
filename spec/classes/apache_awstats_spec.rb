@@ -8,6 +8,10 @@ describe 'apache_c2c::awstats' do
         facts
       end
 
+      let(:pre_condition) do
+        "include apache_c2c"
+      end
+
       it { should contain_package('awstats').with_ensure('installed') }
 
       it do should contain_file('/etc/awstats').with(

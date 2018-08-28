@@ -19,6 +19,7 @@ describe 'apache_c2c::redirectmatch' do
           :url    => 'http://foobar.example.com/',
           :vhost  => 'www.example.com',
         } }
+
         it { should contain_class('apache_c2c::params') }
 
         case facts[:osfamily]

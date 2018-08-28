@@ -7,7 +7,9 @@ describe 'apache_c2c::dev' do
       let(:facts) do
         facts
       end
-
+      let(:pre_condition) do
+        "package{'gcc':}"
+      end
       case facts[:osfamily]
       when 'Debian'
         it { should contain_package('apache-devel').with( {

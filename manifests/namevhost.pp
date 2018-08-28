@@ -25,10 +25,11 @@ define apache_c2c::namevhost ($ensure='present') {
     }
   } else {
     include ::apache_c2c::params
-
-    concat::fragment { "apache-namevhost.conf-${name}":
-      target  => "${apache_c2c::params::conf}/ports.conf",
-      content => "NameVirtualHost ${name}\n",
+    if ($ensure == 'present') {
+      concat::fragment { "apache-namevhost.conf-${name}":
+        target  => "${apache_c2c::params::conf}/ports.conf",
+        content => "NameVirtualHost ${name}\n",
+      }
     }
   }
 
