@@ -3,9 +3,11 @@ require 'spec_helper'
 describe 'apache_c2c::aw_stats' do
   let(:title) { 'foo' }
 
-  let(:pre_condition) { 'include ::apache_c2c' }
-  let(:pre_condition) { 'include ::apache_c2c::awstats' }
-  
+  let(:pre_condition) {
+'include ::apache_c2c
+include ::apache_c2c::awstats'
+  }
+
   on_supported_os.each do |os, facts|
     context "on #{os}" do
       let(:facts) do
