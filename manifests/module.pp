@@ -9,11 +9,6 @@ define apache_c2c::module ($ensure='present') {
             ssl_options => false,
           }
         }
-        'status': {
-          class { '::apache::mod::status':
-                allow_from => ['localhost', 'ip6-localhost', '127.0.0.0/255.0.0.0',],
-              }
-            }
         default: {
           if defined("apache::mod::${name}") {
             include "::apache::mod::${name}"
