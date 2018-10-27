@@ -1,7 +1,6 @@
 define apache_c2c::vhost (
   $ensure         = present,
   $config_content = false,
-  $readme         = false,
   $docroot        = false,
   $cgibin         = true,
   $config_file    = undef,
@@ -239,23 +238,6 @@ define apache_c2c::vhost (
           mode    => '0644',
           seltype => $logfiles_seltype,
           require => File["${::apache_c2c::root}/${servername}/logs"],
-        }
-      )
-
-      # README file
-      $readme_content = $readme ? {
-        false   => template('apache_c2c/README_vhost.erb'),
-        default => $readme,
-      }
-      ensure_resource(
-        'file',
-        "${::apache_c2c::root}/${servername}/README",
-        {
-          ensure  => present,
-          owner   => root,
-          group   => root,
-          mode    => '0644',
-          content => $readme_content,
         }
       )
 
