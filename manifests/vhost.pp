@@ -371,6 +371,7 @@ define apache_c2c::vhost (
       ensure              => $ensure,
       access_log          => $access_log,
       access_log_file     => 'access.log',
+      access_log_format   => $accesslog_format,
       additional_includes => $_additional_includes,
       directories         => $_directories,
       docroot             => $documentroot,
